@@ -379,13 +379,15 @@ const buildEmailHTML = (data, type, settings) => {
 
 app.post('/api/send-email', async (req, res) => {
   try {
+    const nodemailer = require('nodemailer');
     const { to, pdfBase64, filename, quoteId, invoiceId } = req.body;
     const settings = await (await col('settings')).findOne({ _id: 'main' }) || defaultSettings;
-    const apiKey = settings.apiKey || settings.smtp?.pass;
-    const senderEmail = settings.smtp?.from || settings.smtp?.user || '';
+    const smtpPass = settings.smtp?.pass;
+    const smtpUser = settings.smtp?.user || '';
+    const senderEmail = settings.smtp?.from || smtpUser;
     const companyName = settings.company?.name || 'AnNissa Dev Group';
 
-    if (!apiKey) return res.status(400).json({ error: 'Clé API Brevo non configurée.' });
+    if (!smtpPass || !smtpUser) return res.status(400).json({ error: 'Configuration SMTP incomplète (email + clé SMTP requis).' });
 
     const type = quoteId ? 'quote' : 'invoice';
     const data = quoteId
@@ -397,44 +399,33 @@ app.post('/api/send-email', async (req, res) => {
     const label = type === 'quote' ? 'Devis' : 'Facture';
     const htmlContent = buildEmailHTML(data, type, settings);
 
-    const payload = {
-      sender: { name: companyName, email: senderEmail },
-      to: [{ email: to }],
+    const transporter = nodemailer.createTransport({
+      host: settings.smtp?.host || 'smtp-relay.brevo.com',
+      port: parseInt(settings.smtp?.port || '587'),
+      auth: { user: smtpUser, pass: smtpPass }
+    });
+
+    const mailOptions = {
+      from: `"${companyName}" <${senderEmail}>`,
+      to,
       subject: `${label} ${data.number} — ${companyName}`,
-      htmlContent
+      html: htmlContent
     };
 
     if (pdfBase64) {
       const cleanBase64 = pdfBase64.replace(/^data:.*?;base64,\s*/, '').replace(/\s/g, '');
-      payload.attachment = [{ content: cleanBase64, name: filename || `${label}_${data.number}.pdf` }];
+      mailOptions.attachments = [{ filename: filename || `${label}_${data.number}.pdf`, content: Buffer.from(cleanBase64, 'base64') }];
     }
 
-    const body = JSON.stringify(payload);
-    const https = require('https');
-    const request = https.request({
-      hostname: 'api.brevo.com', path: '/v3/smtp/email', method: 'POST',
-      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
-    }, (response) => {
-      let d = '';
-      response.on('data', chunk => d += chunk);
-      response.on('end', async () => {
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-          if (quoteId) {
-            const q = await (await col('quotes')).findOne({ id: quoteId });
-            if (q && q.status === 'draft') {
-              await (await col('quotes')).updateOne({ id: quoteId }, { $set: { status: 'sent', updatedAt: new Date().toISOString() } });
-            }
-          }
-          res.json({ success: true });
-        } else {
-          let parsed; try { parsed = JSON.parse(d); } catch(e) { parsed = {}; }
-          res.status(response.statusCode).json({ error: parsed.message || d });
-        }
-      });
-    });
-    request.on('error', err => res.status(500).json({ error: err.message }));
-    request.write(body);
-    request.end();
+    await transporter.sendMail(mailOptions);
+
+    if (quoteId) {
+      const q = await (await col('quotes')).findOne({ id: quoteId });
+      if (q && q.status === 'draft') {
+        await (await col('quotes')).updateOne({ id: quoteId }, { $set: { status: 'sent', updatedAt: new Date().toISOString() } });
+      }
+    }
+    res.json({ success: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
