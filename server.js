@@ -381,7 +381,7 @@ app.post('/api/send-email', async (req, res) => {
   try {
     const { to, pdfBase64, filename, quoteId, invoiceId } = req.body;
     const settings = await (await col('settings')).findOne({ _id: 'main' }) || defaultSettings;
-    const apiKey = settings.apiKey;
+    const apiKey = settings.apiKey || settings.smtp?.pass;
     const senderEmail = settings.smtp?.from || settings.smtp?.user || '';
     const companyName = settings.company?.name || 'AnNissa Dev Group';
 
