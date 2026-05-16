@@ -42,6 +42,7 @@ const defaultSettings = {
 };
 
 // ── Middleware ──
+app.set('trust proxy', 1);
 app.use(express.json({ limit: '10mb' }));
 
 app.use(session({
@@ -85,7 +86,7 @@ app.post('/api/auth/login', async (req, res) => {
     if (email === adminEmail && hashPwd(password) === settings.adminPasswordHash) {
       req.session.isAdmin = true;
       req.session.adminEmail = email;
-      return res.json({ success: true });
+      return req.session.save(() => res.json({ success: true }));
     }
     res.status(401).json({ error: 'Email ou mot de passe incorrect' });
   } catch (e) { res.status(500).json({ error: e.message }); }
