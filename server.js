@@ -4,7 +4,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const { MongoStore } = require('connect-mongo');
 const { MongoClient } = require('mongodb');
 
 const hashPwd = (p) => crypto.createHash('sha256').update(p).digest('hex');
