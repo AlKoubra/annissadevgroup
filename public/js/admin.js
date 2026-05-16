@@ -1701,32 +1701,24 @@ const renderSettings = (main) => {
           </div>
         </div>
         <div class="settings-section">
-          <h3>Email (SMTP)</h3>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Configurez votre compte email pour envoyer les devis et factures directement depuis l'admin. Utilisez Gmail, Outlook ou tout autre fournisseur SMTP.</p>
+          <h3>Email (Brevo API)</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Configurez Brevo pour envoyer les devis et factures par email.</p>
           <div class="form-grid">
             <div class="form-group">
-              <label>Serveur SMTP (host)</label>
-              <input id="s_smtp_host" value="${state.settings.smtp?.host || 'smtp-relay.brevo.com'}" placeholder="smtp-relay.brevo.com">
-            </div>
-            <div class="form-group">
-              <label>Port</label>
-              <input id="s_smtp_port" type="number" value="${state.settings.smtp?.port || 587}" placeholder="587">
-            </div>
-            <div class="form-group">
-              <label>Adresse email (expéditeur)</label>
+              <label>Adresse email expéditeur</label>
               <input id="s_smtp_user" type="email" value="${state.settings.smtp?.user || ''}" placeholder="contact@annissadevgroup.com">
             </div>
             <div class="form-group">
-              <label>Clé SMTP (API Key Brevo)</label>
-              <input id="s_smtp_pass" type="password" value="${state.settings.smtp?.pass || ''}" placeholder="xsmtp-xxxxxxxxxxxxxxxx">
+              <label>Clé API Brevo <span style="color:#f87171;font-size:11px">(pas la clé SMTP)</span></label>
+              <input id="s_brevo_api_key" type="password" value="${state.settings.brevoApiKey || ''}" placeholder="xkeysib-...">
             </div>
           </div>
           <div style="background:rgba(240,180,41,0.08);border:1px solid rgba(240,180,41,0.3);border-radius:10px;padding:14px 16px;margin-top:12px;font-size:12px;color:var(--text-muted)">
-            <strong style="color:var(--gold)">Configuration Brevo :</strong><br>
+            <strong style="color:var(--gold)">Comment obtenir la clé API Brevo :</strong><br>
             1. Connectez-vous sur <strong>app.brevo.com</strong><br>
-            2. Allez dans <strong>Paramètres → SMTP &amp; API</strong><br>
-            3. Copiez votre <strong>clé SMTP</strong> (commence par <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px">xsmtp-</code>)<br>
-            4. Login = votre email Brevo &nbsp;|&nbsp; Host = <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px">smtp-relay.brevo.com</code> &nbsp;|&nbsp; Port = <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px">587</code>
+            2. Cliquez sur votre profil (en haut à droite) → <strong>SMTP &amp; API</strong><br>
+            3. Onglet <strong style="color:var(--gold)">API Keys</strong> (pas "SMTP Keys")<br>
+            4. Cliquez <strong>Générer une nouvelle clé API</strong> → copiez-la ici
           </div>
         </div>
         <div class="form-actions">
@@ -1753,11 +1745,11 @@ const saveSettings = async () => {
       quotePrefix: document.getElementById('s_qprefix')?.value,
       invoicePrefix: document.getElementById('s_iprefix')?.value
     },
+    brevoApiKey: document.getElementById('s_brevo_api_key')?.value?.trim(),
     smtp: {
-      host: document.getElementById('s_smtp_host')?.value?.trim(),
-      port: document.getElementById('s_smtp_port')?.value || '587',
-      user: document.getElementById('s_smtp_user')?.value?.trim(),
-      pass: document.getElementById('s_smtp_pass')?.value
+      host: 'smtp-relay.brevo.com',
+      port: '587',
+      user: document.getElementById('s_smtp_user')?.value?.trim()
     }
   };
   const saved = await api.put('/api/settings', data);
