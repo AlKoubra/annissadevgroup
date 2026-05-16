@@ -379,14 +379,16 @@ const buildEmailHTML = (data, type, settings) => {
 
 app.post('/api/send-email', async (req, res) => {
   try {
+    const nodemailer = require('nodemailer');
     const { to, pdfBase64, filename, quoteId, invoiceId } = req.body;
     const settings = await (await col('settings')).findOne({ _id: 'main' }) || defaultSettings;
-    const apiKey = settings.brevoApiKey || settings.smtp?.pass;
-    const senderEmail = settings.smtp?.from || settings.smtp?.user || '';
+    const smtpUser = settings.smtp?.user || '';
+    const smtpPass = settings.smtp?.pass || '';
+    const senderEmail = settings.smtp?.from || smtpUser;
     const companyName = settings.company?.name || 'AnNissa Dev Group';
 
-    if (!apiKey) return res.status(400).json({ error: 'Clé API Brevo non configurée. Allez dans Paramètres et entrez votre clé API Brevo.' });
-    if (!senderEmail) return res.status(400).json({ error: 'Adresse email expéditeur non configurée.' });
+    if (!smtpPass) return res.status(400).json({ error: 'Clé SMTP non configurée. Allez dans Paramètres → Email.' });
+    if (!smtpUser) return res.status(400).json({ error: 'Adresse email expéditeur non configurée.' });
 
     const type = quoteId ? 'quote' : 'invoice';
     const data = quoteId
@@ -398,47 +400,36 @@ app.post('/api/send-email', async (req, res) => {
     const label = type === 'quote' ? 'Devis' : 'Facture';
     const htmlContent = buildEmailHTML(data, type, settings);
 
-    const payload = {
-      sender: { name: companyName, email: senderEmail },
-      to: [{ email: to }],
+    const transporter = nodemailer.createTransport({
+      host: settings.smtp?.host || 'smtp-relay.brevo.com',
+      port: parseInt(settings.smtp?.port || '587'),
+      secure: false,
+      auth: { user: smtpUser, pass: smtpPass },
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 8000
+    });
+
+    const mail = {
+      from: `"${companyName}" <${senderEmail}>`,
+      to,
       subject: `${label} ${data.number} — ${companyName}`,
-      htmlContent
+      html: htmlContent
     };
 
     if (pdfBase64) {
       const cleanBase64 = pdfBase64.replace(/^data:.*?;base64,\s*/, '').replace(/\s/g, '');
-      payload.attachment = [{ content: cleanBase64, name: filename || `${label}_${data.number}.pdf` }];
+      mail.attachments = [{ filename: filename || `${label}_${data.number}.pdf`, content: Buffer.from(cleanBase64, 'base64') }];
     }
 
-    const body = JSON.stringify(payload);
-    const https = require('https');
-    await new Promise((resolve, reject) => {
-      const request = https.request({
-        hostname: 'api.brevo.com', path: '/v3/smtp/email', method: 'POST',
-        headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
-      }, (response) => {
-        let d = '';
-        response.on('data', chunk => d += chunk);
-        response.on('end', async () => {
-          if (response.statusCode >= 200 && response.statusCode < 300) {
-            if (quoteId) {
-              const q = await (await col('quotes')).findOne({ id: quoteId });
-              if (q && q.status === 'draft') {
-                await (await col('quotes')).updateOne({ id: quoteId }, { $set: { status: 'sent', updatedAt: new Date().toISOString() } });
-              }
-            }
-            resolve();
-          } else {
-            let parsed; try { parsed = JSON.parse(d); } catch(e) { parsed = {}; }
-            reject(new Error(parsed.message || `Brevo error ${response.statusCode}: ${d}`));
-          }
-        });
-      });
-      request.on('error', reject);
-      request.write(body);
-      request.end();
-    });
+    await transporter.sendMail(mail);
 
+    if (quoteId) {
+      const q = await (await col('quotes')).findOne({ id: quoteId });
+      if (q && q.status === 'draft') {
+        await (await col('quotes')).updateOne({ id: quoteId }, { $set: { status: 'sent', updatedAt: new Date().toISOString() } });
+      }
+    }
     res.json({ success: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
