@@ -1679,6 +1679,10 @@ const renderSettings = (main) => {
               <label>SIRET / Numéro fiscal</label>
               <input id="s_siret" value="${co.siret || ''}">
             </div>
+            <div class="form-group">
+              <label>Téléphone admin (SMS notifications)</label>
+              <input id="s_admin_phone" value="${co.adminPhone || ''}" placeholder="+221XXXXXXXXX">
+            </div>
           </div>
         </div>
         <div class="settings-section">
@@ -1740,6 +1744,7 @@ const saveSettings = async () => {
       phone: document.getElementById('s_phone')?.value,
       address: document.getElementById('s_address')?.value,
       siret: document.getElementById('s_siret')?.value,
+      adminPhone: document.getElementById('s_admin_phone')?.value?.trim(),
       currency: document.getElementById('s_currency')?.value,
       quotePrefix: document.getElementById('s_qprefix')?.value,
       invoicePrefix: document.getElementById('s_iprefix')?.value

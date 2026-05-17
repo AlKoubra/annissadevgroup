@@ -100,6 +100,21 @@ app.get('/api/auth/check', (req, res) => {
   res.json({ authenticated: !!(req.session?.isAdmin) });
 });
 
+// ── SMS (Brevo) ──
+const sendSMS = async (phone, message, apiKey) => {
+  if (!phone || !apiKey) return;
+  const https = require('https');
+  const body = JSON.stringify({ sender: 'AnNissa', recipient: phone, content: message });
+  return new Promise((resolve) => {
+    const req = https.request({
+      hostname: 'api.brevo.com', path: '/v3/transactionalSMS/sms', method: 'POST',
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
+    }, (resp) => { resp.on('data', () => {}); resp.on('end', resolve); });
+    req.on('error', () => resolve());
+    req.write(body); req.end();
+  });
+};
+
 // ── MESSAGES public (formulaire de contact) ──
 app.post('/api/messages', async (req, res) => {
   try {
@@ -107,6 +122,15 @@ app.post('/api/messages', async (req, res) => {
     const msg = { id: uuidv4(), ...req.body, read: false, createdAt: new Date().toISOString() };
     await c.insertOne(msg);
     res.json(msg);
+    // SMS notification
+    const settings = await (await col('settings')).findOne({ _id: 'main' });
+    const phone = settings?.company?.adminPhone;
+    const apiKey = settings?.smtp?.pass;
+    if (phone && apiKey) {
+      const name = req.body.name || 'Inconnu';
+      const service = req.body.service || '';
+      await sendSMS(phone, `AnNissa - Nouveau message de ${name}${service ? ' (' + service + ')' : ''}. Connectez-vous a l\'admin.`, apiKey);
+    }
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -194,6 +218,9 @@ app.post('/api/quotes', async (req, res) => {
     };
     await c.insertOne(quote);
     res.status(201).json(quote);
+    const phone = settings?.company?.adminPhone;
+    const apiKey = settings?.smtp?.pass;
+    if (phone && apiKey) await sendSMS(phone, `AnNissa - Nouveau devis ${quote.number} cree pour ${quote.clientName || ''}. Montant: ${quote.total || 0} ${settings.company?.currency || 'FCFA'}.`, apiKey);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -273,6 +300,9 @@ app.post('/api/invoices', async (req, res) => {
     };
     await c.insertOne(invoice);
     res.status(201).json(invoice);
+    const phone = settings?.company?.adminPhone;
+    const apiKey = settings?.smtp?.pass;
+    if (phone && apiKey) await sendSMS(phone, `AnNissa - Nouvelle facture ${invoice.number} creee pour ${invoice.clientName || ''}. Montant: ${invoice.total || 0} ${settings.company?.currency || 'FCFA'}.`, apiKey);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
