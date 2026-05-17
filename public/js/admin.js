@@ -1709,15 +1709,15 @@ const renderSettings = (main) => {
               <input id="s_smtp_user" type="email" value="${state.settings.smtp?.user || ''}" placeholder="votre@email.com">
             </div>
             <div class="form-group">
-              <label>Clé SMTP Brevo</label>
-              <input id="s_smtp_pass" type="password" value="${state.settings.smtp?.pass || ''}" placeholder="xsmtpsib-...">
+              <label>Clé API Brevo</label>
+              <input id="s_smtp_pass" type="password" value="${state.settings.smtp?.pass || ''}" placeholder="xkeysib-...">
             </div>
           </div>
           <div style="background:rgba(240,180,41,0.08);border:1px solid rgba(240,180,41,0.3);border-radius:10px;padding:14px 16px;margin-top:12px;font-size:12px;color:var(--text-muted)">
             <strong style="color:var(--gold)">Configuration Brevo :</strong><br>
             1. Connectez-vous sur <strong>app.brevo.com</strong><br>
-            2. Profil → <strong>SMTP &amp; API</strong> → onglet <strong>SMTP</strong><br>
-            3. Copiez la clé SMTP (commence par <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px">xsmtpsib-</code>)
+            2. Profil → <strong>SMTP &amp; API</strong> → onglet <strong>API keys &amp; MCP</strong><br>
+            3. Copiez la clé API (commence par <code style="background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px">xkeysib-</code>)
           </div>
         </div>
         <div class="form-actions">
