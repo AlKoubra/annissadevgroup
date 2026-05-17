@@ -10,14 +10,14 @@
   <style>
     /* Responsive overrides for inline-styled elements */
     @media (max-width: 768px) {
-      /* Services — 1 carte par ligne sur téléphone */
-      .services-grid {
+      /* Services + Expertise — 1 carte par ligne sur téléphone */
+      .services-grid, .tech-grid {
         display: grid !important;
         grid-template-columns: 1fr !important;
         width: 100% !important;
         max-width: 100% !important;
       }
-      .service-card {
+      .service-card, .tech-category {
         width: 100% !important;
         min-width: 0 !important;
         box-sizing: border-box !important;
