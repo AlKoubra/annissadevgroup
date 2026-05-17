@@ -439,9 +439,9 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
   .section-title { font-size: clamp(1.8rem, 5.5vw, 2.4rem); }
   .section-desc { font-size: 15px; }
 
-  /* Services — 2 colonnes sur tablette uniquement */
-  .services-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .service-card { padding: 28px 22px; }
+  /* Services — 1 colonne sur mobile */
+  .services-grid { grid-template-columns: 1fr !important; gap: 14px; }
+  .service-card { padding: 28px 22px; min-width: 0; width: 100%; box-sizing: border-box; }
 }
 
 /* ── Petits écrans (≤ 600px) — 1 colonne ── */
