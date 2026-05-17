@@ -10,6 +10,19 @@
   <style>
     /* Responsive overrides for inline-styled elements */
     @media (max-width: 768px) {
+      /* Services — 1 carte par ligne sur téléphone */
+      .services-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .service-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+
       /* Credentials band badges wrap */
       #credentialsBand > div:last-child { gap: 8px !important; }
       #credentialsBand span[style*="font-size:13px"] { font-size: 12px !important; }
