@@ -325,9 +325,29 @@ const buildEmailHTML = (data, type, settings) => {
 <body style="margin:0;padding:0;background:#eef0f8;font-family:'Segoe UI',Arial,sans-serif">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#eef0f8;padding:32px 16px"><tr><td align="center">
 <table width="620" cellpadding="0" cellspacing="0" style="max-width:620px;width:100%">
-  <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:36px 40px;border-radius:12px 12px 0 0">
+  <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:32px 40px;border-radius:12px 12px 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td><div style="font-size:24px;font-weight:800;color:#f0b429">${co.name || 'AnNissa Dev Group'}</div></td>
+      <td>
+        <table cellpadding="0" cellspacing="0"><tr>
+          <td style="padding-right:14px;vertical-align:middle">
+            <svg width="48" height="48" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="60" height="60" rx="12" fill="#080c32"/>
+              <circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/>
+              <circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/>
+              <circle cx="30" cy="36" r="3" fill="#f0b429"/>
+              <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle cx="30" cy="6" r="2" fill="#f0b429"/>
+              <circle cx="30" cy="54" r="2" fill="#f0b429"/>
+              <circle cx="6" cy="30" r="2" fill="#f0b429"/>
+              <circle cx="54" cy="30" r="2" fill="#f0b429"/>
+            </svg>
+          </td>
+          <td style="vertical-align:middle">
+            <div style="font-size:22px;font-weight:800;color:#f0b429;line-height:1">${co.name || 'AnNissa Dev Group'}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:4px;letter-spacing:.5px">Tech with Purpose and Dignity</div>
+          </td>
+        </tr></table>
+      </td>
       <td align="right"><div style="background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);border-radius:8px;padding:10px 16px;display:inline-block">
         <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase">${label}</div>
         <div style="font-size:18px;font-weight:800;color:#f0b429">${data.number}</div>
@@ -371,8 +391,25 @@ const buildEmailHTML = (data, type, settings) => {
     <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.email, co.website].filter(Boolean).join(' · ')}</p>
   </td></tr>
   <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:20px 40px;border-radius:0 0 12px 12px">
-    <span style="font-size:13px;font-weight:700;color:#f0b429">${co.name || 'AnNissa Dev Group'}</span>
-    <span style="font-size:10px;color:rgba(255,255,255,.3);margin-left:8px">© ${new Date().getFullYear()}</span>
+    <table cellpadding="0" cellspacing="0"><tr>
+      <td style="padding-right:10px;vertical-align:middle">
+        <svg width="28" height="28" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="12" fill="#080c32"/>
+          <circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/>
+          <circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/>
+          <circle cx="30" cy="36" r="3" fill="#f0b429"/>
+          <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="30" cy="6" r="2" fill="#f0b429"/>
+          <circle cx="30" cy="54" r="2" fill="#f0b429"/>
+          <circle cx="6" cy="30" r="2" fill="#f0b429"/>
+          <circle cx="54" cy="30" r="2" fill="#f0b429"/>
+        </svg>
+      </td>
+      <td style="vertical-align:middle">
+        <span style="font-size:13px;font-weight:700;color:#f0b429">${co.name || 'AnNissa Dev Group'}</span>
+        <span style="font-size:10px;color:rgba(255,255,255,.3);margin-left:8px">© ${new Date().getFullYear()}</span>
+      </td>
+    </tr></table>
   </td></tr>
 </table></td></tr></table></body></html>`;
 };
