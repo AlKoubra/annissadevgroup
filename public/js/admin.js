@@ -1889,29 +1889,29 @@ const renderMessages = async (main) => {
   }
 
   list.innerHTML = state.messages.map(m => `
-    <div id="msg-${m.id}" style="background:#fff;border:1px solid ${m.read ? '#e2e8f0' : '#c7d2fe'};border-left:4px solid ${m.read ? '#e2e8f0' : '#6366f1'};border-radius:12px;padding:20px 24px;margin-bottom:12px;cursor:pointer;transition:all .2s" onclick="expandMsg('${m.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-            ${!m.read ? '<span style="width:8px;height:8px;border-radius:50%;background:#6366f1;display:inline-block;flex-shrink:0"></span>' : ''}
-            <strong style="font-size:14px;color:#0d1347">${m.name || '—'}</strong>
-            <span style="font-size:12px;color:#94a3b8">${m.email || ''}</span>
-            ${m.phone ? `<span style="font-size:12px;color:#94a3b8">· ${m.phone}</span>` : ''}
+    <div id="msg-${m.id}" class="msg-card ${m.read ? '' : 'msg-unread'}" onclick="expandMsg('${m.id}')">
+      <div class="msg-card-row">
+        <div class="msg-content">
+          <div class="msg-meta-line">
+            ${!m.read ? '<span class="msg-dot"></span>' : ''}
+            <strong class="msg-name">${m.name || '—'}</strong>
+            <span class="msg-contact">${m.email || ''}</span>
+            ${m.phone ? `<span class="msg-contact">· ${m.phone}</span>` : ''}
           </div>
-          <div style="font-size:12px;color:#6366f1;font-weight:600;margin-bottom:6px">${projectTypes[m.projectType] || m.projectType || '—'}</div>
-          <p style="margin:0;font-size:13px;color:#475569;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:600px" id="preview-${m.id}">${m.message || ''}</p>
+          <div class="msg-type">${projectTypes[m.projectType] || m.projectType || '—'}</div>
+          <p class="msg-preview" id="preview-${m.id}">${m.message || ''}</p>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0">
-          <span style="font-size:11px;color:#94a3b8;white-space:nowrap">${fmt.date(m.createdAt)}</span>
-          <div style="display:flex;gap:6px">
-            ${!m.read ? `<button onclick="event.stopPropagation();markRead('${m.id}')" style="padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid #6366f1;background:#eef2ff;color:#6366f1;cursor:pointer;font-weight:600">Lu</button>` : ''}
-            <button onclick="event.stopPropagation();deleteMsg('${m.id}')" style="padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid #fecaca;background:#fef2f2;color:#ef4444;cursor:pointer;font-weight:600">Suppr.</button>
+        <div class="msg-actions">
+          <span class="msg-date">${fmt.date(m.createdAt)}</span>
+          <div class="msg-btns">
+            ${!m.read ? `<button onclick="event.stopPropagation();markRead('${m.id}')" class="btn-read">Lu</button>` : ''}
+            <button onclick="event.stopPropagation();deleteMsg('${m.id}')" class="btn-del">Suppr.</button>
           </div>
         </div>
       </div>
-      <div id="body-${m.id}" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid #f1f5f9">
+      <div id="body-${m.id}" class="msg-body" style="display:none">
         <p style="margin:0;font-size:13px;color:#334155;line-height:1.7;white-space:pre-wrap">${m.message || ''}</p>
-        <a href="mailto:${m.email}?subject=Re: Votre demande ${projectTypes[m.projectType] || ''}" style="display:inline-block;margin-top:12px;padding:8px 18px;background:#0d1347;color:#f0b429;font-size:12px;font-weight:700;border-radius:8px;text-decoration:none">Répondre par email →</a>
+        <a href="mailto:${m.email}?subject=Re: Votre demande ${projectTypes[m.projectType] || ''}" class="btn-reply">Répondre par email →</a>
       </div>
     </div>`).join('');
 };

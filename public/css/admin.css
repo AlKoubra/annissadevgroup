@@ -384,6 +384,98 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   .table-actions { flex-wrap: wrap; }
 }
 
+/* ===== MESSAGE CARDS ===== */
+.msg-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.msg-card.msg-unread {
+  border-color: #c7d2fe;
+  border-left-color: #6366f1;
+}
+.msg-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.msg-content { flex: 1; min-width: 0; }
+.msg-meta-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.msg-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #6366f1;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.msg-name { font-size: 14px; color: #0d1347; }
+.msg-contact { font-size: 12px; color: #94a3b8; word-break: break-all; }
+.msg-type { font-size: 12px; color: #6366f1; font-weight: 600; margin-bottom: 6px; }
+.msg-preview {
+  margin: 0;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.msg-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.msg-date { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+.msg-btns { display: flex; gap: 6px; }
+.btn-read {
+  padding: 4px 10px; font-size: 11px; border-radius: 6px;
+  border: 1px solid #6366f1; background: #eef2ff; color: #6366f1;
+  cursor: pointer; font-weight: 600;
+}
+.btn-del {
+  padding: 4px 10px; font-size: 11px; border-radius: 6px;
+  border: 1px solid #fecaca; background: #fef2f2; color: #ef4444;
+  cursor: pointer; font-weight: 600;
+}
+.msg-body {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+.btn-reply {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 18px;
+  background: #0d1347;
+  color: #f0b429;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .msg-card { padding: 14px 16px; }
+  .msg-card-row { flex-direction: column; gap: 10px; }
+  .msg-actions { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+  .msg-preview { white-space: normal; }
+  .msg-contact { word-break: break-all; }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
