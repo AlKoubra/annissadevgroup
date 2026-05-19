@@ -360,17 +360,7 @@ const buildEmailHTML = (data, type, settings) => {
       <td>
         <table cellpadding="0" cellspacing="0"><tr>
           <td style="padding-right:14px;vertical-align:middle">
-            <svg width="48" height="48" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="60" height="60" rx="12" fill="#080c32"/>
-              <circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/>
-              <circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/>
-              <circle cx="30" cy="36" r="3" fill="#f0b429"/>
-              <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
-              <circle cx="30" cy="6" r="2" fill="#f0b429"/>
-              <circle cx="30" cy="54" r="2" fill="#f0b429"/>
-              <circle cx="6" cy="30" r="2" fill="#f0b429"/>
-              <circle cx="54" cy="30" r="2" fill="#f0b429"/>
-            </svg>
+            <img src="https://annissadevgroup.com/favicon-192.png" width="48" height="48" alt="AnNissa" style="display:block;border-radius:10px">
           </td>
           <td style="vertical-align:middle">
             <div style="font-size:22px;font-weight:800;color:#f0b429;line-height:1">${co.name || 'AnNissa Dev Group'}</div>
@@ -423,17 +413,7 @@ const buildEmailHTML = (data, type, settings) => {
   <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:20px 40px;border-radius:0 0 12px 12px">
     <table cellpadding="0" cellspacing="0"><tr>
       <td style="padding-right:10px;vertical-align:middle">
-        <svg width="28" height="28" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="60" height="60" rx="12" fill="#080c32"/>
-          <circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/>
-          <circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/>
-          <circle cx="30" cy="36" r="3" fill="#f0b429"/>
-          <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <circle cx="30" cy="6" r="2" fill="#f0b429"/>
-          <circle cx="30" cy="54" r="2" fill="#f0b429"/>
-          <circle cx="6" cy="30" r="2" fill="#f0b429"/>
-          <circle cx="54" cy="30" r="2" fill="#f0b429"/>
-        </svg>
+        <img src="https://annissadevgroup.com/favicon-192.png" width="28" height="28" alt="AnNissa" style="display:block;border-radius:6px">
       </td>
       <td style="vertical-align:middle">
         <span style="font-size:13px;font-weight:700;color:#f0b429">${co.name || 'AnNissa Dev Group'}</span>
