@@ -763,6 +763,7 @@ const openQuoteForm = (id = null, preClientId = null) => {
   const cur = state.settings.company?.currency || 'FCFA';
   const today = new Date().toISOString().split('T')[0];
   const validUntil = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+  const isFormation = q.type === 'formation';
 
   openModal(id ? `Devis ${q.number}` : 'Nouveau devis', `
     <div class="form-grid">
@@ -783,7 +784,39 @@ const openQuoteForm = (id = null, preClientId = null) => {
         <input id="qf_valid" type="date" value="${q.validUntil || validUntil}">
       </div>
     </div>
-    <div style="margin:20px 0">
+    <div style="margin:0 0 18px;display:flex;gap:20px;align-items:center;padding:10px 14px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.15);border-radius:8px">
+      <span style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Type</span>
+      <label style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px">
+        <input type="radio" name="qf_type" id="qf_type_standard" value="standard" ${!isFormation ? 'checked' : ''} onchange="toggleFormationType('q','standard')">
+        Standard
+      </label>
+      <label style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gold);font-weight:600">
+        <input type="radio" name="qf_type" id="qf_type_formation" value="formation" ${isFormation ? 'checked' : ''} onchange="toggleFormationType('q','formation')">
+        Formation
+      </label>
+    </div>
+    <div id="q_formation_panel" style="display:${isFormation ? 'block' : 'none'};margin:0 0 20px;padding:16px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.25);border-radius:10px">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Nom de la formation</label>
+        <input id="qf_formation_name" value="${q.formationName || ''}" placeholder="Ex : Formation Gestion E-commerce..." oninput="calcFormationQ()">
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Frais d'inscription (${cur})</label>
+          <input id="qf_inscription" type="number" min="0" value="${q.inscription || 0}" oninput="calcFormationQ()">
+        </div>
+        <div class="form-group">
+          <label>Mensualité — montant/mois (${cur})</label>
+          <input id="qf_mensualite" type="number" min="0" value="${q.mensualite || 0}" oninput="calcFormationQ()">
+        </div>
+        <div class="form-group">
+          <label>Nombre de mensualités</label>
+          <input id="qf_nb_mois" type="number" min="0" value="${q.nbMois || 1}" oninput="calcFormationQ()">
+        </div>
+      </div>
+      <div id="q_formation_totals" class="totals-box" style="margin-top:12px"></div>
+    </div>
+    <div id="q_standard_panel" style="display:${isFormation ? 'none' : 'block'};margin:20px 0">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <label style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Prestations</label>
         <button class="btn-admin btn-admin-outline btn-admin-sm" onclick="addQuoteItem()">+ Ajouter une ligne</button>
@@ -795,12 +828,12 @@ const openQuoteForm = (id = null, preClientId = null) => {
         </table>
       </div>
     </div>
-    <div class="totals-box">
+    <div id="q_std_total" class="totals-box" style="display:${isFormation ? 'none' : 'block'}">
       <div class="total-row final"><span>TOTAL</span><span id="q_total">—</span></div>
     </div>
     <div class="form-group" style="margin-top:16px">
       <label>Notes / Conditions de paiement</label>
-      <textarea id="qf_notes" rows="3">${q.notes || 'Devis valable 30 jours à compter de la date d\'émission.\nConditions de paiement : 50% à la commande, 50% à la mise en ligne.'}</textarea>
+      <textarea id="qf_notes" rows="3">${q.notes || 'Devis valable 30 jours à compter de la date d\'émission.\nConditions de paiement : 50% à l\'inscription, puis mensualités selon planning.'}</textarea>
     </div>
     <div class="form-actions">
       <button class="btn-admin btn-admin-outline" onclick="closeModal()">Annuler</button>
@@ -809,7 +842,7 @@ const openQuoteForm = (id = null, preClientId = null) => {
       </button>
     </div>
   `, 'modal-lg');
-  setTimeout(() => { renderQuoteItems(); }, 10);
+  setTimeout(() => { renderQuoteItems(); if (isFormation) calcFormationQ(); }, 10);
 };
 
 const saveQuote = async (id) => {
@@ -817,21 +850,38 @@ const saveQuote = async (id) => {
   const client = state.clients.find(c => c.id === clientId);
   const projectId = document.getElementById('qf_project')?.value;
   const project = state.projects.find(p => p.id === projectId);
-  const taxRate = 0;
-  const subtotal = quoteItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
-  const taxAmount = 0;
-  const total = subtotal;
 
   if (!clientId) { toast('Veuillez sélectionner un client', 'error'); return; }
-  if (!quoteItems.length || !quoteItems[0].description) { toast('Ajoutez au moins une prestation', 'error'); return; }
+
+  const isFormation = document.getElementById('qf_type_formation')?.checked;
+  let items, total, extraData;
+
+  if (isFormation) {
+    const formationName = document.getElementById('qf_formation_name')?.value?.trim() || 'Formation';
+    const inscription = parseFloat(document.getElementById('qf_inscription')?.value) || 0;
+    const mensualite = parseFloat(document.getElementById('qf_mensualite')?.value) || 0;
+    const nbMois = parseInt(document.getElementById('qf_nb_mois')?.value) || 0;
+    items = [];
+    if (inscription > 0) items.push({ description: `Frais d'inscription — ${formationName}`, quantity: 1, unitPrice: inscription });
+    if (mensualite > 0 && nbMois > 0) items.push({ description: `Mensualité — ${formationName}`, quantity: nbMois, unitPrice: mensualite });
+    if (!items.length) { toast('Renseignez au moins les frais d\'inscription ou une mensualité', 'error'); return; }
+    total = inscription + mensualite * nbMois;
+    extraData = { type: 'formation', formationName, inscription, mensualite, nbMois };
+  } else {
+    if (!quoteItems.length || !quoteItems[0].description) { toast('Ajoutez au moins une prestation', 'error'); return; }
+    items = quoteItems;
+    total = quoteItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
+    extraData = { type: 'standard', formationName: null, inscription: null, mensualite: null, nbMois: null };
+  }
 
   const data = {
     clientId, clientName: client?.name || '',
     projectId: projectId || null, projectName: project?.name || '',
     date: document.getElementById('qf_date')?.value,
     validUntil: document.getElementById('qf_valid')?.value,
-    items: quoteItems, taxRate, subtotal, taxAmount, total,
-    notes: document.getElementById('qf_notes')?.value?.trim()
+    items, taxRate: 0, subtotal: total, taxAmount: 0, total,
+    notes: document.getElementById('qf_notes')?.value?.trim(),
+    ...extraData
   };
   if (id) {
     const updated = await api.put(`/api/quotes/${id}`, data);
@@ -977,6 +1027,7 @@ const openInvoiceForm = (id = null) => {
   ).join('');
   const existingTaux = inv.acompteTaux != null ? inv.acompteTaux
     : (inv.acompte && inv.total ? Math.round(inv.acompte / inv.total * 100) : 0);
+  const isInvFormation = inv.type === 'formation';
 
   openModal(id ? `Facture ${inv.number}` : 'Nouvelle facture', `
     <div class="form-grid">
@@ -1001,24 +1052,58 @@ const openInvoiceForm = (id = null) => {
         <input id="if_due" type="date" value="${inv.dueDate || due}">
       </div>
     </div>
-    <div class="form-group" style="margin-bottom:20px;padding:14px 16px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.2);border-radius:10px">
-      <label style="color:var(--gold)">Importer depuis un devis client</label>
-      <select id="if_quote_source" onchange="loadQuoteItems(this.value)" style="margin-top:6px">
-        <option value="">— Sélectionner un devis —</option>
-        ${quoteOptions}
-      </select>
-      <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Les prestations du devis sélectionné remplaceront les lignes ci-dessous automatiquement.</p>
+    <div style="margin:0 0 18px;display:flex;gap:20px;align-items:center;padding:10px 14px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.15);border-radius:8px">
+      <span style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Type</span>
+      <label style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px">
+        <input type="radio" name="if_type" id="if_type_standard" value="standard" ${!isInvFormation ? 'checked' : ''} onchange="toggleFormationType('i','standard')">
+        Standard
+      </label>
+      <label style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gold);font-weight:600">
+        <input type="radio" name="if_type" id="if_type_formation" value="formation" ${isInvFormation ? 'checked' : ''} onchange="toggleFormationType('i','formation')">
+        Formation
+      </label>
     </div>
-    <div style="margin:20px 0">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <label style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Prestations facturées</label>
-        <button class="btn-admin btn-admin-outline btn-admin-sm" onclick="addInvItem()">+ Ajouter</button>
+    <div id="i_formation_panel" style="display:${isInvFormation ? 'block' : 'none'};margin:0 0 20px;padding:16px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.25);border-radius:10px">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Nom de la formation</label>
+        <input id="if_formation_name" value="${inv.formationName || ''}" placeholder="Ex : Formation Gestion E-commerce..." oninput="calcFormationI()">
       </div>
-      <div class="table-wrap" style="border:1px solid var(--card-border);border-radius:var(--radius-sm)">
-        <table class="items-table">
-          <thead><tr><th>Description</th><th>Qté</th><th>Prix (${cur})</th><th>Total</th><th></th></tr></thead>
-          <tbody id="invItemsBody"></tbody>
-        </table>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Frais d'inscription (${cur})</label>
+          <input id="if_inscription" type="number" min="0" value="${inv.inscription || 0}" oninput="calcFormationI()">
+        </div>
+        <div class="form-group">
+          <label>Mensualité — montant/mois (${cur})</label>
+          <input id="if_mensualite" type="number" min="0" value="${inv.mensualite || 0}" oninput="calcFormationI()">
+        </div>
+        <div class="form-group">
+          <label>Nombre de mensualités</label>
+          <input id="if_nb_mois" type="number" min="0" value="${inv.nbMois || 1}" oninput="calcFormationI()">
+        </div>
+      </div>
+      <div id="i_formation_subtotals" class="totals-box" style="margin-top:12px"></div>
+    </div>
+    <div id="i_standard_panel" style="display:${isInvFormation ? 'none' : 'block'}">
+      <div class="form-group" style="margin-bottom:20px;padding:14px 16px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.2);border-radius:10px">
+        <label style="color:var(--gold)">Importer depuis un devis client</label>
+        <select id="if_quote_source" onchange="loadQuoteItems(this.value)" style="margin-top:6px">
+          <option value="">— Sélectionner un devis —</option>
+          ${quoteOptions}
+        </select>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Les prestations du devis sélectionné remplaceront les lignes ci-dessous automatiquement.</p>
+      </div>
+      <div style="margin:0 0 20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <label style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Prestations facturées</label>
+          <button class="btn-admin btn-admin-outline btn-admin-sm" onclick="addInvItem()">+ Ajouter</button>
+        </div>
+        <div class="table-wrap" style="border:1px solid var(--card-border);border-radius:var(--radius-sm)">
+          <table class="items-table">
+            <thead><tr><th>Description</th><th>Qté</th><th>Prix (${cur})</th><th>Total</th><th></th></tr></thead>
+            <tbody id="invItemsBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="form-group" style="margin-bottom:16px;padding:14px 16px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px">
@@ -1032,7 +1117,7 @@ const openInvoiceForm = (id = null) => {
       </div>
     </div>
     <div class="totals-box">
-      <div class="total-row final"><span>TOTAL DEVIS</span><span id="i_total">—</span></div>
+      <div class="total-row final"><span>TOTAL</span><span id="i_total">—</span></div>
       <div class="total-row" style="color:var(--success)">
         <span>Acompte versé (<span id="i_taux_label">${existingTaux || 0}</span>%)</span>
         <span id="i_acompte_display">—</span>
@@ -1053,7 +1138,7 @@ const openInvoiceForm = (id = null) => {
       </button>
     </div>
   `, 'modal-lg');
-  setTimeout(() => renderInvItems(), 10);
+  setTimeout(() => { renderInvItems(); if (isInvFormation) calcFormationI(); }, 10);
 };
 
 const onClientChangeInvoice = () => {
@@ -1070,8 +1155,22 @@ const loadQuoteItems = (quoteId) => {
   if (!quoteId) return;
   const quote = state.quotes.find(q => q.id === quoteId);
   if (!quote) return;
-  invoiceItems = JSON.parse(JSON.stringify(quote.items));
-  renderInvItems();
+  if (quote.type === 'formation') {
+    const fmRad = document.getElementById('if_type_formation');
+    if (fmRad) { fmRad.checked = true; toggleFormationType('i', 'formation'); }
+    const fn = document.getElementById('if_formation_name');
+    const ins = document.getElementById('if_inscription');
+    const men = document.getElementById('if_mensualite');
+    const nb = document.getElementById('if_nb_mois');
+    if (fn) fn.value = quote.formationName || '';
+    if (ins) ins.value = quote.inscription || 0;
+    if (men) men.value = quote.mensualite || 0;
+    if (nb) nb.value = quote.nbMois || 1;
+    calcFormationI();
+  } else {
+    invoiceItems = JSON.parse(JSON.stringify(quote.items));
+    renderInvItems();
+  }
 };
 
 const addInvItem = () => { invoiceItems.push({ description: '', quantity: 1, unitPrice: 0 }); renderInvItems(); };
@@ -1098,7 +1197,55 @@ const applyAcomptePercent = (pct) => {
   if (input) { input.value = pct; calcInvTotals(); }
 };
 
+const toggleFormationType = (prefix, type) => {
+  const isFormation = type === 'formation';
+  const stdPanel = document.getElementById(`${prefix}_standard_panel`);
+  const frmPanel = document.getElementById(`${prefix}_formation_panel`);
+  const stdTotal = document.getElementById(`${prefix}_std_total`);
+  if (stdPanel) stdPanel.style.display = isFormation ? 'none' : 'block';
+  if (frmPanel) frmPanel.style.display = isFormation ? 'block' : 'none';
+  if (stdTotal) stdTotal.style.display = isFormation ? 'none' : 'block';
+  if (isFormation) { if (prefix === 'q') calcFormationQ(); else calcFormationI(); }
+  else { if (prefix === 'q') calcTotals(); else calcInvTotals(); }
+};
+
+const calcFormationQ = () => {
+  const inscription = parseFloat(document.getElementById('qf_inscription')?.value) || 0;
+  const mensualite  = parseFloat(document.getElementById('qf_mensualite')?.value)  || 0;
+  const nbMois      = parseInt(document.getElementById('qf_nb_mois')?.value)        || 0;
+  const total       = inscription + mensualite * nbMois;
+  const cur         = state.settings.company?.currency || 'FCFA';
+  const el          = document.getElementById('q_formation_totals');
+  if (el) el.innerHTML = `
+    <div class="total-row"><span>Frais d'inscription</span><span>${fmt.currency(inscription, cur)}</span></div>
+    <div class="total-row"><span>Mensualités (${nbMois} × ${fmt.currency(mensualite, cur)})</span><span>${fmt.currency(mensualite * nbMois, cur)}</span></div>
+    <div class="total-row final"><span>TOTAL</span><span>${fmt.currency(total, cur)}</span></div>
+  `;
+};
+
+const calcFormationI = () => {
+  const inscription = parseFloat(document.getElementById('if_inscription')?.value) || 0;
+  const mensualite  = parseFloat(document.getElementById('if_mensualite')?.value)  || 0;
+  const nbMois      = parseInt(document.getElementById('if_nb_mois')?.value)        || 0;
+  const total       = inscription + mensualite * nbMois;
+  const cur         = state.settings.company?.currency || 'FCFA';
+  const subtEl      = document.getElementById('i_formation_subtotals');
+  if (subtEl) subtEl.innerHTML = `
+    <div class="total-row"><span>Frais d'inscription</span><span>${fmt.currency(inscription, cur)}</span></div>
+    <div class="total-row"><span>Mensualités (${nbMois} × ${fmt.currency(mensualite, cur)})</span><span>${fmt.currency(mensualite * nbMois, cur)}</span></div>
+  `;
+  const taux    = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
+  const acompte = Math.round(total * taux / 100);
+  const reste   = Math.max(0, total - acompte);
+  const el      = (id) => document.getElementById(id);
+  if (el('i_total'))           el('i_total').textContent           = fmt.currency(total, cur);
+  if (el('i_taux_label'))      el('i_taux_label').textContent      = taux;
+  if (el('i_acompte_display')) el('i_acompte_display').textContent = acompte > 0 ? `- ${fmt.currency(acompte, cur)}` : '—';
+  if (el('i_reste'))           el('i_reste').textContent           = fmt.currency(reste, cur);
+};
+
 const calcInvTotals = () => {
+  if (document.getElementById('if_type_formation')?.checked) { calcFormationI(); return; }
   const total   = invoiceItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
   const taux    = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
   const acompte = Math.round(total * taux / 100);
@@ -1115,20 +1262,41 @@ const saveInvoice = async (id) => {
   const clientId  = document.getElementById('if_client')?.value;
   const client    = state.clients.find(c => c.id === clientId);
   const quoteId   = document.getElementById('if_quote_source')?.value || undefined;
-  const total     = invoiceItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
-  const acompteTaux = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
-  const acompte   = Math.round(total * acompteTaux / 100);
-  const reste     = Math.max(0, total - acompte);
   if (!clientId) { toast('Veuillez sélectionner un client', 'error'); return; }
+
+  const isFormation = document.getElementById('if_type_formation')?.checked;
+  let items, total, extraData;
+
+  if (isFormation) {
+    const formationName = document.getElementById('if_formation_name')?.value?.trim() || 'Formation';
+    const inscription   = parseFloat(document.getElementById('if_inscription')?.value) || 0;
+    const mensualite    = parseFloat(document.getElementById('if_mensualite')?.value)  || 0;
+    const nbMois        = parseInt(document.getElementById('if_nb_mois')?.value)        || 0;
+    items = [];
+    if (inscription > 0) items.push({ description: `Frais d'inscription — ${formationName}`, quantity: 1, unitPrice: inscription });
+    if (mensualite > 0 && nbMois > 0) items.push({ description: `Mensualité — ${formationName}`, quantity: nbMois, unitPrice: mensualite });
+    if (!items.length) { toast('Renseignez au moins les frais d\'inscription ou une mensualité', 'error'); return; }
+    total = inscription + mensualite * nbMois;
+    extraData = { type: 'formation', formationName, inscription, mensualite, nbMois };
+  } else {
+    items = invoiceItems;
+    total = invoiceItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
+    extraData = { type: 'standard', formationName: null, inscription: null, mensualite: null, nbMois: null };
+  }
+
+  const acompteTaux = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
+  const acompte     = Math.round(total * acompteTaux / 100);
+  const reste       = Math.max(0, total - acompte);
   const data = {
     clientId, clientName: client?.name || '',
     quoteId,
     status: document.getElementById('if_status')?.value,
     issueDate: document.getElementById('if_date')?.value,
     dueDate: document.getElementById('if_due')?.value,
-    items: invoiceItems, taxRate: 0, subtotal: total, taxAmount: 0, total,
+    items, taxRate: 0, subtotal: total, taxAmount: 0, total,
     acompteTaux, acompte, reste,
-    notes: document.getElementById('if_notes')?.value?.trim()
+    notes: document.getElementById('if_notes')?.value?.trim(),
+    ...extraData
   };
   if (id) {
     const updated = await api.put(`/api/invoices/${id}`, data);
@@ -1238,7 +1406,7 @@ const buildPDF = (doc, data, type = 'quote') => {
   doc.text(co.website || 'annissadevgroup.com', 34, 41);
 
   // ── Document type badge (top-right) ──────────────────────────────────────
-  const badgeW = 52, badgeH = 20, badgeX = pageW - badgeW - 12, badgeY = 8;
+  const badgeW = 52, badgeH = data.type === 'formation' ? 26 : 20, badgeX = pageW - badgeW - 12, badgeY = 8;
   doc.setFillColor(...gold);
   doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 3, 3, 'F');
   doc.setTextColor(...navy);
@@ -1247,6 +1415,11 @@ const buildPDF = (doc, data, type = 'quote') => {
   doc.text(label, badgeX + badgeW / 2, badgeY + 8, { align: 'center' });
   doc.setFontSize(8);
   doc.text(data.number, badgeX + badgeW / 2, badgeY + 15, { align: 'center' });
+  if (data.type === 'formation') {
+    doc.setFontSize(6.5);
+    doc.setFont('helvetica', 'bold');
+    doc.text('FORMATION', badgeX + badgeW / 2, badgeY + 22, { align: 'center' });
+  }
 
   // Status pill
 
@@ -1551,6 +1724,7 @@ const previewDocument = (type, id) => {
           <!-- Badge document -->
           <div style="text-align:right;flex-shrink:0">
             <div style="background:#f0b429;color:#0d1347;font-weight:900;font-size:16px;letter-spacing:3px;padding:9px 22px;border-radius:8px;display:inline-block;margin-bottom:8px">${label}</div>
+            ${data.type === 'formation' ? '<div style="background:#0d1347;color:#f0b429;font-weight:800;font-size:10px;letter-spacing:2px;padding:3px 12px;border-radius:5px;border:1px solid #f0b429;display:inline-block;margin-bottom:6px">FORMATION</div><br>' : ''}
             <div style="font-size:20px;font-weight:800;color:#fff">${data.number}</div>
           </div>
         </div>
