@@ -1025,8 +1025,7 @@ const openInvoiceForm = (id = null) => {
   const quoteOptions = clientQuotes.map(q =>
     `<option value="${q.id}" ${inv.quoteId === q.id ? 'selected' : ''}>${q.number} — ${q.projectName || ''} (${fmt.currency(q.total, cur)})</option>`
   ).join('');
-  const existingTaux = inv.acompteTaux != null ? inv.acompteTaux
-    : (inv.acompte && inv.total ? Math.round(inv.acompte / inv.total * 100) : 0);
+  const existingAcompte = inv.acompte || 0;
   const isInvFormation = inv.type === 'formation';
 
   openModal(id ? `Facture ${inv.number}` : 'Nouvelle facture', `
@@ -1050,6 +1049,10 @@ const openInvoiceForm = (id = null) => {
       <div class="form-group">
         <label>Date d'échéance</label>
         <input id="if_due" type="date" value="${inv.dueDate || due}">
+      </div>
+      <div class="form-group form-full">
+        <label>Projet</label>
+        <input id="if_project" value="${inv.projectName || ''}" placeholder="Nom du projet...">
       </div>
     </div>
     <div style="margin:0 0 18px;display:flex;gap:20px;align-items:center;padding:10px 14px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.15);border-radius:8px">
@@ -1107,19 +1110,16 @@ const openInvoiceForm = (id = null) => {
       </div>
     </div>
     <div class="form-group" style="margin-bottom:16px;padding:14px 16px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px">
-      <label style="color:var(--success)">Taux d'acompte déjà versé</label>
-      <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-        <input id="if_acompte_taux" type="number" min="0" max="100" value="${existingTaux}" placeholder="0" oninput="calcInvTotals()" style="width:80px;text-align:center;font-size:18px;font-weight:700;background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.3)">
-        <span style="font-size:18px;font-weight:700;color:var(--success)">%</span>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-left:8px">
-          ${[25,30,40,50,60,100].map(p => `<button type="button" onclick="applyAcomptePercent(${p})" style="padding:5px 9px;font-size:11px;font-weight:700;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.4);color:var(--gold);border-radius:6px;cursor:pointer" onmouseover="this.style.background='rgba(240,180,41,0.25)'" onmouseout="this.style.background='rgba(240,180,41,0.1)'">${p}%</button>`).join('')}
-        </div>
+      <label style="color:var(--success)">Acompte déjà versé (${cur})</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+        <input id="if_acompte_montant" type="number" min="0" value="${existingAcompte}" placeholder="0" oninput="calcInvTotals()" style="flex:1;text-align:right;font-size:18px;font-weight:700;background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.3)">
+        <span style="font-size:14px;font-weight:700;color:var(--success);white-space:nowrap">${cur}</span>
       </div>
     </div>
     <div class="totals-box">
       <div class="total-row final"><span>TOTAL</span><span id="i_total">—</span></div>
       <div class="total-row" style="color:var(--success)">
-        <span>Acompte versé (<span id="i_taux_label">${existingTaux || 0}</span>%)</span>
+        <span>Acompte versé (<span id="i_taux_label">0</span>%)</span>
         <span id="i_acompte_display">—</span>
       </div>
       <div class="total-row final" style="border-top:2px solid var(--gold);margin-top:6px;padding-top:10px">
@@ -1155,6 +1155,8 @@ const loadQuoteItems = (quoteId) => {
   if (!quoteId) return;
   const quote = state.quotes.find(q => q.id === quoteId);
   if (!quote) return;
+  const proj = document.getElementById('if_project');
+  if (proj && quote.projectName) proj.value = quote.projectName;
   if (quote.type === 'formation') {
     const fmRad = document.getElementById('if_type_formation');
     if (fmRad) { fmRad.checked = true; toggleFormationType('i', 'formation'); }
@@ -1192,10 +1194,6 @@ const renderInvItems = () => {
   calcInvTotals();
 };
 
-const applyAcomptePercent = (pct) => {
-  const input = document.getElementById('if_acompte_taux');
-  if (input) { input.value = pct; calcInvTotals(); }
-};
 
 const toggleFormationType = (prefix, type) => {
   const isFormation = type === 'formation';
@@ -1234,23 +1232,20 @@ const calcFormationI = () => {
     <div class="total-row"><span>Frais d'inscription</span><span>${fmt.currency(inscription, cur)}</span></div>
     <div class="total-row"><span>Mensualités (${nbMois} × ${fmt.currency(mensualite, cur)})</span><span>${fmt.currency(mensualite * nbMois, cur)}</span></div>
   `;
-  const taux    = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
-  const acompte = Math.round(total * taux / 100);
-  const reste   = Math.max(0, total - acompte);
-  const el      = (id) => document.getElementById(id);
-  if (el('i_total'))           el('i_total').textContent           = fmt.currency(total, cur);
-  if (el('i_taux_label'))      el('i_taux_label').textContent      = taux;
-  if (el('i_acompte_display')) el('i_acompte_display').textContent = acompte > 0 ? `- ${fmt.currency(acompte, cur)}` : '—';
-  if (el('i_reste'))           el('i_reste').textContent           = fmt.currency(reste, cur);
+  _updateInvAcompteTotals(total, cur);
 };
 
 const calcInvTotals = () => {
   if (document.getElementById('if_type_formation')?.checked) { calcFormationI(); return; }
-  const total   = invoiceItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
-  const taux    = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
-  const acompte = Math.round(total * taux / 100);
+  const total = invoiceItems.reduce((s, i) => s + (i.quantity * i.unitPrice), 0);
+  const cur   = state.settings.company?.currency || 'FCFA';
+  _updateInvAcompteTotals(total, cur);
+};
+
+const _updateInvAcompteTotals = (total, cur) => {
+  const acompte = Math.min(parseFloat(document.getElementById('if_acompte_montant')?.value) || 0, total);
+  const taux    = total > 0 ? Math.round(acompte / total * 100) : 0;
   const reste   = Math.max(0, total - acompte);
-  const cur     = state.settings.company?.currency || 'FCFA';
   const el      = (id) => document.getElementById(id);
   if (el('i_total'))           el('i_total').textContent           = fmt.currency(total, cur);
   if (el('i_taux_label'))      el('i_taux_label').textContent      = taux;
@@ -1284,11 +1279,13 @@ const saveInvoice = async (id) => {
     extraData = { type: 'standard', formationName: null, inscription: null, mensualite: null, nbMois: null };
   }
 
-  const acompteTaux = parseFloat(document.getElementById('if_acompte_taux')?.value) || 0;
-  const acompte     = Math.round(total * acompteTaux / 100);
+  const acompte     = Math.min(parseFloat(document.getElementById('if_acompte_montant')?.value) || 0, total);
+  const acompteTaux = total > 0 ? Math.round(acompte / total * 100) : 0;
   const reste       = Math.max(0, total - acompte);
+  const projectName = document.getElementById('if_project')?.value?.trim() || '';
   const data = {
     clientId, clientName: client?.name || '',
+    projectName,
     quoteId,
     status: document.getElementById('if_status')?.value,
     issueDate: document.getElementById('if_date')?.value,
