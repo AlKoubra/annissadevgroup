@@ -1815,6 +1815,15 @@ const previewDocument = (type, id) => {
       <!-- ══ TOTALS ══ -->
       <div style="display:flex;justify-content:flex-end;padding:20px 28px 0">
         <div style="min-width:320px">
+          ${data.remiseMontant > 0 ? `
+          <div style="display:flex;justify-content:space-between;padding:7px 14px;background:#f7f8fe;border-radius:7px;margin-bottom:4px">
+            <span style="font-size:12px;color:#8896c4;font-weight:500">Sous-total</span>
+            <span style="font-size:12px;color:#1c2360;font-weight:600">${fmt.currency(data.subtotal, cur)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:7px 14px;background:rgba(239,68,68,0.06);border-radius:7px;border-left:3px solid #ef4444;margin-bottom:6px">
+            <span style="font-size:12.5px;color:#ef4444;font-weight:600">${data.remiseType === 'pct' ? `Remise (${data.remiseVal}%)` : 'Remise'}</span>
+            <span style="font-size:12.5px;color:#ef4444;font-weight:700">- ${fmt.currency(data.remiseMontant, cur)}</span>
+          </div>` : ''}
           <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#0d1347;border-radius:10px;border-left:4px solid #f0b429">
             <span style="font-size:13px;font-weight:700;color:#c8d0f0;letter-spacing:.5px">TOTAL</span>
             <span style="font-size:18px;font-weight:900;color:#f0b429">${fmt.currency(data.total, cur)}</span>
