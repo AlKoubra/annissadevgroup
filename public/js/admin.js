@@ -976,7 +976,7 @@ const renderInvoicesTable = (invoices) => {
     return `<tr>
       <td><strong style="color:var(--gold)">${inv.number}</strong></td>
       <td>${inv.clientName || '—'}</td>
-      <td><strong>${fmt.currency(inv.total, cur)}</strong>${inv.acompte > 0 ? `<br><span style="font-size:11px;color:var(--success)">Acompte : ${fmt.currency(inv.acompte, cur)}</span>` : ''}</td>
+      <td><strong>${fmt.currency(inv.total, cur)}</strong>${inv.remiseMontant > 0 ? `<br><span style="font-size:11px;color:var(--danger)">Remise : -${fmt.currency(inv.remiseMontant, cur)}</span>` : ''}${inv.acompte > 0 ? `<br><span style="font-size:11px;color:var(--success)">Acompte : ${fmt.currency(inv.acompte, cur)}</span>` : ''}</td>
       <td style="color:var(--text-muted)">${fmt.date(inv.issueDate)}</td>
       <td style="color:${isOverdue ? 'var(--danger)' : 'var(--text-muted)'}">${fmt.date(inv.dueDate)}${inv.reste > 0 ? `<br><span style="font-size:11px;color:var(--gold)">Reste : ${fmt.currency(inv.reste, cur)}</span>` : ''}</td>
       <td><span class="badge badge-${status}">${statusLabel[status] || status}</span></td>
@@ -1027,6 +1027,8 @@ const openInvoiceForm = (id = null) => {
   ).join('');
   const existingAcompte = inv.acompte || 0;
   const isInvFormation = inv.type === 'formation';
+  const invRemiseType  = inv.remiseType || 'none';
+  const invRemiseVal   = inv.remiseVal  || 0;
 
   openModal(id ? `Facture ${inv.number}` : 'Nouvelle facture', `
     <div class="form-grid">
@@ -1109,6 +1111,18 @@ const openInvoiceForm = (id = null) => {
         </div>
       </div>
     </div>
+    <div class="form-group" style="margin-bottom:16px;padding:14px 16px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12);border-radius:10px">
+      <label style="color:var(--danger)">Remise client</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap">
+        <select id="if_remise_type" onchange="calcInvTotals()" style="flex:none;min-width:170px">
+          <option value="none" ${invRemiseType==='none'?'selected':''}>Aucune remise</option>
+          <option value="pct"  ${invRemiseType==='pct' ?'selected':''}>Pourcentage (%)</option>
+          <option value="fixed"${invRemiseType==='fixed'?'selected':''}>Montant fixe</option>
+        </select>
+        <input id="if_remise_val" type="number" min="0" value="${invRemiseVal}" placeholder="0" oninput="calcInvTotals()" style="flex:1;min-width:80px;text-align:right;font-size:16px;font-weight:700;background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.2)">
+        <span id="if_remise_unit" style="font-size:13px;font-weight:700;color:var(--danger);white-space:nowrap">${invRemiseType==='fixed'?cur:'%'}</span>
+      </div>
+    </div>
     <div class="form-group" style="margin-bottom:16px;padding:14px 16px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px">
       <label style="color:var(--success)">Acompte déjà versé (${cur})</label>
       <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
@@ -1117,6 +1131,8 @@ const openInvoiceForm = (id = null) => {
       </div>
     </div>
     <div class="totals-box">
+      <div class="total-row" id="i_subtotal_row" style="display:none;color:var(--text-light)"><span>Sous-total</span><span id="i_subtotal">—</span></div>
+      <div class="total-row" id="i_remise_row" style="display:none;color:var(--danger)"><span id="i_remise_label">Remise</span><span id="i_remise_display">—</span></div>
       <div class="total-row final"><span>TOTAL</span><span id="i_total">—</span></div>
       <div class="total-row" style="color:var(--success)">
         <span>Acompte versé (<span id="i_taux_label">0</span>%)</span>
@@ -1242,15 +1258,28 @@ const calcInvTotals = () => {
   _updateInvAcompteTotals(total, cur);
 };
 
-const _updateInvAcompteTotals = (total, cur) => {
+const _updateInvAcompteTotals = (subtotal, cur) => {
+  const remiseType  = document.getElementById('if_remise_type')?.value || 'none';
+  const remiseVal   = parseFloat(document.getElementById('if_remise_val')?.value) || 0;
+  let remiseMontant = 0;
+  if (remiseType === 'pct')   remiseMontant = Math.round(subtotal * remiseVal / 100);
+  if (remiseType === 'fixed') remiseMontant = Math.min(remiseVal, subtotal);
+  const total   = Math.max(0, subtotal - remiseMontant);
   const acompte = Math.min(parseFloat(document.getElementById('if_acompte_montant')?.value) || 0, total);
   const taux    = total > 0 ? Math.round(acompte / total * 100) : 0;
   const reste   = Math.max(0, total - acompte);
   const el      = (id) => document.getElementById(id);
-  if (el('i_total'))           el('i_total').textContent           = fmt.currency(total, cur);
-  if (el('i_taux_label'))      el('i_taux_label').textContent      = taux;
-  if (el('i_acompte_display')) el('i_acompte_display').textContent = acompte > 0 ? `- ${fmt.currency(acompte, cur)}` : '—';
-  if (el('i_reste'))           el('i_reste').textContent           = fmt.currency(reste, cur);
+  const hasRemise = remiseMontant > 0;
+  if (el('i_subtotal_row'))   el('i_subtotal_row').style.display   = hasRemise ? '' : 'none';
+  if (el('i_subtotal'))       el('i_subtotal').textContent          = fmt.currency(subtotal, cur);
+  if (el('i_remise_row'))     el('i_remise_row').style.display      = hasRemise ? '' : 'none';
+  if (el('i_remise_label'))   el('i_remise_label').textContent      = remiseType === 'pct' ? `Remise (${remiseVal}%)` : 'Remise';
+  if (el('i_remise_display')) el('i_remise_display').textContent    = hasRemise ? `- ${fmt.currency(remiseMontant, cur)}` : '—';
+  if (el('if_remise_unit'))   el('if_remise_unit').textContent      = remiseType === 'fixed' ? cur : '%';
+  if (el('i_total'))           el('i_total').textContent            = fmt.currency(total, cur);
+  if (el('i_taux_label'))      el('i_taux_label').textContent       = taux;
+  if (el('i_acompte_display')) el('i_acompte_display').textContent  = acompte > 0 ? `- ${fmt.currency(acompte, cur)}` : '—';
+  if (el('i_reste'))           el('i_reste').textContent            = fmt.currency(reste, cur);
 };
 
 const saveInvoice = async (id) => {
@@ -1279,6 +1308,13 @@ const saveInvoice = async (id) => {
     extraData = { type: 'standard', formationName: null, inscription: null, mensualite: null, nbMois: null };
   }
 
+  const subtotal    = total;
+  const remiseType  = document.getElementById('if_remise_type')?.value || 'none';
+  const remiseVal   = parseFloat(document.getElementById('if_remise_val')?.value) || 0;
+  let remiseMontant = 0;
+  if (remiseType === 'pct')   remiseMontant = Math.round(subtotal * remiseVal / 100);
+  if (remiseType === 'fixed') remiseMontant = Math.min(remiseVal, subtotal);
+  total = Math.max(0, subtotal - remiseMontant);
   const acompte     = Math.min(parseFloat(document.getElementById('if_acompte_montant')?.value) || 0, total);
   const acompteTaux = total > 0 ? Math.round(acompte / total * 100) : 0;
   const reste       = Math.max(0, total - acompte);
@@ -1290,7 +1326,8 @@ const saveInvoice = async (id) => {
     status: document.getElementById('if_status')?.value,
     issueDate: document.getElementById('if_date')?.value,
     dueDate: document.getElementById('if_due')?.value,
-    items, taxRate: 0, subtotal: total, taxAmount: 0, total,
+    items, taxRate: 0, subtotal, taxAmount: 0, total,
+    remiseType, remiseVal, remiseMontant,
     acompteTaux, acompte, reste,
     notes: document.getElementById('if_notes')?.value?.trim(),
     ...extraData
@@ -1530,7 +1567,25 @@ const buildPDF = (doc, data, type = 'quote') => {
   doc.setLineWidth(0.3);
   doc.line(tX, tY, pageW - 12, tY);
 
-  const totalBannerY = tY + 4;
+  let extraOffset = 0;
+  if (data.remiseMontant > 0) {
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...slate);
+    doc.text('Sous-total', tX + 2, tY + 8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...ink);
+    doc.text(fmt.currency(data.subtotal, cur), pageW - 13, tY + 8, { align: 'right' });
+    const remLabel = data.remiseType === 'pct' ? `Remise (${data.remiseVal}%)` : 'Remise';
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(220, 38, 38);
+    doc.text(remLabel, tX + 2, tY + 15);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`- ${fmt.currency(data.remiseMontant, cur)}`, pageW - 13, tY + 15, { align: 'right' });
+    extraOffset = 16;
+  }
+
+  const totalBannerY = tY + 4 + extraOffset;
 
   // Total banner
   doc.setFillColor(...navy);
