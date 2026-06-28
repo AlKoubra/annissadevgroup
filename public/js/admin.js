@@ -1640,7 +1640,7 @@ const buildPDF = (doc, data, type = 'quote') => {
     const noteLines = doc.splitTextToSize(data.notes, pageW - 34);
     const boxH = Math.max(26, 12 + noteLines.length * 5);
     let nY = afterTotalY + 4;
-    if (nY + boxH + 18 > pageH - 18) {
+    if (nY + boxH + 2 > pageH - 16) {
       doc.addPage();
       doc.setFillColor(...gold); doc.rect(0, 0, 4, pageH, 'F');
       nY = 20;
