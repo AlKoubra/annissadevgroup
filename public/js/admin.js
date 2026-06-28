@@ -1559,7 +1559,13 @@ const buildPDF = (doc, data, type = 'quote') => {
   });
 
   // ── Totals block ──────────────────────────────────────────────────────────
-  const tY = doc.lastAutoTable.finalY + 6;
+  const spaceNeeded = 24 + (data.remiseMontant > 0 ? 20 : 0) + (data.acompte > 0 ? 14 : 0) + 18 + (data.notes ? 36 : 0) + 22;
+  let tY = doc.lastAutoTable.finalY + 6;
+  if (tY + spaceNeeded > pageH - 18) {
+    doc.addPage();
+    doc.setFillColor(...gold); doc.rect(0, 0, 4, pageH, 'F');
+    tY = 20;
+  }
   const tX = 118, tW = 80;
 
   // Subtle separator line
@@ -1610,8 +1616,11 @@ const buildPDF = (doc, data, type = 'quote') => {
     doc.text('Acompte versé', tX + 2, afterTotalY + 4);
     doc.setFont('helvetica', 'bold');
     doc.text(`- ${fmt.currency(data.acompte, cur)}`, pageW - 13, afterTotalY + 4, { align: 'right' });
-
-    const resteY = afterTotalY + 8;
+    afterTotalY += 12;
+  }
+  if (!isQuote) {
+    const resteVal = data.reste ?? Math.max(0, data.total - (data.acompte || 0));
+    const resteY = afterTotalY;
     doc.setFillColor(...navy);
     doc.roundedRect(tX, resteY, pageW - 12 - tX, 14, 3, 3, 'F');
     doc.setFillColor(...gold);
@@ -1619,21 +1628,29 @@ const buildPDF = (doc, data, type = 'quote') => {
     doc.setTextColor(...gold);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
-    doc.text('RESTE À PAYER', tX + 7, resteY + 9);
+    doc.text('NET À PAYER', tX + 7, resteY + 9);
     doc.setFontSize(10);
-    doc.text(fmt.currency(data.reste ?? (data.total - data.acompte), cur), pageW - 13, resteY + 9, { align: 'right' });
+    doc.text(fmt.currency(resteVal, cur), pageW - 13, resteY + 9, { align: 'right' });
     afterTotalY = resteY + 18;
   }
 
   // ── Notes ─────────────────────────────────────────────────────────────────
   if (data.notes) {
-    const nY = afterTotalY + 4;
+    doc.setFontSize(7.5);
+    const noteLines = doc.splitTextToSize(data.notes, pageW - 34);
+    const boxH = Math.max(26, 12 + noteLines.length * 5);
+    let nY = afterTotalY + 4;
+    if (nY + boxH + 18 > pageH - 18) {
+      doc.addPage();
+      doc.setFillColor(...gold); doc.rect(0, 0, 4, pageH, 'F');
+      nY = 20;
+    }
     doc.setFillColor(248, 249, 254);
     doc.setDrawColor(...gold);
     doc.setLineWidth(0.3);
-    doc.roundedRect(12, nY, pageW - 24, 28, 3, 3, 'F');
+    doc.roundedRect(12, nY, pageW - 24, boxH, 3, 3, 'F');
     doc.setFillColor(...gold);
-    doc.roundedRect(12, nY, 3, 28, 1, 1, 'F');
+    doc.roundedRect(12, nY, 3, boxH, 1, 1, 'F');
     doc.setTextColor(...gold);
     doc.setFontSize(6.5);
     doc.setFont('helvetica', 'bold');
@@ -1641,8 +1658,7 @@ const buildPDF = (doc, data, type = 'quote') => {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7.5);
     doc.setTextColor(80, 88, 130);
-    const lines = doc.splitTextToSize(data.notes, pageW - 34);
-    doc.text(lines, 19, nY + 12);
+    doc.text(noteLines, 19, nY + 12);
   }
 
   // ── Footer ────────────────────────────────────────────────────────────────
