@@ -1536,19 +1536,19 @@ const buildPDF = (doc, data, type = 'quote') => {
     theme: 'plain',
     headStyles: {
       fillColor: navy, textColor: gold,
-      fontSize: 7, fontStyle: 'bold', cellPadding: { top: 5, bottom: 5, left: 4, right: 4 }
+      fontSize: 7, fontStyle: 'bold', cellPadding: { top: 4, bottom: 4, left: 4, right: 4 }
     },
     bodyStyles: {
       fontSize: 8, textColor: ink,
-      cellPadding: { top: 5, bottom: 5, left: 4, right: 4 },
+      cellPadding: { top: 3, bottom: 3, left: 4, right: 4 },
       lineColor: [235, 237, 250], lineWidth: 0.2
     },
     alternateRowStyles: { fillColor: [247, 248, 254] },
     columnStyles: {
       0: { cellWidth: 'auto' },
-      1: { cellWidth: 10, halign: 'center' },
-      2: { cellWidth: 42, halign: 'right' },
-      3: { cellWidth: 42, fontStyle: 'bold', halign: 'right' }
+      1: { cellWidth: 20, halign: 'center' },
+      2: { cellWidth: 40, halign: 'right' },
+      3: { cellWidth: 40, fontStyle: 'bold', halign: 'right' }
     },
     margin: { left: 12, right: 12 },
     didDrawPage: (d) => {
