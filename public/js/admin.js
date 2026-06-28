@@ -1559,7 +1559,7 @@ const buildPDF = (doc, data, type = 'quote') => {
   });
 
   // ── Totals block ──────────────────────────────────────────────────────────
-  const spaceNeeded = 24 + (data.remiseMontant > 0 ? 20 : 0) + (data.acompte > 0 ? 14 : 0) + 18 + (data.notes ? 36 : 0) + 22;
+  const spaceNeeded = 10 + (data.remiseMontant > 0 ? 16 : 0) + 20 + (data.acompte > 0 ? 12 : 0) + 18;
   let tY = doc.lastAutoTable.finalY + 6;
   if (tY + spaceNeeded > pageH - 18) {
     doc.addPage();
