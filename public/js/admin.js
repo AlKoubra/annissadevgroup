@@ -1628,7 +1628,7 @@ const buildPDF = (doc, data, type = 'quote') => {
     doc.setTextColor(...gold);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
-    doc.text('NET À PAYER', tX + 7, resteY + 9);
+    doc.text('RESTE À PAYER', tX + 7, resteY + 9);
     doc.setFontSize(10);
     doc.text(fmt.currency(resteVal, cur), pageW - 13, resteY + 9, { align: 'right' });
     afterTotalY = resteY + 18;
@@ -2233,4 +2233,8 @@ const logout = async () => {
 
   await loadAll();
   navigate('dashboard');
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
 })();
