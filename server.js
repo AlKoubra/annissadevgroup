@@ -25,6 +25,10 @@ const connectDB = async () => {
 };
 const col = async (name) => (await connectDB()).collection(name);
 
+const bumpVersion = async () => {
+  try { await (await col('meta')).updateOne({ _id: 'version' }, { $set: { ts: Date.now() } }, { upsert: true }); } catch {}
+};
+
 // ── Default settings ──
 const defaultSettings = {
   company: {
@@ -138,6 +142,23 @@ app.post('/api/messages', async (req, res) => {
 app.use('/api', (req, res, next) => {
   if (req.session?.isAdmin) return next();
   res.status(401).json({ error: 'Non autorisé — Veuillez vous connecter' });
+});
+
+// ── Version pour sync temps réel ──
+app.get('/api/events/version', async (req, res) => {
+  try {
+    const meta = await (await col('meta')).findOne({ _id: 'version' });
+    res.json({ version: meta?.ts || 0 });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Bump version automatiquement après chaque écriture réussie
+app.use('/api', (req, res, next) => {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+    const orig = res.json.bind(res);
+    res.json = (body) => { orig(body); if (res.statusCode < 400) bumpVersion(); };
+  }
+  next();
 });
 
 // ── CLIENTS ──

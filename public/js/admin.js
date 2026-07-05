@@ -5,11 +5,13 @@ let state = {
 };
 
 // ===== API =====
+let lastOwnWrite = 0, syncVersion = 0;
+
 const api = {
   async get(url) { const r = await fetch(url); return r.json(); },
-  async post(url, data) { const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); return r.json(); },
-  async put(url, data) { const r = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); return r.json(); },
-  async del(url) { const r = await fetch(url, { method: 'DELETE' }); return r.json(); }
+  async post(url, data) { lastOwnWrite = Date.now(); const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); return r.json(); },
+  async put(url, data)  { lastOwnWrite = Date.now(); const r = await fetch(url, { method: 'PUT',  headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); return r.json(); },
+  async del(url)        { lastOwnWrite = Date.now(); const r = await fetch(url, { method: 'DELETE' }); return r.json(); }
 };
 
 // ===== UTILS =====
@@ -64,6 +66,30 @@ const openConfirm = (title, msg) => new Promise(resolve => {
 const closeConfirm = () => {
   document.getElementById('confirmOverlay').style.display = 'none';
   if (confirmResolve) { confirmResolve(false); confirmResolve = null; }
+};
+
+// ===== REAL-TIME SYNC (polling 3s) =====
+const silentRefresh = async () => {
+  try {
+    if (document.getElementById('modalOverlay')?.classList.contains('open')) return;
+    const [clients, projects, quotes, invoices, messages] = await Promise.all([
+      api.get('/api/clients'), api.get('/api/projects'),
+      api.get('/api/quotes'), api.get('/api/invoices'), api.get('/api/messages')
+    ]);
+    state = { ...state, clients, projects, quotes, invoices, messages };
+    updateBadges();
+    renderPage(state.currentPage);
+  } catch {}
+};
+
+const syncPoll = async () => {
+  try {
+    const { version } = await fetch('/api/events/version').then(r => r.json());
+    if (syncVersion && version !== syncVersion && Date.now() - lastOwnWrite > 3000) {
+      await silentRefresh();
+    }
+    syncVersion = version;
+  } catch {}
 };
 
 // ===== LOAD ALL DATA =====
@@ -2233,6 +2259,11 @@ const logout = async () => {
 
   await loadAll();
   navigate('dashboard');
+
+  // Démarrage sync temps réel
+  const v = await fetch('/api/events/version').then(r => r.json()).catch(() => ({ version: 0 }));
+  syncVersion = v.version;
+  setInterval(syncPoll, 3000);
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
