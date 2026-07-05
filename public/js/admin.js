@@ -69,26 +69,34 @@ const closeConfirm = () => {
 };
 
 // ===== REAL-TIME SYNC (polling 3s) =====
+const nc = url => fetch(url, { cache: 'no-store' }).then(r => r.json());
+
 const silentRefresh = async () => {
   try {
-    if (document.getElementById('modalOverlay')?.classList.contains('open')) return;
+    if (document.getElementById('modalOverlay')?.classList.contains('open')) return false;
     const [clients, projects, quotes, invoices, messages] = await Promise.all([
-      api.get('/api/clients'), api.get('/api/projects'),
-      api.get('/api/quotes'), api.get('/api/invoices'), api.get('/api/messages')
+      nc('/api/clients'), nc('/api/projects'),
+      nc('/api/quotes'), nc('/api/invoices'), nc('/api/messages')
     ]);
     state = { ...state, clients, projects, quotes, invoices, messages };
     updateBadges();
     renderPage(state.currentPage);
-  } catch {}
+    return true;
+  } catch { return false; }
 };
 
 const syncPoll = async () => {
   try {
-    const { version } = await fetch('/api/events/version').then(r => r.json());
-    if (version !== syncVersion && Date.now() - lastOwnWrite > 3000) {
-      await silentRefresh();
+    const { version } = await fetch('/api/events/version', { cache: 'no-store' }).then(r => r.json());
+    if (version !== syncVersion) {
+      if (Date.now() - lastOwnWrite > 5000) {
+        const ok = await silentRefresh();
+        if (ok) syncVersion = version;
+        // if modal was open, syncVersion stays old → next poll will retry
+      } else {
+        syncVersion = version; // own write, local state already up to date
+      }
     }
-    syncVersion = version;
   } catch {}
 };
 
