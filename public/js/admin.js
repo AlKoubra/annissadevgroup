@@ -5,7 +5,7 @@ let state = {
 };
 
 // ===== API =====
-let lastOwnWrite = 0, syncVersion = 0;
+let lastOwnWrite = 0, syncVersion = '';
 
 const api = {
   async get(url) { const r = await fetch(url); return r.json(); },
@@ -2261,7 +2261,7 @@ const logout = async () => {
   navigate('dashboard');
 
   // Démarrage sync temps réel
-  const v = await fetch('/api/events/version').then(r => r.json()).catch(() => ({ version: 0 }));
+  const v = await fetch('/api/events/version').then(r => r.json()).catch(() => ({ version: '' }));
   syncVersion = v.version;
   setInterval(syncPoll, 3000);
 

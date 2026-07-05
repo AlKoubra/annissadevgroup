@@ -144,25 +144,30 @@ app.use('/api', (req, res, next) => {
   res.status(401).json({ error: 'Non autorisé — Veuillez vous connecter' });
 });
 
-// ── Version pour sync temps réel ──
+// ── Version pour sync temps réel (dérivée des données, sans mécanisme externe) ──
 app.get('/api/events/version', async (req, res) => {
   try {
     res.setHeader('Cache-Control', 'no-store');
-    const meta = await (await col('meta')).findOne({ _id: 'version' });
-    res.json({ version: meta?.ts || 0 });
-  } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
-// Bump version AVANT d'envoyer la réponse (Vercel gèle la fonction après envoi)
-app.use('/api', (req, res, next) => {
-  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-    const orig = res.json.bind(res);
-    res.json = async (body) => {
-      if (res.statusCode < 400) await bumpVersion();
-      return orig(body);
+    const db = await connectDB();
+    const names = ['clients', 'projects', 'quotes', 'invoices', 'messages'];
+    const [counts, latests] = await Promise.all([
+      Promise.all(names.map(n => db.collection(n).countDocuments())),
+      Promise.all(names.map(n =>
+        db.collection(n).find({}, { projection: { updatedAt: 1, createdAt: 1 } })
+          .sort({ $natural: -1 }).limit(1).toArray()
+      ))
+    ]);
+    const getTs = (docs) => {
+      const d = docs[0];
+      if (!d) return 0;
+      return Math.max(
+        d.updatedAt ? new Date(d.updatedAt).getTime() : 0,
+        d.createdAt ? new Date(d.createdAt).getTime() : 0
+      );
     };
-  }
-  next();
+    const version = counts.join(',') + '|' + latests.map(getTs).join(',');
+    res.json({ version });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── CLIENTS ──
