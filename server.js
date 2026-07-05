@@ -153,11 +153,14 @@ app.get('/api/events/version', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Bump version automatiquement après chaque écriture réussie
+// Bump version AVANT d'envoyer la réponse (Vercel gèle la fonction après envoi)
 app.use('/api', (req, res, next) => {
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
     const orig = res.json.bind(res);
-    res.json = (body) => { orig(body); if (res.statusCode < 400) bumpVersion(); };
+    res.json = async (body) => {
+      if (res.statusCode < 400) await bumpVersion();
+      return orig(body);
+    };
   }
   next();
 });
