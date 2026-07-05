@@ -22,12 +22,17 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const { request } = e;
-  // API calls : réseau d'abord, pas de cache
+  // Navigation requests: always network (iOS Safari rejects SW-served redirects)
+  if (request.mode === 'navigate') {
+    e.respondWith(fetch(request));
+    return;
+  }
+  // API calls: network first, no cache
   if (request.url.includes('/api/')) {
     e.respondWith(fetch(request));
     return;
   }
-  // Shell : cache d'abord, réseau en fallback
+  // Static assets: cache first, network fallback
   e.respondWith(
     caches.match(request).then(cached => cached || fetch(request))
   );
