@@ -150,22 +150,16 @@ app.get('/api/events/version', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     const db = await connectDB();
     const names = ['clients', 'projects', 'quotes', 'invoices', 'messages'];
-    const [counts, latests] = await Promise.all([
-      Promise.all(names.map(n => db.collection(n).countDocuments())),
-      Promise.all(names.map(n =>
-        db.collection(n).find({}, { projection: { updatedAt: 1, createdAt: 1 } })
-          .sort({ $natural: -1 }).limit(1).toArray()
-      ))
-    ]);
-    const getTs = (docs) => {
-      const d = docs[0];
-      if (!d) return 0;
-      return Math.max(
-        d.updatedAt ? new Date(d.updatedAt).getTime() : 0,
-        d.createdAt ? new Date(d.createdAt).getTime() : 0
-      );
-    };
-    const version = counts.join(',') + '|' + latests.map(getTs).join(',');
+    const results = await Promise.all(names.map(n =>
+      db.collection(n).aggregate([
+        { $group: {
+          _id: null,
+          count: { $sum: 1 },
+          maxTs: { $max: { $toLong: { $toDate: { $ifNull: ['$updatedAt', '$createdAt'] } } } }
+        }}
+      ]).toArray()
+    ));
+    const version = results.map(r => r[0] ? `${r[0].count}:${r[0].maxTs}` : '0:0').join(',');
     res.json({ version });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
