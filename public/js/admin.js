@@ -85,7 +85,7 @@ const silentRefresh = async () => {
 const syncPoll = async () => {
   try {
     const { version } = await fetch('/api/events/version').then(r => r.json());
-    if (syncVersion && version !== syncVersion && Date.now() - lastOwnWrite > 3000) {
+    if (version !== syncVersion && Date.now() - lastOwnWrite > 3000) {
       await silentRefresh();
     }
     syncVersion = version;

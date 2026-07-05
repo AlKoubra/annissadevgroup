@@ -147,6 +147,7 @@ app.use('/api', (req, res, next) => {
 // ── Version pour sync temps réel ──
 app.get('/api/events/version', async (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store');
     const meta = await (await col('meta')).findOne({ _id: 'version' });
     res.json({ version: meta?.ts || 0 });
   } catch (e) { res.status(500).json({ error: e.message }); }
