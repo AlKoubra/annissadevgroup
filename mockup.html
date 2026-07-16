@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1600">
+<title>AnNissa Dev Group — Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background: linear-gradient(145deg,#04071e 0%,#080c32 50%,#0a0f3a 100%);
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  font-family:'Inter',sans-serif; padding:60px 40px;
+  position:relative; overflow:hidden;
+}
+body::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(240,180,41,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.glow1{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(240,180,41,0.07),transparent 70%);top:-200px;left:-200px;}
+.glow2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(30,39,112,0.5),transparent 70%);bottom:-100px;right:-100px;}
+
+/* ── HEADER ── */
+.header{position:relative;z-index:10;text-align:center;margin-bottom:60px;}
+.header-logo{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px;}
+.header-logo svg{width:44px;height:44px;}
+.header-brand{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:800;color:#f0b429;letter-spacing:-0.5px;}
+.header-sub{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:4px;text-transform:uppercase;}
+.header h2{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:12px;}
+.header h2 span{color:#f0b429;}
+.header p{font-size:15px;color:rgba(200,208,240,0.6);font-weight:400;}
+
+/* ── DEVICES SCENE ── */
+.scene{position:relative;z-index:5;width:1400px;height:700px;display:flex;align-items:flex-end;justify-content:center;}
+
+/* ══ DESKTOP ══ */
+.desktop-wrap{position:absolute;left:50%;top:0;transform:translateX(-50%);z-index:2;}
+.desktop-monitor{
+  width:820px;
+  background:linear-gradient(180deg,#1a1a2e,#16213e);
+  border-radius:16px 16px 0 0;
+  border:2px solid rgba(255,255,255,0.12);
+  padding:12px 12px 0;
+  box-shadow:0 40px 100px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.05);
+}
+.monitor-bar{height:18px;display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.monitor-btn{width:10px;height:10px;border-radius:50%;}
+.monitor-screen{
+  width:100%;height:460px;border-radius:6px;overflow:hidden;
+  background:#080c32;position:relative;
+}
+.desktop-stand{
+  width:200px;height:28px;background:linear-gradient(180deg,#1a1a2e,#111);
+  margin:0 auto;border-radius:0 0 4px 4px;
+  border:2px solid rgba(255,255,255,0.08);border-top:none;
+}
+.desktop-base{
+  width:340px;height:14px;background:linear-gradient(180deg,#111,#0a0a0a);
+  margin:0 auto;border-radius:0 0 8px 8px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* ══ TABLET ══ */
+.tablet-wrap{position:absolute;right:30px;bottom:0;z-index:3;transform:rotate(2deg);}
+.tablet-device{
+  width:280px;height:390px;
+  background:linear-gradient(180deg,#1c1c2e,#141428);
+  border-radius:20px;border:3px solid rgba(255,255,255,0.13);
+  padding:14px 10px;
+  box-shadow:0 30px 70px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05);
+  position:relative;
+}
+.tablet-device::before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);width:30px;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);}
+.tablet-device::after{content:'';position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);}
+.tablet-screen{width:100%;height:100%;border-radius:10px;overflow:hidden;background:#080c32;}
+
+/* ══ PHONE ══ */
+.phone-wrap{position:absolute;left:40px;bottom:0;z-index:3;transform:rotate(-3deg);}
+.phone-device{
+  width:175px;height:370px;
+  background:linear-gradient(180deg,#1c1c2e,#141428);
+  border-radius:36px;border:3px solid rgba(255,255,255,0.13);
+  padding:14px 8px 18px;
+  box-shadow:0 30px 70px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05);
+  position:relative;
+}
+.phone-device::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:50px;height:5px;border-radius:3px;background:rgba(255,255,255,0.2);}
+.phone-screen{width:100%;height:100%;border-radius:24px;overflow:hidden;background:#080c32;}
+
+/* ══════════════════════════════════
+   SITE PREVIEW — SHARED COMPONENTS
+══════════════════════════════════ */
+.site{width:100%;height:100%;overflow:hidden;position:relative;background:#080c32;}
+.site-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(240,180,41,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,0.04) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+.site-glow{position:absolute;width:60%;height:60%;top:-20%;left:-10%;border-radius:50%;background:radial-gradient(circle,rgba(240,180,41,0.1),transparent 70%);}
+
+/* NAV */
+.site-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:rgba(8,12,50,0.9);
+  backdrop-filter:blur(10px);border-bottom:1px solid rgba(240,180,41,0.15);
+  position:relative;z-index:5;
+}
+.nav-logo{display:flex;align-items:center;gap:6px;}
+.nav-logo svg{width:20px;height:20px;}
+.nav-brand{font-family:'Space Grotesk',sans-serif;font-weight:800;color:#f0b429;font-size:11px;}
+.nav-links-d{display:flex;gap:12px;}
+.nav-link-d{color:rgba(200,208,240,0.7);font-size:8px;font-weight:500;}
+.nav-cta-d{background:#f0b429;color:#0d1347;font-size:7px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.nav-hamburger{display:flex;flex-direction:column;gap:2px;}
+.nav-hamburger span{width:14px;height:1.5px;background:#f0b429;border-radius:1px;display:block;}
+
+/* HERO */
+.site-hero{
+  padding:16px 16px 12px;position:relative;z-index:2;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.3);
+  color:#f0b429;font-size:6px;font-weight:700;padding:3px 8px;border-radius:20px;
+  margin-bottom:8px;letter-spacing:1.5px;text-transform:uppercase;
+}
+.hero-dot{width:4px;height:4px;border-radius:50%;background:#f0b429;}
+.hero-title{font-family:'Space Grotesk',sans-serif;font-weight:800;color:#fff;line-height:1.1;margin-bottom:6px;}
+.hero-title span{color:#f0b429;}
+.hero-desc{color:rgba(200,208,240,0.65);line-height:1.5;margin-bottom:10px;}
+.hero-btns{display:flex;gap:6px;flex-wrap:wrap;}
+.btn-g{background:#f0b429;color:#0d1347;font-weight:700;border-radius:20px;display:inline-block;}
+.btn-o{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.25);border-radius:20px;display:inline-block;}
+.hero-stats{display:flex;gap:12px;margin-top:10px;}
+.stat-item{display:flex;flex-direction:column;}
+.stat-n{font-family:'Space Grotesk',sans-serif;font-weight:800;color:#f0b429;}
+.stat-l{color:rgba(200,208,240,0.5);text-transform:uppercase;letter-spacing:0.5px;}
+
+/* SERVICES */
+.site-services{padding:12px 16px;position:relative;z-index:2;}
+.section-tag{font-size:6px;color:rgba(240,180,41,0.7);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.section-h{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;margin-bottom:8px;}
+.section-h span{color:#f0b429;}
+.svc-grid{display:grid;gap:6px;}
+.svc-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:8px;}
+.svc-icon-mini{width:20px;height:20px;border-radius:5px;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
+.svc-icon-mini svg{width:10px;height:10px;stroke:#f0b429;}
+.svc-title{font-weight:700;color:#fff;}
+.svc-desc{color:rgba(200,208,240,0.5);}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(240,180,41,0.2),transparent);margin:8px 0;}
+
+/* ══════════════ DESKTOP PREVIEW ══════════════ */
+.preview-desktop .site-nav{padding:10px 20px;}
+.preview-desktop .nav-logo svg{width:24px;height:24px;}
+.preview-desktop .nav-brand{font-size:13px;}
+.preview-desktop .nav-link-d{font-size:9px;}
+.preview-desktop .nav-cta-d{font-size:8px;padding:4px 10px;}
+.preview-desktop .site-hero{padding:30px 40px 20px;}
+.preview-desktop .hero-badge{font-size:7px;padding:4px 12px;margin-bottom:12px;}
+.preview-desktop .hero-title{font-size:38px;}
+.preview-desktop .hero-desc{font-size:11px;max-width:420px;}
+.preview-desktop .btn-g{font-size:9px;padding:7px 16px;}
+.preview-desktop .btn-o{font-size:9px;padding:7px 14px;}
+.preview-desktop .stat-n{font-size:20px;}
+.preview-desktop .stat-l{font-size:7px;}
+.preview-desktop .site-services{padding:20px 40px;}
+.preview-desktop .section-tag{font-size:7px;}
+.preview-desktop .section-h{font-size:18px;margin-bottom:12px;}
+.preview-desktop .svc-grid{grid-template-columns:repeat(3,1fr);gap:10px;}
+.preview-desktop .svc-card{padding:12px;}
+.preview-desktop .svc-icon-mini{width:28px;height:28px;border-radius:8px;margin-bottom:6px;}
+.preview-desktop .svc-icon-mini svg{width:14px;height:14px;}
+.preview-desktop .svc-title{font-size:10px;margin-bottom:3px;}
+.preview-desktop .svc-desc{font-size:8px;line-height:1.5;}
+.preview-desktop .hero-stats{gap:24px;margin-top:16px;}
+
+/* ══════════════ TABLET PREVIEW ══════════════ */
+.preview-tablet .site-hero{padding:14px 14px 10px;}
+.preview-tablet .hero-badge{font-size:5.5px;margin-bottom:6px;}
+.preview-tablet .hero-title{font-size:18px;}
+.preview-tablet .hero-desc{font-size:8px;margin-bottom:8px;}
+.preview-tablet .btn-g{font-size:7px;padding:5px 10px;}
+.preview-tablet .btn-o{font-size:7px;padding:5px 9px;}
+.preview-tablet .stat-n{font-size:12px;}
+.preview-tablet .stat-l{font-size:5px;}
+.preview-tablet .site-services{padding:10px 14px;}
+.preview-tablet .section-h{font-size:11px;}
+.preview-tablet .svc-grid{grid-template-columns:repeat(2,1fr);gap:5px;}
+.preview-tablet .svc-card{padding:7px;}
+.preview-tablet .svc-title{font-size:7px;margin-bottom:2px;}
+.preview-tablet .svc-desc{font-size:5.5px;line-height:1.4;}
+
+/* ══════════════ PHONE PREVIEW ══════════════ */
+.preview-phone .nav-links-d{display:none;}
+.preview-phone .nav-cta-d{display:none;}
+.preview-phone .site-hero{padding:10px 10px 8px;}
+.preview-phone .hero-badge{font-size:5px;padding:2px 6px;margin-bottom:5px;}
+.preview-phone .hero-title{font-size:14px;}
+.preview-phone .hero-desc{font-size:7px;margin-bottom:6px;}
+.preview-phone .btn-g{font-size:6px;padding:4px 10px;}
+.preview-phone .btn-o{display:none;}
+.preview-phone .stat-n{font-size:11px;}
+.preview-phone .stat-l{font-size:5px;}
+.preview-phone .hero-stats{gap:10px;margin-top:8px;}
+.preview-phone .site-services{padding:8px 10px;}
+.preview-phone .section-h{font-size:9px;margin-bottom:6px;}
+.preview-phone .svc-grid{grid-template-columns:1fr;gap:4px;}
+.preview-phone .svc-card{padding:6px;display:flex;align-items:center;gap:6px;}
+.preview-phone .svc-icon-mini{margin-bottom:0;flex-shrink:0;}
+.preview-phone .svc-title{font-size:7px;margin-bottom:1px;}
+.preview-phone .svc-desc{font-size:5.5px;}
+
+/* ── LABELS ── */
+.device-label{
+  text-align:center;margin-top:14px;
+  font-size:12px;font-weight:600;color:rgba(200,208,240,0.5);
+  text-transform:uppercase;letter-spacing:2px;
+}
+
+/* ── FOOTER TEXT ── */
+.footer-text{
+  position:relative;z-index:10;margin-top:52px;text-align:center;
+  color:rgba(200,208,240,0.35);font-size:13px;letter-spacing:0.5px;
+}
+.footer-text strong{color:rgba(240,180,41,0.6);}
+</style>
+</head>
+<body>
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="60" height="60" rx="12" fill="#080c32"/>
+      <circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/>
+      <circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/>
+      <circle cx="30" cy="36" r="3" fill="#f0b429"/>
+      <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="30" cy="6" r="2" fill="#f0b429"/>
+      <circle cx="30" cy="54" r="2" fill="#f0b429"/>
+      <circle cx="6" cy="30" r="2" fill="#f0b429"/>
+      <circle cx="54" cy="30" r="2" fill="#f0b429"/>
+    </svg>
+    <div>
+      <div class="header-brand">AnNissa</div>
+      <div class="header-sub">Dev Group</div>
+    </div>
+  </div>
+  <h2>Une expérience <span>fluide</span> sur tous les écrans</h2>
+  <p>Design adaptatif · Web · Tablette · Mobile</p>
+</div>
+
+<!-- SCENE -->
+<div class="scene">
+
+  <!-- DESKTOP -->
+  <div class="desktop-wrap">
+    <div class="desktop-monitor">
+      <div class="monitor-bar">
+        <div class="monitor-btn" style="background:#ff5f57"></div>
+        <div class="monitor-btn" style="background:#febc2e"></div>
+        <div class="monitor-btn" style="background:#28c840"></div>
+      </div>
+      <div class="monitor-screen">
+        <div class="site preview-desktop">
+          <div class="site-grid"></div>
+          <div class="site-glow"></div>
+          <nav class="site-nav">
+            <div class="nav-logo">
+              <svg viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="12" fill="#080c32"/><circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/><circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/><circle cx="30" cy="36" r="3" fill="#f0b429"/><path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+              <span class="nav-brand">AnNissa DEV GROUP</span>
+            </div>
+            <div class="nav-links-d">
+              <span class="nav-link-d">Services</span>
+              <span class="nav-link-d">À propos</span>
+              <span class="nav-link-d">Expertise</span>
+              <span class="nav-link-d">Contact</span>
+            </div>
+            <span class="nav-cta-d">Démarrer →</span>
+          </nav>
+          <div class="site-hero">
+            <div class="hero-badge"><div class="hero-dot"></div>Solutions digitales sur mesure</div>
+            <div class="hero-title">Votre vision,<br>notre <span>code</span>,<br>votre succès.</div>
+            <div class="hero-desc" style="margin-top:8px">De l'idée au produit fini — solutions web, mobile et IA qui transforment votre business.</div>
+            <div class="hero-btns"><span class="btn-g">Démarrer un projet</span><span class="btn-o">Voir nos services</span></div>
+            <div class="hero-stats">
+              <div class="stat-item"><span class="stat-n">7+</span><span class="stat-l">Expertises</span></div>
+              <div class="stat-item"><span class="stat-n">100%</span><span class="stat-l">Satisfaction</span></div>
+              <div class="stat-item"><span class="stat-n">24/7</span><span class="stat-l">Support</span></div>
+            </div>
+          </div>
+          <div class="divider" style="margin:0 40px"></div>
+          <div class="site-services">
+            <div class="section-tag">Ce que nous faisons</div>
+            <div class="section-h">Nos <span>Services</span></div>
+            <div class="svc-grid">
+              <div class="svc-card"><div class="svc-icon-mini"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="svc-title">Développement Web</div><div class="svc-desc">Sites, e-commerce, SaaS</div></div>
+              <div class="svc-card"><div class="svc-icon-mini"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="#f0b429"/></svg></div><div class="svc-title">Développement Mobile</div><div class="svc-desc">iOS & Android natif</div></div>
+              <div class="svc-card"><div class="svc-icon-mini"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div><div class="svc-title">Intelligence Artificielle</div><div class="svc-desc">Chatbots, ML, automatisation</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="desktop-stand"></div>
+    <div class="desktop-base"></div>
+    <div class="device-label">Desktop</div>
+  </div>
+
+  <!-- TABLET -->
+  <div class="tablet-wrap">
+    <div class="tablet-device">
+      <div class="tablet-screen">
+        <div class="site preview-tablet">
+          <div class="site-grid"></div>
+          <div class="site-glow"></div>
+          <nav class="site-nav">
+            <div class="nav-logo">
+              <svg viewBox="0 0 60 60" fill="none" width="18" height="18"><rect width="60" height="60" rx="12" fill="#080c32"/><circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/><circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/><circle cx="30" cy="36" r="3" fill="#f0b429"/><path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none"/></svg>
+              <span class="nav-brand" style="font-size:10px">AnNissa</span>
+            </div>
+            <div class="nav-hamburger"><span></span><span></span><span></span></div>
+          </nav>
+          <div class="site-hero">
+            <div class="hero-badge"><div class="hero-dot"></div>Solutions digitales</div>
+            <div class="hero-title" style="font-size:17px;margin-top:6px">Votre vision,<br>notre <span>code</span>.</div>
+            <div class="hero-desc" style="font-size:8px;margin-top:5px">Des solutions web, mobile et IA sur mesure.</div>
+            <div class="hero-btns" style="margin-top:8px"><span class="btn-g" style="font-size:7px;padding:5px 10px">Démarrer →</span></div>
+            <div class="hero-stats" style="margin-top:10px;gap:14px">
+              <div class="stat-item"><span class="stat-n" style="font-size:13px">7+</span><span class="stat-l" style="font-size:5px">Expertises</span></div>
+              <div class="stat-item"><span class="stat-n" style="font-size:13px">100%</span><span class="stat-l" style="font-size:5px">Satisfaction</span></div>
+            </div>
+          </div>
+          <div class="divider" style="margin:0 14px"></div>
+          <div class="site-services">
+            <div class="section-tag">Services</div>
+            <div class="section-h" style="font-size:11px;margin-bottom:8px">Nos <span>Services</span></div>
+            <div class="svc-grid" style="grid-template-columns:repeat(2,1fr);gap:5px">
+              <div class="svc-card" style="padding:7px"><div class="svc-icon-mini" style="margin-bottom:4px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="10" height="10"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="svc-title" style="font-size:7px">Dev Web</div></div>
+              <div class="svc-card" style="padding:7px"><div class="svc-icon-mini" style="margin-bottom:4px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="10" height="10"><rect x="7" y="2" width="10" height="20" rx="2"/></svg></div><div class="svc-title" style="font-size:7px">Mobile</div></div>
+              <div class="svc-card" style="padding:7px"><div class="svc-icon-mini" style="margin-bottom:4px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="10" height="10"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M19 12h3"/></svg></div><div class="svc-title" style="font-size:7px">IA & ML</div></div>
+              <div class="svc-card" style="padding:7px"><div class="svc-icon-mini" style="margin-bottom:4px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="10" height="10"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></div><div class="svc-title" style="font-size:7px">Conseil IT</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="device-label">Tablette</div>
+  </div>
+
+  <!-- PHONE -->
+  <div class="phone-wrap">
+    <div class="phone-device">
+      <div class="phone-screen">
+        <div class="site preview-phone">
+          <div class="site-grid"></div>
+          <div class="site-glow"></div>
+          <nav class="site-nav" style="padding:6px 10px">
+            <div class="nav-logo">
+              <svg viewBox="0 0 60 60" fill="none" width="16" height="16"><rect width="60" height="60" rx="12" fill="#080c32"/><circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/><circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/><circle cx="30" cy="36" r="3" fill="#f0b429"/><path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none"/></svg>
+              <span class="nav-brand" style="font-size:9px">AnNissa</span>
+            </div>
+            <div class="nav-hamburger"><span style="width:12px"></span><span style="width:12px"></span><span style="width:12px"></span></div>
+          </nav>
+          <div class="site-hero" style="padding:10px 10px 8px">
+            <div class="hero-badge" style="font-size:5px;padding:2px 6px;margin-bottom:6px"><div class="hero-dot" style="width:3px;height:3px"></div>Solutions digitales</div>
+            <div class="hero-title" style="font-size:16px;margin-bottom:5px">Votre vision,<br>notre <span>code</span>.</div>
+            <div class="hero-desc" style="font-size:7px;margin-bottom:8px">Des solutions sur mesure pour votre business.</div>
+            <span class="btn-g" style="font-size:7px;padding:5px 12px">Démarrer →</span>
+            <div class="hero-stats" style="margin-top:10px;gap:12px">
+              <div class="stat-item"><span class="stat-n" style="font-size:13px">7+</span><span class="stat-l" style="font-size:5px">Expertises</span></div>
+              <div class="stat-item"><span class="stat-n" style="font-size:13px">100%</span><span class="stat-l" style="font-size:5px">Satisfaction</span></div>
+            </div>
+          </div>
+          <div class="divider" style="margin:0 10px"></div>
+          <div class="site-services" style="padding:8px 10px">
+            <div class="section-tag" style="font-size:5.5px;margin-bottom:4px">Nos Services</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div class="svc-card" style="padding:6px;display:flex;align-items:center;gap:7px"><div class="svc-icon-mini" style="margin-bottom:0;width:18px;height:18px;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="9" height="9"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div><div class="svc-title" style="font-size:7px">Développement Web</div><div class="svc-desc" style="font-size:6px">Sites, SaaS, e-commerce</div></div></div>
+              <div class="svc-card" style="padding:6px;display:flex;align-items:center;gap:7px"><div class="svc-icon-mini" style="margin-bottom:0;width:18px;height:18px;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="9" height="9"><rect x="7" y="2" width="10" height="20" rx="2"/></svg></div><div><div class="svc-title" style="font-size:7px">Apps Mobile</div><div class="svc-desc" style="font-size:6px">iOS & Android</div></div></div>
+              <div class="svc-card" style="padding:6px;display:flex;align-items:center;gap:7px"><div class="svc-icon-mini" style="margin-bottom:0;width:18px;height:18px;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="9" height="9"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M19 12h3"/></svg></div><div><div class="svc-title" style="font-size:7px">Intelligence Artificielle</div><div class="svc-desc" style="font-size:6px">Chatbots, ML, IA</div></div></div>
+              <div class="svc-card" style="padding:6px;display:flex;align-items:center;gap:7px"><div class="svc-icon-mini" style="margin-bottom:0;width:18px;height:18px;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" width="9" height="9"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></div><div><div class="svc-title" style="font-size:7px">Conseil & Expertise IT</div><div class="svc-desc" style="font-size:6px">Audit, stratégie digitale</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="device-label">Mobile</div>
+  </div>
+
+</div>
+
+<div class="footer-text">
+  <strong>annissadevgroup.com</strong> &nbsp;·&nbsp; Design adaptatif sur tous les appareils
+</div>
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+<title>Affiche AnNissa Dev Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #060a2e; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Inter', sans-serif; }
+
+  .poster {
+    width: 900px;
+    height: 1200px;
+    background: #080c32;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Background elements ── */
+  .bg-gradient {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% -10%, rgba(240,180,41,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 110%, rgba(13,19,71,0.8) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(30,39,112,0.5) 0%, transparent 50%);
+  }
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,180,41,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,180,41,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .orb-1 {
+    position: absolute; width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,180,41,0.08) 0%, transparent 70%);
+    top: -150px; right: -100px;
+  }
+  .orb-2 {
+    position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,39,112,0.6) 0%, transparent 70%);
+    bottom: 100px; left: -120px;
+  }
+  .orb-3 {
+    position: absolute; width: 250px; height: 250px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,180,41,0.06) 0%, transparent 70%);
+    bottom: 300px; right: 50px;
+  }
+
+  /* ── Decorative lines ── */
+  .deco-line {
+    position: absolute; background: linear-gradient(90deg, transparent, rgba(240,180,41,0.4), transparent);
+    height: 1px; width: 100%;
+  }
+  .deco-line-v {
+    position: absolute; background: linear-gradient(180deg, transparent, rgba(240,180,41,0.2), transparent);
+    width: 1px; height: 100%;
+  }
+
+  /* ── Content ── */
+  .content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; padding: 60px 70px; }
+
+  /* Top bar */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 60px;
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 14px; }
+  .logo-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(240,180,41,0.2), rgba(240,180,41,0.05));
+    border: 1px solid rgba(240,180,41,0.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-name { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: #f0b429; letter-spacing: -0.5px; }
+  .logo-sub { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 4px; text-transform: uppercase; }
+  .top-badge {
+    background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.3);
+    color: #f0b429; font-size: 11px; font-weight: 700; padding: 8px 18px;
+    border-radius: 50px; letter-spacing: 2px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #f0b429; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+  /* Main headline */
+  .headline-wrap { margin-bottom: 44px; }
+  .tag-line {
+    font-size: 12px; font-weight: 600; color: rgba(240,180,41,0.7);
+    letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .tag-line::before { content: ''; display: block; width: 32px; height: 1px; background: rgba(240,180,41,0.5); }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 72px; font-weight: 800; line-height: 1.0;
+    color: #ffffff; letter-spacing: -3px; margin-bottom: 24px;
+  }
+  h1 .gold { color: #f0b429; }
+  h1 .outline {
+    -webkit-text-stroke: 2px rgba(240,180,41,0.6);
+    color: transparent;
+  }
+  .subtitle {
+    font-size: 18px; color: rgba(200,208,240,0.75); line-height: 1.6;
+    max-width: 560px; font-weight: 400;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex; gap: 0; margin-bottom: 52px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px; overflow: hidden;
+  }
+  .stat {
+    flex: 1; padding: 24px 28px; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.07);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 800; color: #f0b429; line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 12px; color: rgba(200,208,240,0.5); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Services grid */
+  .services-label {
+    font-size: 11px; font-weight: 700; color: rgba(240,180,41,0.6);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .services-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 48px;
+  }
+  .svc {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 18px 20px;
+    display: flex; align-items: center; gap: 12px;
+    transition: all 0.3s;
+  }
+  .svc-icon {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: #f0b429;
+  }
+  .svc-icon svg { width: 18px; height: 18px; stroke: #f0b429; }
+  .svc-name { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3; }
+
+  /* CTA section */
+  .cta-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .cta-left { display: flex; flex-direction: column; gap: 8px; }
+  .cta-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #fff; }
+  .cta-url { font-size: 15px; color: #f0b429; font-weight: 600; letter-spacing: 0.5px; }
+  .cta-btn {
+    background: linear-gradient(135deg, #f0b429, #c8941f);
+    color: #0d1347; font-size: 15px; font-weight: 800;
+    padding: 18px 40px; border-radius: 50px; letter-spacing: 0.5px;
+    box-shadow: 0 12px 40px rgba(240,180,41,0.3);
+    white-space: nowrap;
+  }
+
+  /* Bottom accent */
+  .bottom-accent {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #f0b429 30%, #ffd166 60%, transparent);
+  }
+  .corner-deco {
+    position: absolute; width: 120px; height: 120px;
+    border-top: 1px solid rgba(240,180,41,0.3); border-left: 1px solid rgba(240,180,41,0.3);
+    top: 30px; left: 30px; border-radius: 4px 0 0 0;
+  }
+  .corner-deco-br {
+    position: absolute; width: 120px; height: 120px;
+    border-bottom: 1px solid rgba(240,180,41,0.3); border-right: 1px solid rgba(240,180,41,0.3);
+    bottom: 30px; right: 30px; border-radius: 0 0 4px 0;
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="bg-gradient"></div>
+  <div class="grid-bg"></div>
+  <div class="orb-1"></div>
+  <div class="orb-2"></div>
+  <div class="orb-3"></div>
+  <div class="deco-line" style="top:140px; opacity:.6"></div>
+  <div class="deco-line" style="bottom:120px; opacity:.4"></div>
+  <div class="deco-line-v" style="left:50%; opacity:.3"></div>
+  <div class="corner-deco"></div>
+  <div class="corner-deco-br"></div>
+  <div class="bottom-accent"></div>
+
+  <div class="content">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="logo-wrap">
+        <div class="logo-icon" style="background:none;border:none;padding:0;width:52px;height:52px;">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="52" height="52">
+            <rect width="60" height="60" rx="12" fill="#080c32"/>
+            <circle cx="30" cy="30" r="26" stroke="#f0b429" stroke-width="2"/>
+            <circle cx="30" cy="30" r="18" stroke="#f0b429" stroke-width="1.5"/>
+            <circle cx="30" cy="36" r="3" fill="#f0b429"/>
+            <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="30" cy="6" r="2" fill="#f0b429"/>
+            <circle cx="30" cy="54" r="2" fill="#f0b429"/>
+            <circle cx="6" cy="30" r="2" fill="#f0b429"/>
+            <circle cx="54" cy="30" r="2" fill="#f0b429"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <div class="logo-name">AnNissa</div>
+          <div class="logo-sub">Dev Group</div>
+        </div>
+      </div>
+      <div class="top-badge">
+        <div class="dot"></div>
+        Solutions digitales sur mesure
+      </div>
+    </div>
+
+    <!-- Headline -->
+    <div class="headline-wrap">
+      <div class="tag-line">Innovation · Excellence · Impact</div>
+      <h1>
+        Votre vision,<br>
+        notre <span class="gold">code</span>,<br>
+        <span class="outline">votre succès.</span>
+      </h1>
+      <p class="subtitle">De l'idée au produit fini — nous concevons des solutions web, mobile et IA qui transforment votre business.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num">7+</div>
+        <div class="stat-label">Expertises</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Satisfaction</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Support</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">SN</div>
+        <div class="stat-label">Dakar, Sénégal</div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="services-label">Nos expertises</div>
+    <div class="services-grid">
+      <div class="svc">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="svc-name">Développement Web</div>
+      </div>
+      <div class="svc">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="#f0b429"/></svg>
+        </div>
+        <div class="svc-name">Apps Mobile</div>
+      </div>
+      <div class="svc">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        </div>
+        <div class="svc-name">Intelligence Artificielle</div>
+      </div>
+      <div class="svc">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M7 8h4M7 12h8"/></svg>
+        </div>
+        <div class="svc-name">Développement Desktop</div>
+      </div>
+      <div class="svc">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="svc-name">Conseil & Expertise IT</div>
+      </div>
+      <div class="svc">
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+        </div>
+        <div class="svc-name">Formation IT</div>
+      </div>
+    </div>
+
+    <!-- Contact info bar -->
+    <div style="display:flex;align-items:center;gap:32px;padding:20px 28px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;margin-bottom:28px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(240,180,41,0.12);border:1px solid rgba(240,180,41,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <span style="font-size:13px;color:rgba(200,208,240,0.8);font-weight:500">contact@annissadevgroup.com</span>
+      </div>
+      <div style="width:1px;height:32px;background:rgba(255,255,255,0.07)"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(240,180,41,0.12);border:1px solid rgba(240,180,41,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <span style="font-size:13px;color:rgba(200,208,240,0.8);font-weight:500">annissadevgroup.com</span>
+      </div>
+      <div style="width:1px;height:32px;background:rgba(255,255,255,0.07)"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(240,180,41,0.12);border:1px solid rgba(240,180,41,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <span style="font-size:13px;color:rgba(200,208,240,0.8);font-weight:500">Dakar, Sénégal</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-row">
+      <div class="cta-left">
+        <div class="cta-title">Démarrons votre projet aujourd'hui</div>
+        <div class="cta-url">www.annissadevgroup.com</div>
+      </div>
+      <div class="cta-btn">Contactez-nous →</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
