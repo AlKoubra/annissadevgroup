@@ -49,13 +49,21 @@ const defaultSettings = {
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '10mb' }));
 
-app.use(session({
+const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET || 'annissa-admin-7x9k2m4p',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: MONGODB_URI, dbName: process.env.MONGODB_DB || 'annissa' }),
   cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 8 * 60 * 60 * 1000 }
-}));
+});
+
+// Le site vitrine public (/, /assets, sw.js...) n'a pas besoin de session.
+// On ne branche express-session que sur /admin et /api pour qu'un incident
+// MongoDB (ex: ECONNRESET après inactivité) ne fasse pas tomber tout le site.
+app.use((req, res, next) => {
+  if (req.path.startsWith('/admin') || req.path.startsWith('/api')) return sessionMiddleware(req, res, next);
+  next();
+});
 
 // Protect /admin pages before static files
 app.use((req, res, next) => {
@@ -584,6 +592,13 @@ app.get('/api/stats', async (req, res) => {
 // ── SPA routes ──
 app.get('/admin/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html')));
 app.get('/admin*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'index.html')));
+
+// ── Error handler de secours (ex: incident réseau MongoDB) ──
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  console.error('Unhandled error:', err);
+  res.status(503).json({ error: 'Service temporairement indisponible. Réessayez dans un instant.' });
+});
 
 // ── Start server (local) / export (Vercel) ──
 if (process.env.NODE_ENV !== 'production') {
