@@ -1,4 +1,4 @@
-const CACHE = 'annissa-v3';
+const CACHE = 'annissa-v4';
 const SHELL = [
   '/admin/',
   '/admin/index.html',

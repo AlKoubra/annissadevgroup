@@ -686,6 +686,9 @@ const renderQuotesTable = (quotes) => {
         <button class="btn-admin-icon" title="Envoyer par email" onclick="sendByEmail('quote','${q.id}')" style="color:var(--success)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </button>
+        <button class="btn-admin-icon" title="Envoyer par WhatsApp" onclick="sendByWhatsApp('quote','${q.id}')" style="color:#25D366">
+          ${whatsappIconSVG}
+        </button>
         ${q.status !== 'accepted' ? `<button class="btn-admin-icon" title="Changer statut" onclick="changeQuoteStatus('${q.id}')" style="color:var(--gold)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         </button>` : ''}
@@ -1026,6 +1029,9 @@ const renderInvoicesTable = (invoices) => {
         </button>
         <button class="btn-admin-icon" title="Envoyer par email" onclick="sendByEmail('invoice','${inv.id}')" style="color:var(--success)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </button>
+        <button class="btn-admin-icon" title="Envoyer par WhatsApp" onclick="sendByWhatsApp('invoice','${inv.id}')" style="color:#25D366">
+          ${whatsappIconSVG}
         </button>
         ${inv.status !== 'paid' ? `<button class="btn-admin btn-admin-sm btn-admin-success" onclick="markAsPaid('${inv.id}')">✓ Payée</button>` : ''}
         <button class="btn-admin-icon" title="Supprimer" onclick="deleteInvoice('${inv.id}')" style="color:var(--danger)">
@@ -1918,6 +1924,10 @@ const previewDocument = (type, id) => {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Envoyer par email
       </button>
+      <button class="btn-admin btn-admin-outline" onclick="sendByWhatsApp('${type}','${id}');closeModal()" style="color:#25D366;border-color:#25D366">
+        ${whatsappIconSVG}
+        Envoyer par WhatsApp
+      </button>
       <button class="btn-admin btn-admin-primary" onclick="${dlFn};closeModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Télécharger PDF
@@ -2148,6 +2158,108 @@ const doSendEmail = async (type, id) => {
   showEmailSuccessPopup(to, label);
   await loadAll();
   renderPage(type === 'quote' ? 'quotes' : 'invoices');
+};
+
+// ===== ENVOI WHATSAPP =====
+const whatsappIconSVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1a7.9 7.9 0 0 0 3.85 1h0a7.94 7.94 0 0 0 7.94-7.94 7.9 7.9 0 0 0-2.35-5.63zm-5.55 12.2h0a6.58 6.58 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.43-.16-.25a6.6 6.6 0 1 1 12.2-3.5 6.56 6.56 0 0 1-6.6 6.58zm3.6-4.93c-.2-.1-1.17-.58-1.35-.64s-.32-.1-.45.1-.5.64-.62.77-.23.15-.43.05a5.4 5.4 0 0 1-1.6-1 6 6 0 0 1-1.1-1.37c-.12-.2 0-.3.09-.4s.2-.23.3-.35a1.4 1.4 0 0 0 .2-.33.37.37 0 0 0 0-.35c-.05-.1-.45-1.1-.62-1.5s-.33-.34-.45-.34h-.38a.73.73 0 0 0-.53.25 2.2 2.2 0 0 0-.7 1.65 3.8 3.8 0 0 0 .8 2.05 8.7 8.7 0 0 0 3.35 3 9.7 9.7 0 0 0 1.13.42 2.7 2.7 0 0 0 1.25.08 2 2 0 0 0 1.35-.95 1.6 1.6 0 0 0 .12-.95c-.05-.08-.2-.13-.4-.23z"/></svg>`;
+
+const sendByWhatsApp = (type, id) => {
+  const data = type === 'quote' ? state.quotes.find(q => q.id === id) : state.invoices.find(i => i.id === id);
+  if (!data) return;
+
+  const client = state.clients.find(c => c.id === data.clientId);
+  const clientPhone = client?.phone || '';
+  const label = type === 'quote' ? 'Devis' : 'Facture';
+  const co = state.settings.company || {};
+  const cur = co.currency || 'FCFA';
+  const firstName = (data.clientName || '').split(' ')[0] || '';
+
+  const defaultMessage = `Bonjour ${firstName}, voici votre ${label.toLowerCase()} ${data.number}${data.projectName ? ` pour le projet "${data.projectName}"` : ''}.\nMontant : ${fmt.currency(data.total, cur)}.\nN'hésitez pas à nous contacter pour toute question.\n${co.name || 'AnNissa Dev Group'}`;
+
+  openModal(`Envoyer le ${label.toLowerCase()} par WhatsApp`, `
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1a7.9 7.9 0 0 0 3.85 1h0a7.94 7.94 0 0 0 7.94-7.94 7.9 7.9 0 0 0-2.35-5.63zm-5.55 12.2h0a6.58 6.58 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.43-.16-.25a6.6 6.6 0 1 1 12.2-3.5 6.56 6.56 0 0 1-6.6 6.58zm3.6-4.93c-.2-.1-1.17-.58-1.35-.64s-.32-.1-.45.1-.5.64-.62.77-.23.15-.43.05a5.4 5.4 0 0 1-1.6-1 6 6 0 0 1-1.1-1.37c-.12-.2 0-.3.09-.4s.2-.23.3-.35a1.4 1.4 0 0 0 .2-.33.37.37 0 0 0 0-.35c-.05-.1-.45-1.1-.62-1.5s-.33-.34-.45-.34h-.38a.73.73 0 0 0-.53.25 2.2 2.2 0 0 0-.7 1.65 3.8 3.8 0 0 0 .8 2.05 8.7 8.7 0 0 0 3.35 3 9.7 9.7 0 0 0 1.13.42 2.7 2.7 0 0 0 1.25.08 2 2 0 0 0 1.35-.95 1.6 1.6 0 0 0 .12-.95c-.05-.08-.2-.13-.4-.23z"/></svg>
+      </div>
+      <div style="background:#f0f4ff;border-radius:12px;padding:14px 20px;margin-bottom:20px;text-align:left">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+          <span style="color:#64748b">Document</span>
+          <span style="color:#0d1347;font-weight:700">${data.number}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+          <span style="color:#64748b">Client</span>
+          <span style="color:#0d1347;font-weight:700">${data.clientName}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px">
+          <span style="color:#64748b">Montant</span>
+          <span style="color:#f0b429;font-weight:800">${fmt.currency(data.total, cur)}</span>
+        </div>
+      </div>
+      <div class="form-group" style="text-align:left;margin-bottom:14px">
+        <label style="font-weight:700;color:#0d1347">Numéro WhatsApp du client</label>
+        <input id="wa_to_input" value="${clientPhone}" placeholder="+221 XX XXX XX XX"
+          style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #e2e8f0;font-size:14px;outline:none;transition:border .2s"
+          onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label style="font-weight:700;color:#0d1347">Message</label>
+        <textarea id="wa_message_input" rows="5"
+          style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;outline:none;transition:border .2s;font-family:inherit;resize:vertical"
+          onfocus="this.style.borderColor='#25D366'" onblur="this.style.borderColor='#e2e8f0'">${defaultMessage}</textarea>
+      </div>
+      <p style="font-size:11.5px;color:#94a3b8;margin-top:10px;text-align:left;line-height:1.6">
+        Sur mobile, le PDF sera proposé au partage avec ce message — il suffira de choisir WhatsApp puis le contact. Sur desktop (ou si le partage de fichier n'est pas supporté), le PDF sera téléchargé et WhatsApp Web s'ouvrira sur la conversation du client avec le message prêt : il ne restera qu'à joindre le fichier téléchargé.
+      </p>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button onclick="closeModal()" style="flex:1;padding:13px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;color:#64748b;font-weight:600;cursor:pointer;font-size:14px">Annuler</button>
+      <button onclick="doSendWhatsApp('${type}','${id}')" style="flex:2;padding:13px;border-radius:10px;border:none;background:#25D366;color:#fff;font-weight:700;cursor:pointer;font-size:14px;letter-spacing:.3px">
+        ${whatsappIconSVG}
+        Envoyer maintenant
+      </button>
+    </div>
+  `);
+};
+
+const doSendWhatsApp = async (type, id) => {
+  const phoneRaw = document.getElementById('wa_to_input')?.value?.trim();
+  const message = document.getElementById('wa_message_input')?.value?.trim() || '';
+  if (!phoneRaw) { toast('Veuillez saisir un numéro WhatsApp', 'error'); return; }
+
+  const data = type === 'quote' ? state.quotes.find(q => q.id === id) : state.invoices.find(i => i.id === id);
+  if (!data) return;
+
+  const label = type === 'quote' ? 'Devis' : 'Facture';
+  const phoneDigits = phoneRaw.replace(/[^\d]/g, ''); // wa.me veut le numéro sans "+" ni espaces
+
+  closeModal();
+  toast('Génération du PDF…');
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  buildPDF(doc, data, type);
+  const filename = type === 'quote' ? `Devis_${data.number}.pdf` : `Facture_${data.number}.pdf`;
+  const pdfBlob = doc.output('blob');
+
+  // 1) Web Share API (mobile / navigateurs compatibles) : partage direct du PDF avec le message pré-rempli
+  if (navigator.canShare) {
+    const file = new File([pdfBlob], filename, { type: 'application/pdf' });
+    if (navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], text: message, title: `${label} ${data.number}` });
+        toast('Partage ouvert — choisissez WhatsApp puis le contact du client ✓', 'success');
+        return;
+      } catch (e) {
+        if (e.name === 'AbortError') return; // annulé par l'utilisateur, on ne fait pas de repli
+      }
+    }
+  }
+
+  // 2) Repli (desktop, ou partage de fichier non supporté) : téléchargement du PDF + WhatsApp Web pré-rempli
+  doc.save(filename);
+  const waUrl = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
+  toast('PDF téléchargé — joignez-le dans la conversation WhatsApp ouverte', 'success');
 };
 
 // ===== MESSAGES =====
