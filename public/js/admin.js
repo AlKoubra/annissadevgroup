@@ -1,6 +1,6 @@
 // ===== STATE =====
 let state = {
-  clients: [], projects: [], quotes: [], invoices: [], settings: {}, messages: [],
+  clients: [], projects: [], quotes: [], invoices: [], settings: {}, messages: [], appointments: [],
   currentPage: 'dashboard'
 };
 
@@ -22,13 +22,32 @@ const fmt = {
   },
   date: (d) => d ? new Date(d).toLocaleDateString('fr-FR') : '—',
   dateInput: (d) => d ? new Date(d).toISOString().split('T')[0] : '',
+  time: (d) => d ? new Date(d).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '—',
+  datetime: (d) => d ? `${fmt.date(d)} à ${fmt.time(d)}` : '—',
   initials: (name) => name ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : '?'
 };
 
 const statusLabel = {
   draft: 'Brouillon', sent: 'Envoyé', accepted: 'Accepté', rejected: 'Refusé',
   paid: 'Payé', overdue: 'En retard', pending: 'En attente',
-  'in-progress': 'En cours', completed: 'Terminé', cancelled: 'Annulé'
+  'in-progress': 'En cours', completed: 'Terminé', cancelled: 'Annulé',
+  scheduled: 'Programmé', done: 'Terminé'
+};
+
+const appointmentTypeLabel = { presentation: 'Présentation de projet', devis: 'Discussion devis', autre: 'Autre' };
+
+// Délai lisible calculé sur l'écart réel avec maintenant (pas un libellé figé
+// J-1/H-1) : "dans 20 minutes", "dans 2 heures", "demain", "dans 3 jours"...
+const relativeTimeLabel = (datetimeStr) => {
+  const diffMs = new Date(datetimeStr).getTime() - Date.now();
+  if (diffMs <= 0) return 'très bientôt';
+  const mins = Math.round(diffMs / 60000);
+  if (mins < 60) return `dans ${mins} minute${mins > 1 ? 's' : ''}`;
+  const hours = Math.round(diffMs / 3600000);
+  if (hours < 24) return `dans ${hours} heure${hours > 1 ? 's' : ''}`;
+  const days = Math.round(diffMs / 86400000);
+  if (days === 1) return 'demain';
+  return `dans ${days} jours`;
 };
 
 const toast = (msg, type = 'success') => {
@@ -74,11 +93,11 @@ const nc = url => fetch(url, { cache: 'no-store' }).then(r => r.json());
 const silentRefresh = async () => {
   try {
     if (document.getElementById('modalOverlay')?.classList.contains('open')) return false;
-    const [clients, projects, quotes, invoices, messages] = await Promise.all([
+    const [clients, projects, quotes, invoices, messages, appointments] = await Promise.all([
       nc('/api/clients'), nc('/api/projects'),
-      nc('/api/quotes'), nc('/api/invoices'), nc('/api/messages')
+      nc('/api/quotes'), nc('/api/invoices'), nc('/api/messages'), nc('/api/appointments')
     ]);
-    state = { ...state, clients, projects, quotes, invoices, messages };
+    state = { ...state, clients, projects, quotes, invoices, messages, appointments };
     updateBadges();
     renderPage(state.currentPage);
     return true;
@@ -102,11 +121,12 @@ const syncPoll = async () => {
 
 // ===== LOAD ALL DATA =====
 const loadAll = async () => {
-  const [clients, projects, quotes, invoices, settings, messages] = await Promise.all([
+  const [clients, projects, quotes, invoices, settings, messages, appointments] = await Promise.all([
     api.get('/api/clients'), api.get('/api/projects'),
-    api.get('/api/quotes'), api.get('/api/invoices'), api.get('/api/settings'), api.get('/api/messages')
+    api.get('/api/quotes'), api.get('/api/invoices'), api.get('/api/settings'), api.get('/api/messages'),
+    api.get('/api/appointments')
   ]);
-  state = { ...state, clients, projects, quotes, invoices, settings, messages };
+  state = { ...state, clients, projects, quotes, invoices, settings, messages, appointments };
   updateBadges();
 };
 
@@ -118,6 +138,8 @@ const updateBadges = () => {
   const unread = state.messages.filter(m => !m.read).length;
   const badge = document.getElementById('messagesBadge');
   if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? '' : 'none'; }
+  const apptBadge = document.getElementById('appointmentsBadge');
+  if (apptBadge) apptBadge.textContent = state.appointments.filter(a => a.status === 'scheduled').length;
 };
 
 // ===== NAVIGATION =====
@@ -133,7 +155,8 @@ const navigate = (page) => {
     quotes: ['Devis', 'Gestion des devis'],
     invoices: ['Factures', 'Gestion de la facturation'],
     settings: ['Paramètres', 'Configuration de l\'entreprise'],
-    messages: ['Messages', 'Demandes reçues depuis le site']
+    messages: ['Messages', 'Demandes reçues depuis le site'],
+    appointments: ['Rendez-vous', 'RDV en ligne avec vos clients']
   };
   const [title, sub] = titles[page] || ['Admin', ''];
   document.getElementById('pageTitle').textContent = title;
@@ -155,7 +178,7 @@ document.getElementById('sidebarClose').addEventListener('click', () => document
 const renderPage = (page) => {
   const main = document.getElementById('adminMain');
   main.innerHTML = '';
-  const pages = { dashboard: renderDashboard, clients: renderClients, projects: renderProjects, quotes: renderQuotes, invoices: renderInvoices, settings: renderSettings, messages: renderMessages };
+  const pages = { dashboard: renderDashboard, clients: renderClients, projects: renderProjects, quotes: renderQuotes, invoices: renderInvoices, settings: renderSettings, messages: renderMessages, appointments: renderAppointments };
   if (pages[page]) pages[page](main);
 };
 
@@ -242,6 +265,13 @@ const renderDashboard = (main) => {
         </div>
         <div class="recent-list" id="acomptesList"></div>
       </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📅 Prochains rendez-vous</span>
+          <button class="btn-admin btn-admin-outline btn-admin-sm" onclick="navigate('appointments')">Voir tout</button>
+        </div>
+        <div class="recent-list" id="upcomingAppointments"></div>
+      </div>
     </div>
   `;
 
@@ -292,6 +322,26 @@ const renderDashboard = (main) => {
       </div>
     </div>`;
   }).join('') : '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:24px">Aucun acompte en cours</p>';
+
+  const upcoming = state.appointments
+    .filter(a => a.status === 'scheduled' && new Date(a.datetime) >= new Date())
+    .sort((a, b) => new Date(a.datetime) - new Date(b.datetime))
+    .slice(0, 5);
+  document.getElementById('upcomingAppointments').innerHTML = upcoming.length ? upcoming.map(a => {
+    const due = appointmentReminderDue(a);
+    return `
+    <div class="recent-item">
+      <div class="recent-avatar">${fmt.initials(a.clientName)}</div>
+      <div class="recent-info">
+        <div class="recent-name">${a.clientName || '—'}</div>
+        <div class="recent-meta">${appointmentTypeLabel[a.type] || 'Autre'} · ${fmt.datetime(a.datetime)}</div>
+      </div>
+      ${(due.j1 || due.h1) ? `<div style="display:flex;gap:4px">
+        <button class="btn-admin-icon" title="Rappel par email" style="color:var(--gold)" onclick="sendAppointmentReminderByEmail('${a.id}')">${mailIconSVG}</button>
+        <button class="btn-admin-icon" title="Rappel WhatsApp à envoyer" style="color:#25D366" onclick="sendAppointmentReminderByWhatsApp('${a.id}','${due.h1 ? 'H-1' : 'J-1'}')">${whatsappIconSVG}</button>
+      </div>` : ''}
+    </div>`;
+  }).join('') : '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:24px">Aucun rendez-vous à venir</p>';
 };
 
 // ===== CLIENTS =====
@@ -2162,6 +2212,7 @@ const doSendEmail = async (type, id) => {
 
 // ===== ENVOI WHATSAPP =====
 const whatsappIconSVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1a7.9 7.9 0 0 0 3.85 1h0a7.94 7.94 0 0 0 7.94-7.94 7.9 7.9 0 0 0-2.35-5.63zm-5.55 12.2h0a6.58 6.58 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.43-.16-.25a6.6 6.6 0 1 1 12.2-3.5 6.56 6.56 0 0 1-6.6 6.58zm3.6-4.93c-.2-.1-1.17-.58-1.35-.64s-.32-.1-.45.1-.5.64-.62.77-.23.15-.43.05a5.4 5.4 0 0 1-1.6-1 6 6 0 0 1-1.1-1.37c-.12-.2 0-.3.09-.4s.2-.23.3-.35a1.4 1.4 0 0 0 .2-.33.37.37 0 0 0 0-.35c-.05-.1-.45-1.1-.62-1.5s-.33-.34-.45-.34h-.38a.73.73 0 0 0-.53.25 2.2 2.2 0 0 0-.7 1.65 3.8 3.8 0 0 0 .8 2.05 8.7 8.7 0 0 0 3.35 3 9.7 9.7 0 0 0 1.13.42 2.7 2.7 0 0 0 1.25.08 2 2 0 0 0 1.35-.95 1.6 1.6 0 0 0 .12-.95c-.05-.08-.2-.13-.4-.23z"/></svg>`;
+const mailIconSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
 
 const sendByWhatsApp = (type, id) => {
   const data = type === 'quote' ? state.quotes.find(q => q.id === id) : state.invoices.find(i => i.id === id);
@@ -2260,6 +2311,331 @@ const doSendWhatsApp = async (type, id) => {
   const waUrl = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`;
   window.open(waUrl, '_blank');
   toast('PDF téléchargé — joignez-le dans la conversation WhatsApp ouverte', 'success');
+};
+
+// ===== RENDEZ-VOUS =====
+// Les rappels par EMAIL (J-1 et H-1) partent automatiquement côté serveur (cron
+// qui appelle /api/reminders/run). Les rappels par WHATSAPP ne peuvent pas être
+// envoyés automatiquement sans l'API WhatsApp Business de Meta — cette page
+// détecte donc les rappels dus et propose un envoi en un clic, préparé à l'avance.
+const appointmentReminderDue = (appt) => {
+  if (appt.status !== 'scheduled') return { j1: false, h1: false };
+  const hoursUntil = (new Date(appt.datetime).getTime() - Date.now()) / 3600000;
+  if (!(hoursUntil > 0)) return { j1: false, h1: false };
+  const r = appt.reminders || {};
+  return { j1: !r.whatsappJ1 && hoursUntil <= 24, h1: !r.whatsappH1 && hoursUntil <= 1 };
+};
+
+const renderAppointments = (main) => {
+  const sorted = [...state.appointments].sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+  const dueList = [];
+  sorted.forEach(a => {
+    const due = appointmentReminderDue(a);
+    if (due.j1) dueList.push({ appt: a, milestone: 'J-1' });
+    if (due.h1) dueList.push({ appt: a, milestone: 'H-1' });
+  });
+
+  main.innerHTML = `
+    <div class="page-header">
+      <div></div>
+      <button class="btn-admin btn-admin-primary" onclick="openAppointmentForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouveau rendez-vous
+      </button>
+    </div>
+
+    ${dueList.length ? `
+    <div class="reminder-alert-card">
+      <div style="width:100%">
+        <div class="reminder-alert-text">
+          ${whatsappIconSVG}
+          <span><strong>${dueList.length} rappel${dueList.length > 1 ? 's' : ''} à envoyer</strong> — l'email automatique part déjà tout seul, mais tu peux aussi en renvoyer un manuellement (message reformulé selon le délai réel) ou déclencher le WhatsApp.</span>
+        </div>
+        <div class="reminder-alert-list">
+          ${dueList.map(({ appt, milestone }) => `
+            <div class="reminder-alert-row">
+              <span>${appt.clientName || '—'} · ${relativeTimeLabel(appt.datetime)} · ${fmt.datetime(appt.datetime)}</span>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn-admin btn-admin-sm" style="background:var(--gold);color:#fff;border:none;display:inline-flex;align-items:center;gap:6px" onclick="sendAppointmentReminderByEmail('${appt.id}')">
+                  ${mailIconSVG} Email
+                </button>
+                <button class="btn-admin btn-admin-sm" style="background:#25D366;color:#fff;border:none;display:inline-flex;align-items:center;gap:6px" onclick="sendAppointmentReminderByWhatsApp('${appt.id}','${milestone}')">
+                  ${whatsappIconSVG} WhatsApp
+                </button>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>` : ''}
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Rendez-vous (${sorted.length})</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date &amp; heure</th><th>Client</th><th>Type</th><th>Rappels</th><th>Statut</th><th></th></tr></thead>
+          <tbody>
+            ${sorted.length === 0 ? `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px">Aucun rendez-vous programmé.</td></tr>` : sorted.map(a => {
+              const r = a.reminders || {};
+              return `<tr>
+                <td><strong>${fmt.datetime(a.datetime)}</strong></td>
+                <td>${a.clientName || '—'}${a.projectName ? `<br><span style="font-size:11.5px;color:var(--text-muted)">${a.projectName}</span>` : ''}${a.quoteNumber ? `<br><span style="font-size:11.5px;color:var(--text-muted)">Devis ${a.quoteNumber}</span>` : ''}</td>
+                <td>${appointmentTypeLabel[a.type] || 'Autre'}</td>
+                <td style="font-size:11px;line-height:1.9;white-space:nowrap">
+                  ✉️ J-1 ${r.emailJ1 ? '✓' : '·'} &nbsp; ✉️ H-1 ${r.emailH1 ? '✓' : '·'}<br>
+                  📱 J-1 ${r.whatsappJ1 ? '✓' : '·'} &nbsp; 📱 H-1 ${r.whatsappH1 ? '✓' : '·'}
+                </td>
+                <td><span class="badge badge-${a.status}">${statusLabel[a.status] || a.status}</span></td>
+                <td><div class="table-actions">
+                  <button class="btn-admin-icon" title="Modifier" onclick="openAppointmentForm('${a.id}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  ${a.status === 'scheduled' ? `
+                  <button class="btn-admin-icon" title="Marquer terminé" onclick="setAppointmentStatus('${a.id}','done')" style="color:var(--success)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+                  <button class="btn-admin-icon" title="Annuler" onclick="setAppointmentStatus('${a.id}','cancelled')" style="color:var(--warning)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  </button>` : ''}
+                  <button class="btn-admin-icon" title="Supprimer" onclick="deleteAppointment('${a.id}')" style="color:var(--danger)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                  </button>
+                </div></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+};
+
+const openAppointmentForm = (id = null) => {
+  const appt = id ? state.appointments.find(a => a.id === id) : null;
+  const dt = appt ? new Date(appt.datetime) : null;
+  const dateVal = dt ? fmt.dateInput(appt.datetime) : '';
+  const timeVal = dt ? `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}` : '';
+
+  const clientOptions = state.clients.map(c => `<option value="${c.id}" ${appt?.clientId === c.id ? 'selected' : ''}>${c.name}</option>`).join('');
+  const quoteOptions = state.quotes.map(q => `<option value="${q.id}" ${appt?.quoteId === q.id ? 'selected' : ''}>${q.number} — ${q.clientName || ''}</option>`).join('');
+  const projectOptions = state.projects.map(p => `<option value="${p.id}" ${appt?.projectId === p.id ? 'selected' : ''}>${p.name} — ${p.clientName || ''}</option>`).join('');
+
+  openModal(id ? 'Modifier le rendez-vous' : 'Nouveau rendez-vous', `
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Client *</label>
+        <select id="a_client"><option value="">Sélectionner...</option>${clientOptions}</select>
+      </div>
+      <div class="form-group">
+        <label>Type de rendez-vous</label>
+        <select id="a_type">
+          <option value="presentation" ${appt?.type === 'presentation' ? 'selected' : ''}>Présentation de projet</option>
+          <option value="devis" ${!appt || appt?.type === 'devis' ? 'selected' : ''}>Discussion autour d'un devis</option>
+          <option value="autre" ${appt?.type === 'autre' ? 'selected' : ''}>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" id="a_date" value="${dateVal}">
+      </div>
+      <div class="form-group">
+        <label>Heure *</label>
+        <input type="time" id="a_time" value="${timeVal}">
+      </div>
+      <div class="form-group">
+        <label>Durée</label>
+        <select id="a_duration">${[30, 45, 60, 90].map(m => `<option value="${m}" ${(appt?.duration || 60) == m ? 'selected' : ''}>${m} min</option>`).join('')}</select>
+      </div>
+      <div class="form-group">
+        <label>Devis concerné (optionnel)</label>
+        <select id="a_quote"><option value="">Aucun</option>${quoteOptions}</select>
+      </div>
+      <div class="form-group form-full">
+        <label>Projet concerné (optionnel)</label>
+        <select id="a_project"><option value="">Aucun</option>${projectOptions}</select>
+      </div>
+      <div class="form-group form-full">
+        <label>Lien de la visio (Meet, Zoom, WhatsApp...)</label>
+        <input type="url" id="a_link" value="${appt?.meetingLink || ''}" placeholder="https://meet.google.com/...">
+      </div>
+      <div class="form-group form-full">
+        <label>Notes</label>
+        <textarea id="a_notes" rows="3">${appt?.notes || ''}</textarea>
+      </div>
+    </div>
+    <p style="font-size:11.5px;color:var(--text-muted);margin:4px 0 16px">
+      Rappels automatiques par email au client et à l'admin 1 jour et 1 heure avant (aucune action requise).
+      Rappel WhatsApp préparé automatiquement, à envoyer en un clic depuis cette page le moment venu.
+    </p>
+    <div class="form-actions">
+      <button class="btn-admin btn-admin-primary" onclick="saveAppointment('${id || ''}')">${id ? 'Enregistrer' : 'Créer le rendez-vous'}</button>
+    </div>
+  `);
+};
+
+const saveAppointment = async (id) => {
+  const clientId = document.getElementById('a_client')?.value;
+  const date = document.getElementById('a_date')?.value;
+  const time = document.getElementById('a_time')?.value;
+  if (!clientId || !date || !time) { toast('Client, date et heure sont obligatoires', 'error'); return; }
+
+  const client = state.clients.find(c => c.id === clientId);
+  const quoteId = document.getElementById('a_quote')?.value || null;
+  const quote = quoteId ? state.quotes.find(q => q.id === quoteId) : null;
+  const projectId = document.getElementById('a_project')?.value || null;
+  const project = projectId ? state.projects.find(p => p.id === projectId) : null;
+  const datetime = new Date(`${date}T${time}:00`).toISOString();
+
+  const payload = {
+    clientId, clientName: client?.name || '', clientEmail: client?.email || '', clientPhone: client?.phone || '',
+    quoteId: quoteId || null, quoteNumber: quote?.number || null,
+    projectId: projectId || null, projectName: project?.name || null,
+    type: document.getElementById('a_type')?.value,
+    duration: parseInt(document.getElementById('a_duration')?.value, 10) || 60,
+    datetime,
+    meetingLink: document.getElementById('a_link')?.value?.trim() || '',
+    notes: document.getElementById('a_notes')?.value?.trim() || ''
+  };
+
+  const existing = id ? state.appointments.find(a => a.id === id) : null;
+  // Si l'horaire change, on relance les rappels (sinon un RDV décalé pourrait ne jamais être rappelé)
+  if (existing && existing.datetime !== datetime) {
+    payload.reminders = { emailJ1: false, emailH1: false, whatsappJ1: false, whatsappH1: false };
+  }
+
+  if (id) await api.put(`/api/appointments/${id}`, payload);
+  else await api.post('/api/appointments', payload);
+
+  state.appointments = await api.get('/api/appointments');
+  closeModal(); updateBadges(); toast(id ? 'Rendez-vous modifié' : 'Rendez-vous créé', 'success'); renderPage('appointments');
+};
+
+const setAppointmentStatus = async (id, status) => {
+  await api.put(`/api/appointments/${id}`, { status });
+  const a = state.appointments.find(x => x.id === id);
+  if (a) a.status = status;
+  updateBadges(); toast(status === 'done' ? 'Marqué comme terminé' : 'Rendez-vous annulé'); renderPage('appointments');
+};
+
+const deleteAppointment = async (id) => {
+  const ok = await openConfirm('Supprimer le rendez-vous', 'Cette action est définitive.');
+  if (!ok) return;
+  await api.del(`/api/appointments/${id}`);
+  state.appointments = state.appointments.filter(a => a.id !== id);
+  updateBadges(); toast('Rendez-vous supprimé'); renderPage('appointments');
+};
+
+// Rappel WhatsApp — texte uniquement (pas de PDF), message préparé à l'avance.
+// L'envoi automatique sans intervention humaine n'est pas possible sans l'API
+// WhatsApp Business de Meta : ici, tout est prêt, il ne reste qu'à cliquer
+// "Envoyer maintenant".
+const sendAppointmentReminderByWhatsApp = (id, milestone) => {
+  const appt = state.appointments.find(a => a.id === id);
+  if (!appt) return;
+  const co = state.settings.company || {};
+  const delayLabel = relativeTimeLabel(appt.datetime);
+  const typeLabel = (appointmentTypeLabel[appt.type] || 'rendez-vous').toLowerCase();
+
+  const defaultMessage = `Bonjour ${appt.clientName || ''}, petit rappel : votre ${typeLabel} avec ${co.name || 'AnNissa Dev Group'} a lieu ${delayLabel}, le ${fmt.datetime(appt.datetime)}.\nÀ très vite !`;
+
+  openModal('Envoyer le rappel par WhatsApp', `
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1a7.9 7.9 0 0 0 3.85 1h0a7.94 7.94 0 0 0 7.94-7.94 7.9 7.9 0 0 0-2.35-5.63zm-5.55 12.2h0a6.58 6.58 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.43-.16-.25a6.6 6.6 0 1 1 12.2-3.5 6.56 6.56 0 0 1-6.6 6.58zm3.6-4.93c-.2-.1-1.17-.58-1.35-.64s-.32-.1-.45.1-.5.64-.62.77-.23.15-.43.05a5.4 5.4 0 0 1-1.6-1 6 6 0 0 1-1.1-1.37c-.12-.2 0-.3.09-.4s.2-.23.3-.35a1.4 1.4 0 0 0 .2-.33.37.37 0 0 0 0-.35c-.05-.1-.45-1.1-.62-1.5s-.33-.34-.45-.34h-.38a.73.73 0 0 0-.53.25 2.2 2.2 0 0 0-.7 1.65 3.8 3.8 0 0 0 .8 2.05 8.7 8.7 0 0 0 3.35 3 9.7 9.7 0 0 0 1.13.42 2.7 2.7 0 0 0 1.25.08 2 2 0 0 0 1.35-.95 1.6 1.6 0 0 0 .12-.95c-.05-.08-.2-.13-.4-.23z"/></svg>
+      </div>
+      <div class="form-group" style="text-align:left;margin-bottom:14px">
+        <label style="font-weight:700">Numéro WhatsApp du client</label>
+        <input id="wa_reminder_to" value="${appt.clientPhone || ''}" placeholder="+221 XX XXX XX XX"
+          style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #e2e8f0;font-size:14px;outline:none">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label style="font-weight:700">Message</label>
+        <textarea id="wa_reminder_msg" rows="5" style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;outline:none;font-family:inherit;resize:vertical">${defaultMessage}</textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button onclick="closeModal()" style="flex:1;padding:13px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;color:#64748b;font-weight:600;cursor:pointer">Annuler</button>
+      <button onclick="doSendAppointmentReminderWhatsApp('${id}','${milestone}')" style="flex:2;padding:13px;border-radius:10px;border:none;background:#25D366;color:#fff;font-weight:700;cursor:pointer">Envoyer maintenant</button>
+    </div>
+  `);
+};
+
+const doSendAppointmentReminderWhatsApp = async (id, milestone) => {
+  const phoneRaw = document.getElementById('wa_reminder_to')?.value?.trim();
+  const message = document.getElementById('wa_reminder_msg')?.value?.trim() || '';
+  if (!phoneRaw) { toast('Veuillez saisir un numéro WhatsApp', 'error'); return; }
+  const phoneDigits = phoneRaw.replace(/[^\d]/g, '');
+
+  closeModal();
+
+  let cancelled = false;
+  if (navigator.share) {
+    try {
+      await navigator.share({ text: message, title: 'Rappel de rendez-vous' });
+      toast('Partage ouvert — choisissez WhatsApp puis le contact ✓', 'success');
+    } catch (e) {
+      if (e.name === 'AbortError') cancelled = true;
+      else window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+  } else {
+    window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+  if (cancelled) return; // annulé par l'admin : on ne marque pas comme envoyé
+
+  const field = milestone === 'H-1' ? 'whatsappH1' : 'whatsappJ1';
+  await api.put(`/api/appointments/${id}`, { reminders: { [field]: true } });
+  const appt = state.appointments.find(a => a.id === id);
+  if (appt) { appt.reminders = { ...(appt.reminders || {}), [field]: true }; }
+  renderPage('appointments');
+};
+
+// Rappel par EMAIL — déclenché à la main (en plus des rappels automatiques du
+// cron) : utile pour renvoyer/relancer à tout moment. Le message est reformulé
+// à l'ouverture de la fenêtre selon le délai réel restant ("dans 20 minutes",
+// "dans 2 heures", "demain"...), pas figé sur J-1/H-1.
+const sendAppointmentReminderByEmail = (id) => {
+  const appt = state.appointments.find(a => a.id === id);
+  if (!appt) return;
+  const co = state.settings.company || {};
+  const delayLabel = relativeTimeLabel(appt.datetime);
+  const typeLabel = (appointmentTypeLabel[appt.type] || 'rendez-vous').toLowerCase();
+
+  const defaultMessage = `Bonjour ${appt.clientName || ''}, un petit rappel : votre ${typeLabel} avec ${co.name || 'AnNissa Dev Group'} a lieu ${delayLabel} (${fmt.datetime(appt.datetime)}).`;
+
+  openModal('Envoyer le rappel par email', `
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="width:56px;height:56px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="26" height="26"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="form-group" style="text-align:left;margin-bottom:14px">
+        <label style="font-weight:700">Adresse email du client</label>
+        <input id="email_reminder_to" type="email" value="${appt.clientEmail || ''}" placeholder="client@email.com"
+          style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #e2e8f0;font-size:14px;outline:none">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label style="font-weight:700">Message</label>
+        <textarea id="email_reminder_msg" rows="4" style="width:100%;padding:12px 16px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;outline:none;font-family:inherit;resize:vertical">${defaultMessage}</textarea>
+      </div>
+      <p style="font-size:11px;color:#94a3b8;margin-top:8px;text-align:left">La date, l'heure et vos notes sont ajoutées automatiquement dans l'email, pas besoin de les répéter ici.</p>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button onclick="closeModal()" style="flex:1;padding:13px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;color:#64748b;font-weight:600;cursor:pointer">Annuler</button>
+      <button onclick="doSendAppointmentReminderEmail('${id}')" style="flex:2;padding:13px;border-radius:10px;border:none;background:var(--gold);color:#fff;font-weight:700;cursor:pointer">Envoyer maintenant</button>
+    </div>
+  `);
+};
+
+const doSendAppointmentReminderEmail = async (id) => {
+  const to = document.getElementById('email_reminder_to')?.value?.trim();
+  const message = document.getElementById('email_reminder_msg')?.value?.trim() || '';
+  if (!to) { toast('Veuillez saisir une adresse email', 'error'); return; }
+
+  closeModal();
+  toast('Envoi en cours…');
+
+  const res = await api.post(`/api/appointments/${id}/remind-email`, { to, message });
+  if (res.error) { toast(res.error, 'error'); return; }
+
+  toast('Email de rappel envoyé ✓', 'success');
 };
 
 // ===== MESSAGES =====

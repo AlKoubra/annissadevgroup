@@ -146,10 +146,104 @@ app.post('/api/messages', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── RAPPELS AUTOMATIQUES DE RENDEZ-VOUS ──────────────────────────────────
+// Appelé par un cron (Vercel Cron ou un pingeur externe type cron-job.org),
+// PAS par un admin connecté : pas de session ici, protégé par un secret.
+// Vercel injecte automatiquement `Authorization: Bearer $CRON_SECRET` sur les
+// requêtes qu'il déclenche lui-même si une env var nommée CRON_SECRET existe ;
+// le paramètre ?key= couvre le cas d'un pingeur externe qui ne peut pas fixer
+// cet en-tête.
+app.all('/api/reminders/run', async (req, res) => {
+  const provided = req.query.key || (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (!process.env.CRON_SECRET || provided !== process.env.CRON_SECRET) {
+    return res.status(401).json({ error: 'Non autorisé' });
+  }
+  try {
+    const settings = await (await col('settings')).findOne({ _id: 'main' }) || defaultSettings;
+    const apiKey = settings.smtp?.pass || '';
+    const senderEmail = settings.smtp?.user || '';
+    const companyName = settings.company?.name || 'AnNissa Dev Group';
+    const adminEmail = settings.adminEmail || settings.company?.email || '';
+
+    const apptCol = await col('appointments');
+    const appts = await apptCol.find({ status: 'scheduled' }).toArray();
+    const now = Date.now();
+    const sent = { emailJ1: 0, emailH1: 0 };
+    const errors = [];
+
+    for (const appt of appts) {
+      const apptTime = new Date(appt.datetime).getTime();
+      if (Number.isNaN(apptTime)) continue;
+      const hoursUntil = (apptTime - now) / 3600000;
+      if (hoursUntil <= 0) continue; // déjà passé
+      const reminders = appt.reminders || {};
+
+      if (!reminders.emailJ1 && hoursUntil <= 24) {
+        if (apiKey && senderEmail) {
+          try { await sendAppointmentReminderEmails(appt, settings, { apiKey, senderEmail, companyName, adminEmail }); sent.emailJ1++; }
+          catch (e) { errors.push(`${appt.id} J-1: ${e.message}`); }
+        }
+        await apptCol.updateOne({ id: appt.id }, { $set: { 'reminders.emailJ1': true } });
+      }
+      if (!reminders.emailH1 && hoursUntil <= 1) {
+        if (apiKey && senderEmail) {
+          try { await sendAppointmentReminderEmails(appt, settings, { apiKey, senderEmail, companyName, adminEmail }); sent.emailH1++; }
+          catch (e) { errors.push(`${appt.id} H-1: ${e.message}`); }
+        }
+        await apptCol.updateOne({ id: appt.id }, { $set: { 'reminders.emailH1': true } });
+      }
+    }
+    res.json({ checked: appts.length, sent, errors });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── AUTH REQUIRED for all routes below ──
 app.use('/api', (req, res, next) => {
   if (req.session?.isAdmin) return next();
   res.status(401).json({ error: 'Non autorisé — Veuillez vous connecter' });
+});
+
+// ── RENDEZ-VOUS (présentation de projet / discussion de devis, en ligne) ──
+app.get('/api/appointments', async (req, res) => {
+  try { res.json(await (await col('appointments')).find({}).sort({ datetime: 1 }).toArray()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/appointments', async (req, res) => {
+  try {
+    const appt = {
+      id: uuidv4(),
+      ...req.body,
+      status: req.body.status || 'scheduled',
+      reminders: { emailJ1: false, emailH1: false, whatsappJ1: false, whatsappH1: false },
+      createdAt: new Date().toISOString()
+    };
+    await (await col('appointments')).insertOne(appt);
+    res.status(201).json(appt);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.put('/api/appointments/:id', async (req, res) => {
+  try {
+    const body = { ...req.body, updatedAt: new Date().toISOString() };
+    // Permet de mettre à jour un sous-champ de reminders sans écraser les autres flags
+    const $set = {};
+    for (const [k, v] of Object.entries(body)) {
+      if (k === 'reminders' && v && typeof v === 'object') {
+        for (const [rk, rv] of Object.entries(v)) $set[`reminders.${rk}`] = rv;
+      } else {
+        $set[k] = v;
+      }
+    }
+    const result = await (await col('appointments')).findOneAndUpdate({ id: req.params.id }, { $set }, { returnDocument: 'after' });
+    if (!result) return res.status(404).json({ error: 'Rendez-vous introuvable' });
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/appointments/:id', async (req, res) => {
+  try { await (await col('appointments')).deleteOne({ id: req.params.id }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── Version pour sync temps réel (dérivée des données, sans mécanisme externe) ──
@@ -358,6 +452,30 @@ app.delete('/api/invoices/:id', async (req, res) => {
 });
 
 // ── SEND EMAIL (Brevo) ──
+
+// Envoi bas niveau via l'API Brevo — réutilisé par l'envoi manuel de devis/facture
+// et par les rappels de rendez-vous.
+const sendViaBrevo = (payload, apiKey) => new Promise((resolve, reject) => {
+  const https = require('https');
+  const body = JSON.stringify(payload);
+  const req2 = https.request({
+    hostname: 'api.brevo.com',
+    path: '/v3/smtp/email',
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
+  }, (resp) => {
+    let raw = '';
+    resp.on('data', chunk => raw += chunk);
+    resp.on('end', () => {
+      if (resp.statusCode >= 200 && resp.statusCode < 300) resolve(raw);
+      else reject(new Error(`Brevo ${resp.statusCode}: ${raw}`));
+    });
+  });
+  req2.on('error', reject);
+  req2.write(body);
+  req2.end();
+});
+
 const buildEmailHTML = (data, type, settings) => {
   const co = settings.company || {};
   const cur = co.currency || 'FCFA';
@@ -461,9 +579,123 @@ const buildEmailHTML = (data, type, settings) => {
 </table></td></tr></table></body></html>`;
 };
 
+// ── EMAIL DE RAPPEL DE RENDEZ-VOUS ──
+
+// Calcule un délai lisible à partir de l'écart réel entre maintenant et le RDV
+// ("dans 20 minutes", "dans 2 heures", "demain", "dans 3 jours"...) plutôt qu'un
+// libellé figé lié au palier J-1/H-1 — reste juste même si l'envoi (auto ou
+// manuel) a lieu un peu avant/après le franchissement du seuil.
+const relativeDelayLabel = (datetimeStr) => {
+  const diffMs = new Date(datetimeStr).getTime() - Date.now();
+  if (diffMs <= 0) return 'très bientôt';
+  const mins = Math.round(diffMs / 60000);
+  if (mins < 60) return `dans ${mins} minute${mins > 1 ? 's' : ''}`;
+  const hours = Math.round(diffMs / 3600000);
+  if (hours < 24) return `dans ${hours} heure${hours > 1 ? 's' : ''}`;
+  const days = Math.round(diffMs / 86400000);
+  if (days === 1) return 'demain';
+  return `dans ${days} jours`;
+};
+
+const buildReminderEmailHTML = (appt, settings, audience, customMessage) => {
+  const co = settings.company || {};
+  const when = new Date(appt.datetime);
+  const dateStr = when.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const timeStr = when.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const delayLabel = relativeDelayLabel(appt.datetime);
+  const typeLabels = { presentation: 'Présentation de projet', devis: 'Discussion autour d\'un devis', autre: 'Rendez-vous' };
+  const typeLabel = typeLabels[appt.type] || appt.title || 'Rendez-vous';
+
+  // Toujours adressé au client, avec l'entreprise (logo + en-tête) comme expéditeur —
+  // y compris sur la copie envoyée à l'admin : pas de ton "interne" différent.
+  const introText = customMessage
+    ? customMessage.replace(/</g, '&lt;').replace(/\n/g, '<br>')
+    : `Bonjour ${appt.clientName || ''}, un petit rappel : votre rendez-vous avec ${co.name || 'AnNissa Dev Group'} a lieu ${delayLabel}.`;
+
+  return `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#eef0f8;font-family:'Segoe UI',Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#eef0f8;padding:32px 16px"><tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+  <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:26px 32px;border-radius:12px 12px 0 0">
+    <table cellpadding="0" cellspacing="0"><tr>
+      <td style="padding-right:14px;vertical-align:middle">
+        <img src="https://annissadevgroup.com/favicon-192.png" width="40" height="40" alt="${co.name || 'AnNissa Dev Group'}" style="display:block;border-radius:8px">
+      </td>
+      <td style="vertical-align:middle">
+        <div style="font-size:19px;font-weight:800;color:#f0b429;line-height:1">${co.name || 'AnNissa Dev Group'}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:4px;letter-spacing:.5px">Tech with Purpose and Dignity</div>
+      </td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="background:#f0b429;height:3px;font-size:0">&nbsp;</td></tr>
+  <tr><td style="background:#fff;padding:32px 32px 8px">
+    <p style="margin:0 0 22px;font-size:14.5px;color:#1c2360;line-height:1.8">${introText}</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f9fe;border-radius:10px"><tr>
+      <td style="padding:18px 20px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#f0b429;margin-bottom:6px">${typeLabel}</div>
+        <div style="font-size:16px;font-weight:800;color:#0d1347;text-transform:capitalize">${dateStr}</div>
+        <div style="font-size:22px;font-weight:800;color:#0d1347;margin-top:2px">${timeStr}</div>
+        ${appt.notes ? `<div style="margin-top:14px;font-size:12.5px;color:#64748b;line-height:1.7">${appt.notes.replace(/</g, '&lt;').replace(/\n/g, '<br>')}</div>` : ''}
+      </td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="background:#fff;padding:26px 32px 30px">
+    <p style="margin:0;font-size:13.5px;font-weight:700;color:#0d1347">${co.name || 'AnNissa Dev Group'}</p>
+    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.email, co.website].filter(Boolean).join(' · ')}</p>
+  </td></tr>
+</table></td></tr></table></body></html>`;
+};
+
+const sendAppointmentReminderEmails = async (appt, settings, { apiKey, senderEmail, companyName, adminEmail }) => {
+  const subjectSuffix = relativeDelayLabel(appt.datetime);
+  if (appt.clientEmail) {
+    await sendViaBrevo({
+      sender: { name: companyName, email: senderEmail },
+      to: [{ email: appt.clientEmail }],
+      subject: `Rappel — votre rendez-vous avec ${companyName} ${subjectSuffix}`,
+      htmlContent: buildReminderEmailHTML(appt, settings, 'client')
+    }, apiKey);
+  }
+  if (adminEmail) {
+    await sendViaBrevo({
+      sender: { name: companyName, email: senderEmail },
+      to: [{ email: adminEmail }],
+      subject: `[Rappel admin] RDV avec ${appt.clientName || 'un client'} ${subjectSuffix}`,
+      htmlContent: buildReminderEmailHTML(appt, settings, 'admin')
+    }, apiKey);
+  }
+};
+
+// Envoi manuel (déclenché par l'admin depuis le dashboard) : contrairement au
+// cron, celui-ci laisse l'admin relire/éditer le message avant envoi.
+app.post('/api/appointments/:id/remind-email', async (req, res) => {
+  try {
+    const { to, message } = req.body;
+    if (!to) return res.status(400).json({ error: 'Adresse email destinataire manquante.' });
+
+    const appt = await (await col('appointments')).findOne({ id: req.params.id });
+    if (!appt) return res.status(404).json({ error: 'Rendez-vous introuvable' });
+
+    const settings = await (await col('settings')).findOne({ _id: 'main' }) || defaultSettings;
+    const apiKey = settings.smtp?.pass || '';
+    const senderEmail = settings.smtp?.user || '';
+    const companyName = settings.company?.name || 'AnNissa Dev Group';
+    if (!apiKey) return res.status(400).json({ error: 'Clé API Brevo non configurée. Allez dans Paramètres → Email.' });
+    if (!senderEmail) return res.status(400).json({ error: 'Adresse email expéditeur non configurée.' });
+
+    await sendViaBrevo({
+      sender: { name: companyName, email: senderEmail },
+      to: [{ email: to }],
+      subject: `Rappel — votre rendez-vous avec ${companyName} ${relativeDelayLabel(appt.datetime)}`,
+      htmlContent: buildReminderEmailHTML(appt, settings, 'client', message)
+    }, apiKey);
+
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/api/send-email', async (req, res) => {
   try {
-    const https = require('https');
     const { to, pdfBase64, filename, quoteId, invoiceId } = req.body;
     const settings = await (await col('settings')).findOne({ _id: 'main' }) || defaultSettings;
     const apiKey = settings.smtp?.pass || '';
@@ -495,30 +727,7 @@ app.post('/api/send-email', async (req, res) => {
       payload.attachment = [{ content: cleanBase64, name: filename || `${label}_${data.number}.pdf` }];
     }
 
-    await new Promise((resolve, reject) => {
-      const body = JSON.stringify(payload);
-      const options = {
-        hostname: 'api.brevo.com',
-        path: '/v3/smtp/email',
-        method: 'POST',
-        headers: {
-          'api-key': apiKey,
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(body)
-        }
-      };
-      const req2 = https.request(options, (resp) => {
-        let raw = '';
-        resp.on('data', chunk => raw += chunk);
-        resp.on('end', () => {
-          if (resp.statusCode >= 200 && resp.statusCode < 300) resolve(raw);
-          else reject(new Error(`Brevo ${resp.statusCode}: ${raw}`));
-        });
-      });
-      req2.on('error', reject);
-      req2.write(body);
-      req2.end();
-    });
+    await sendViaBrevo(payload, apiKey);
 
     if (quoteId) {
       const q = await (await col('quotes')).findOne({ id: quoteId });

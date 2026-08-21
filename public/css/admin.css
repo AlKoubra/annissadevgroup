@@ -166,6 +166,21 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .badge-in-progress { background: rgba(59,130,246,0.15); color: #60a5fa; }
 .badge-completed { background: rgba(16,185,129,0.15); color: #34d399; }
 .badge-cancelled { background: rgba(107,114,128,0.2); color: #9ca3af; }
+.badge-scheduled { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.badge-done { background: rgba(16,185,129,0.15); color: #34d399; }
+
+/* ===== RENDEZ-VOUS ===== */
+.reminder-alert-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  background: rgba(240,180,41,.08); border: 1px solid rgba(240,180,41,.3); border-radius: var(--radius);
+  padding: 16px 20px; margin-bottom: 20px;
+}
+.reminder-alert-card .reminder-alert-text { display: flex; align-items: center; gap: 12px; font-size: 13.5px; color: var(--text-light); }
+.reminder-alert-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.reminder-alert-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 10px 14px;
+}
 
 /* ===== FORM ===== */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
