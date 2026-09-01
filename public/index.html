@@ -561,6 +561,13 @@
             </div>
           </div>
           <div class="contact-item">
+            <div class="contact-icon">☎</div>
+            <div>
+              <strong>Téléphone</strong>
+              <span><a href="tel:+221779215050">+221 77 921 50 50</a></span>
+            </div>
+          </div>
+          <div class="contact-item">
             <div class="contact-icon">⊙</div>
             <div>
               <strong>Localisation</strong>
@@ -832,5 +839,18 @@ function closeServiceModal() {
 
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeServiceModal(); });
 </script>
+
+<!-- ===== BOUTON WHATSAPP FLOTTANT ===== -->
+<a href="https://wa.me/221779215050?text=Bonjour%20AnNissa%20Dev%20Group%2C%20je%20souhaite%20discuter%20de%20mon%20projet."
+   class="whatsapp-float" target="_blank" rel="noopener" aria-label="Nous contacter sur WhatsApp">
+  <svg viewBox="0 0 32 32" width="30" height="30" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.004 3C9.383 3 4 8.383 4 15c0 2.117.555 4.184 1.61 6.008L4 29l8.184-1.582A11.93 11.93 0 0016.004 27C22.625 27 28 21.617 28 15S22.625 3 16.004 3zm0 21.6a9.55 9.55 0 01-4.867-1.332l-.35-.207-4.856.94.945-4.73-.227-.364A9.53 9.53 0 016.4 15c0-5.293 4.31-9.6 9.605-9.6 5.293 0 9.595 4.307 9.595 9.6 0 5.293-4.302 9.6-9.596 9.6zm5.266-7.19c-.29-.145-1.71-.844-1.976-.94-.266-.098-.46-.145-.653.144-.194.29-.75.94-.92 1.133-.168.194-.34.218-.63.073-.29-.145-1.223-.45-2.33-1.437-.86-.767-1.44-1.714-1.61-2.004-.168-.29-.018-.446.127-.59.13-.13.29-.34.436-.51.145-.17.194-.29.29-.484.098-.194.05-.364-.024-.51-.073-.144-.653-1.574-.895-2.156-.236-.566-.475-.49-.653-.5l-.556-.01c-.194 0-.51.073-.775.364s-1.017.994-1.017 2.424 1.04 2.81 1.185 3.005c.145.194 2.047 3.125 4.96 4.382.693.3 1.234.478 1.655.612.695.22 1.328.19 1.828.115.558-.083 1.71-.698 1.952-1.372.24-.674.24-1.252.168-1.372-.072-.12-.266-.194-.556-.34z"/>
+  </svg>
+</a>
+<style>
+.whatsapp-float{position:fixed;right:20px;bottom:20px;z-index:9998;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .2s ease,box-shadow .2s ease}
+.whatsapp-float:hover{transform:scale(1.08);box-shadow:0 8px 26px rgba(37,211,102,.5)}
+@media(max-width:600px){.whatsapp-float{right:16px;bottom:16px;width:52px;height:52px}}
+</style>
 </body>
 </html>
