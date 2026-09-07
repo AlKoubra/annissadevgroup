@@ -1525,7 +1525,8 @@ const buildPDF = (doc, data, type = 'quote') => {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...slate);
   doc.text('Tech with purpose and dignity', 34, 29);
-  const contactLine = [co.address, co.email, co.phone].filter(Boolean).join('  ·  ');
+  const phoneLine = [co.phone, co.commercialPhone].filter(Boolean).join(' / ');
+  const contactLine = [co.address, co.email, phoneLine].filter(Boolean).join('  ·  ');
   doc.text(contactLine || 'annissadevgroup.com', 34, 35);
   doc.text(co.website || 'annissadevgroup.com', 34, 41);
 
@@ -1873,7 +1874,7 @@ const previewDocument = (type, id) => {
               <div style="font-size:10px;color:#8896c4;letter-spacing:2px;text-transform:uppercase;margin:4px 0 10px">Tech with purpose and dignity</div>
               <div style="font-size:11px;color:#6872a8;line-height:1.9">
                 ${co.address || 'Dakar, Sénégal'}<br>
-                ${[co.email, co.phone].filter(Boolean).join('  ·  ') || 'contact@annissadevgroup.com'}<br>
+                ${[co.email, [co.phone, co.commercialPhone].filter(Boolean).join(' / ')].filter(Boolean).join('  ·  ') || 'contact@annissadevgroup.com'}<br>
                 <span style="color:#8896c4">${co.website || 'annissadevgroup.com'}</span>
               </div>
             </div>
@@ -2016,6 +2017,10 @@ const renderSettings = (main) => {
               <label>Téléphone</label>
               <input id="s_phone" value="${co.phone || ''}">
             </div>
+            <div class="form-group">
+              <label>Téléphone commercial (devis &amp; factures)</label>
+              <input id="s_commercial_phone" value="${co.commercialPhone || ''}" placeholder="77 921 50 50">
+            </div>
             <div class="form-group form-full">
               <label>Adresse</label>
               <input id="s_address" value="${co.address || ''}">
@@ -2081,12 +2086,17 @@ const renderSettings = (main) => {
 };
 
 const saveSettings = async () => {
+  // On repart des paramètres existants pour ne pas écraser les champs non gérés
+  // par ce formulaire (adminEmail, adminPasswordHash...) — le PUT fait un replaceOne.
   const data = {
+    ...state.settings,
     company: {
+      ...(state.settings.company || {}),
       name: document.getElementById('s_name')?.value,
       website: document.getElementById('s_web')?.value,
       email: document.getElementById('s_email')?.value,
       phone: document.getElementById('s_phone')?.value,
+      commercialPhone: document.getElementById('s_commercial_phone')?.value?.trim(),
       address: document.getElementById('s_address')?.value,
       siret: document.getElementById('s_siret')?.value,
       adminPhone: document.getElementById('s_admin_phone')?.value?.trim(),
@@ -2095,12 +2105,14 @@ const saveSettings = async () => {
       invoicePrefix: document.getElementById('s_iprefix')?.value
     },
     smtp: {
+      ...(state.settings.smtp || {}),
       host: 'smtp-relay.brevo.com',
       port: '587',
       user: document.getElementById('s_smtp_user')?.value?.trim(),
       pass: document.getElementById('s_smtp_pass')?.value?.trim()
     }
   };
+  delete data._id;
   const saved = await api.put('/api/settings', data);
   state.settings = saved;
   toast('Paramètres enregistrés ✓', 'success');

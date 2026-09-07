@@ -35,6 +35,7 @@ const defaultSettings = {
     name: 'AnNissa Dev Group',
     email: 'contact@annissadevgroup.com',
     phone: '',
+    commercialPhone: '77 921 50 50',
     address: 'Dakar, Sénégal',
     website: 'annissadevgroup.com',
     siret: '',
@@ -563,7 +564,7 @@ const buildEmailHTML = (data, type, settings) => {
   </td></tr>` : ''}
   <tr><td style="background:#fff;padding:28px 40px">
     <p style="margin:0;font-size:14px;font-weight:700;color:#0d1347">${co.name || 'AnNissa Dev Group'}</p>
-    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.email, co.website].filter(Boolean).join(' · ')}</p>
+    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.commercialPhone, co.email, co.website].filter(Boolean).join(' · ')}</p>
   </td></tr>
   <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:20px 40px;border-radius:0 0 12px 12px">
     <table cellpadding="0" cellspacing="0"><tr>
@@ -641,7 +642,7 @@ const buildReminderEmailHTML = (appt, settings, audience, customMessage) => {
   </td></tr>
   <tr><td style="background:#fff;padding:26px 32px 30px">
     <p style="margin:0;font-size:13.5px;font-weight:700;color:#0d1347">${co.name || 'AnNissa Dev Group'}</p>
-    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.email, co.website].filter(Boolean).join(' · ')}</p>
+    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.commercialPhone, co.email, co.website].filter(Boolean).join(' · ')}</p>
   </td></tr>
 </table></td></tr></table></body></html>`;
 };
