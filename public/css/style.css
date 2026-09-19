@@ -136,7 +136,7 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
   position: relative; z-index: 2;
 }
 .hero-content--split {
-  display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: center;
+  display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: stretch;
 }
 .hero-content--split .hero-text,
 .hero-content--split .hero-visual { min-width: 0; }
@@ -149,7 +149,7 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
 }
 
 /* ── Hero visual (photo + glass badges) ── */
-.hero-visual { position: relative; }
+.hero-visual { position: relative; height: 100%; min-height: 480px; }
 .hero-visual-glow {
   position: absolute; inset: -60px;
   background:
@@ -164,7 +164,8 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
 }
 .hero-visual-frame {
   position: relative; z-index: 1; overflow: hidden;
-  border-radius: 28px; aspect-ratio: 4 / 3;
+  height: 100%; width: 100%;
+  border-radius: 28px;
   border: 1px solid rgba(240,180,41,0.35);
   box-shadow: 0 30px 80px rgba(0,0,6,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset,
     0 1px 0 rgba(255,255,255,0.08) inset;
@@ -185,22 +186,22 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
 .hero-float-card {
   position: absolute; z-index: 2;
   display: flex; align-items: center; gap: 10px;
-  background: rgba(13,19,71,0.72); backdrop-filter: blur(16px);
-  border: 1px solid rgba(240,180,41,0.28);
-  border-radius: 16px; padding: 12px 18px;
-  box-shadow: 0 16px 40px rgba(0,0,10,0.4);
+  background: rgba(11,16,58,0.82); backdrop-filter: blur(16px);
+  border: 1px solid rgba(240,180,41,0.28); border-top: 2px solid var(--gold);
+  border-radius: 14px; padding: 14px 20px;
+  box-shadow: 0 20px 50px rgba(0,0,10,0.5);
   animation: floatCard 5s ease-in-out infinite;
 }
 .hero-float-card span { font-size: 12.5px; font-weight: 600; color: #e6ebff; white-space: nowrap; }
-.hero-float-card--top { top: 6%; left: -8%; }
+.hero-float-card--top { top: 28px; left: 28px; }
 .hero-float-card--bottom {
-  bottom: 6%; right: -6%; flex-direction: column; align-items: flex-start; gap: 0;
+  bottom: -22px; right: 32px; flex-direction: column; align-items: flex-start; gap: 0;
   animation-delay: .6s;
 }
 .hero-float-card--bottom strong {
-  font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; color: var(--gold); line-height: 1;
+  font-family: var(--font-head); font-size: 1.7rem; font-weight: 800; color: var(--gold); line-height: 1;
 }
-.hero-float-card--bottom span { color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+.hero-float-card--bottom span { color: var(--text-muted); font-weight: 600; margin-top: 3px; }
 .hfc-icon {
   width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
   background: rgba(240,180,41,0.12); border: 1px solid rgba(240,180,41,0.3);
@@ -446,10 +447,11 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
   .hero-title { font-size: clamp(2.4rem, 5.5vw, 3.6rem); }
 
   /* Hero visual — passe en une colonne, photo sous le texte */
-  .hero-content--split { grid-template-columns: 1fr; gap: 48px; }
-  .hero-visual { max-width: 460px; margin: 0 auto; width: 100%; }
-  .hero-float-card--top { left: 0; }
-  .hero-float-card--bottom { right: 0; }
+  .hero-content--split { grid-template-columns: 1fr; gap: 48px; align-items: normal; }
+  .hero-visual { max-width: 460px; margin: 0 auto; width: 100%; height: auto; min-height: 0; }
+  .hero-visual-frame { height: auto; aspect-ratio: 4 / 3; }
+  .hero-float-card--top { top: 16px; left: 16px; }
+  .hero-float-card--bottom { right: 16px; }
 
   /* About */
   .about-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -511,7 +513,8 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
   .hero-visual-frame { border-radius: 22px; }
   .hero-float-card { padding: 9px 14px; border-radius: 12px; }
   .hero-float-card span { font-size: 11px; }
-  .hero-float-card--top { top: 4%; }
+  .hero-float-card--top { top: 12px; left: 12px; }
+  .hero-float-card--bottom { right: 12px; bottom: -16px; }
   .hero-float-card--bottom strong { font-size: 1.3rem; }
 
   /* Sections */
