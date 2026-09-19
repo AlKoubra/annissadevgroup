@@ -142,7 +142,7 @@
     </div>
     <div class="services-grid">
 
-      <div class="service-card" data-delay="0">
+      <div class="service-card" data-delay="0" onclick="showService('web')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -154,9 +154,10 @@
         </div>
         <h3>Développement Web</h3>
         <p>Sites vitrine, applications web complexes, e-commerce, plateformes SaaS. Des interfaces modernes, performantes et optimisées SEO.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="100">
+      <div class="service-card" data-delay="100" onclick="showService('mobile')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,9 +169,10 @@
         </div>
         <h3>Développement Mobile</h3>
         <p>Applications iOS et Android natives ou cross-platform. Expériences utilisateurs fluides, intégrations API avancées et déploiement App Store / Play Store.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="150">
+      <div class="service-card" data-delay="150" onclick="showService('desktop')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,9 +184,10 @@
         </div>
         <h3>Développement Desktop</h3>
         <p>Applications de bureau performantes pour Windows, macOS et Linux. Logiciels métier, outils internes, interfaces riches et déploiement cross-platform.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card featured" data-delay="200">
+      <div class="service-card featured" data-delay="200" onclick="showService('ia')">
         <div class="service-badge">Tendance</div>
         <div class="service-icon-wrap">
           <div class="service-icon">
@@ -198,9 +201,10 @@
         </div>
         <h3>Intelligence Artificielle</h3>
         <p>Intégration d'IA dans vos produits : chatbots intelligents, analyse prédictive, traitement du langage naturel, automatisation par ML.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="300">
+      <div class="service-card" data-delay="300" onclick="showService('conseil')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -212,9 +216,10 @@
         </div>
         <h3>Conseil & Expertise IT</h3>
         <p>Audit de vos systèmes, architecture technique, choix technologiques, transformation digitale, accompagnement de vos équipes et intégration Salesforce.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="400">
+      <div class="service-card" data-delay="400" onclick="showService('formationit')">
         <div class="service-badge" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)">Nouveau</div>
         <div class="service-icon-wrap">
           <div class="service-icon">
@@ -227,9 +232,10 @@
         </div>
         <h3>Formation IT</h3>
         <p>Formations pratiques en développement web & mobile, cloud, cybersécurité et intelligence artificielle. Dispensées par des ingénieurs et experts IT certifiés.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="500">
+      <div class="service-card" data-delay="500" onclick="showService('formation')">
         <div class="service-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">Nouveau</div>
         <div class="service-icon-wrap">
           <div class="service-icon">
@@ -242,9 +248,10 @@
         </div>
         <h3>Développement Personnel & Leadership</h3>
         <p>Coaching certifié en leadership, confiance en soi, gestion du stress et intelligence émotionnelle. Des coachs certifiés pour libérer le potentiel de vos équipes.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="600">
+      <div class="service-card" data-delay="600" onclick="showService('anglais')">
         <div class="service-badge" style="background:linear-gradient(135deg,#10b981,#059669)">Nouveau</div>
         <div class="service-icon-wrap">
           <div class="service-icon">
@@ -257,9 +264,10 @@
         </div>
         <h3>Formation Anglais</h3>
         <p>Business English, présentations professionnelles, négociation et communication en anglais. Formation adaptée à tous niveaux par des formateurs certifiés.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
-      <div class="service-card" data-delay="700">
+      <div class="service-card" data-delay="700" onclick="showService('infographie')">
         <div class="service-badge" style="background:linear-gradient(135deg,#ec4899,#be185d)">Nouveau</div>
         <div class="service-icon-wrap">
           <div class="service-icon">
@@ -273,6 +281,7 @@
         </div>
         <h3>Infographie & Impression</h3>
         <p>Création de logos, affiches, banderolles et cartes de visite. Conception graphique professionnelle et impression haute qualité pour valoriser votre image de marque.</p>
+        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
 
     </div>
