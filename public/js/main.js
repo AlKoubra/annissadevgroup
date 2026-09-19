@@ -111,7 +111,7 @@ const observeCounters = () => {
 observeCounters();
 
 // ===== CARD REVEAL ON SCROLL =====
-const cards = document.querySelectorAll('.service-card, .tech-category, .step, .value-item');
+const cards = document.querySelectorAll('.service-card, .tech-category, .step, .value-item, .value-card');
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
     if (entry.isIntersecting) {

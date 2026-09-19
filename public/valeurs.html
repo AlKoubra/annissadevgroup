@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Nos Valeurs – AnNissa Dev Group</title>
+  <meta name="description" content="Les valeurs qui guident AnNissa Dev Group dans chaque projet : innovation, excellence, dignité, transparence, engagement et écoute client.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon-192.png">
+  <link rel="stylesheet" href="/css/style.css?v=7">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== PAGE HERO ===== */
+    .page-hero {
+      position: relative; overflow: hidden; padding: 160px 24px 100px; text-align: center;
+    }
+    .page-hero .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(240,180,41,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240,180,41,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 40%, transparent 100%);
+    }
+    .page-hero .glow-a, .page-hero .glow-b {
+      position: absolute; border-radius: 50%; filter: blur(60px); z-index: 0; pointer-events: none;
+    }
+    .page-hero .glow-a { width: 480px; height: 480px; background: radial-gradient(circle, rgba(240,180,41,0.18), transparent 70%); top: -120px; left: -80px; }
+    .page-hero .glow-b { width: 420px; height: 420px; background: radial-gradient(circle, rgba(99,102,241,0.16), transparent 70%); bottom: -140px; right: -60px; }
+    .page-hero-content { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+    .page-hero .section-label { display: block; }
+    .page-hero h1 {
+      font-family: var(--font-head); font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 800; line-height: 1.15; margin: 14px 0 20px; letter-spacing: -1px;
+    }
+    .page-hero p.lead { color: var(--text-light); font-size: clamp(15px, 1.6vw, 18px); line-height: 1.75; max-width: 620px; margin: 0 auto; }
+    .page-hero .quote-pill {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 32px;
+      background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.25);
+      padding: 10px 22px; border-radius: 50px; color: var(--gold);
+      font-size: 13px; font-weight: 600; letter-spacing: .5px; font-style: italic;
+    }
+
+    /* ===== VALUES GRID ===== */
+    .values { padding: 20px 0 120px; position: relative; }
+    .value-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      counter-reset: value-counter;
+    }
+    .value-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 36px 32px; position: relative; overflow: hidden;
+      transition: transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s cubic-bezier(.16,1,.3,1), border-color .4s;
+      backdrop-filter: blur(10px);
+      counter-increment: value-counter;
+    }
+    .value-card::before {
+      content: ''; position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(240,180,41,0.1) 0%, transparent 60%);
+      opacity: 0; transition: opacity .4s;
+    }
+    .value-card:hover {
+      transform: translateY(-10px); border-color: rgba(240,180,41,0.5);
+      box-shadow: 0 24px 48px -12px rgba(0,0,8,0.55);
+    }
+    .value-card:hover::before { opacity: 1; }
+    .value-card-num {
+      position: absolute; top: 18px; right: 24px; z-index: 0;
+      font-family: var(--font-head); font-weight: 800; font-size: 2.6rem;
+      color: rgba(240,180,41,0.12); line-height: 1;
+    }
+    .value-card-num::before { content: counter(value-counter, decimal-leading-zero); }
+    .value-icon {
+      width: 60px; height: 60px; border-radius: 14px; margin-bottom: 24px; position: relative; z-index: 1;
+      background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.2);
+      display: flex; align-items: center; justify-content: center; color: var(--gold);
+      transition: transform .5s cubic-bezier(.34,1.56,.64,1), background .4s, border-color .4s;
+    }
+    .value-icon svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; flex-shrink: 0; }
+    .value-card:hover .value-icon { transform: scale(1.1) rotate(-6deg); background: rgba(240,180,41,0.18); border-color: rgba(240,180,41,0.4); }
+    .value-card h3 { font-family: var(--font-head); font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; position: relative; z-index: 1; }
+    .value-card p { color: var(--text-light); font-size: 14px; line-height: 1.7; position: relative; z-index: 1; }
+
+    /* ===== CTA BAND ===== */
+    .values-cta {
+      max-width: 1200px; margin: 0 auto 0; padding: 0 24px;
+    }
+    .values-cta-inner {
+      background: linear-gradient(135deg, rgba(240,180,41,0.12), rgba(99,102,241,0.08));
+      border: 1px solid rgba(240,180,41,0.25); border-radius: 24px;
+      padding: 56px 40px; text-align: center;
+    }
+    .values-cta-inner h2 { font-family: var(--font-head); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 12px; }
+    .values-cta-inner p { color: var(--text-light); margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+    @media (max-width: 900px) {
+      .value-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .page-hero { padding: 130px 20px 70px; }
+      .value-grid { grid-template-columns: 1fr; gap: 16px; }
+      .values-cta-inner { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
+          <circle cx="30" cy="30" r="28" stroke="#f0b429" stroke-width="2"/>
+          <circle cx="30" cy="30" r="20" stroke="#f0b429" stroke-width="1.5"/>
+          <circle cx="30" cy="36" r="3" fill="#f0b429"/>
+          <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="30" cy="8" r="2" fill="#f0b429"/>
+          <circle cx="30" cy="52" r="2" fill="#f0b429"/>
+          <circle cx="8" cy="30" r="2" fill="#f0b429"/>
+          <circle cx="52" cy="30" r="2" fill="#f0b429"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">AnNissa</span>
+        <span class="logo-sub">DEV GROUP</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li class="nav-dropdown">
+        <a href="/#services" class="nav-dropdown-toggle">
+          Services
+          <svg class="nav-caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="nav-dropdown-panel">
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Web</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Mobile</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Desktop</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Intelligence Artificielle</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Conseil & Expertise IT</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#0ea5e9"></span>Formation IT</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#6366f1"></span>Développement Personnel</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#10b981"></span>Formation Anglais</a>
+          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#ec4899"></span>Infographie & Impression</a>
+          <a class="nav-dropdown-viewall" href="/#services">Voir tous les services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </li>
+      <li><a href="/#about">À propos</a></li>
+      <li><a href="/valeurs.html" style="color:#f0b429">Nos Valeurs</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===== PAGE HERO ===== -->
+<section class="page-hero">
+  <div class="hero-grid"></div>
+  <div class="glow-a"></div>
+  <div class="glow-b"></div>
+  <div class="page-hero-content">
+    <span class="section-label">Ce qui nous définit</span>
+    <h1>Nos <span class="gold-text">Valeurs</span></h1>
+    <p class="lead">
+      Six principes qui guident chaque décision, chaque ligne de code et chaque relation client
+      chez AnNissa Dev Group — depuis le premier échange jusqu'au support après livraison.
+    </p>
+    <div class="quote-pill">« Tech with purpose and dignity »</div>
+  </div>
+</section>
+
+<!-- ===== VALUES GRID ===== -->
+<section class="values">
+  <div class="container">
+    <div class="value-grid">
+
+      <div class="value-card">
+        <span class="value-card-num"></span>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><path d="M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </div>
+        <h3>Innovation</h3>
+        <p>Nous explorons sans relâche les technologies émergentes — IA, cloud, automatisation — pour vous offrir des solutions toujours à la pointe, adaptées à vos réalités locales.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-card-num"></span>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.6 6.8L12 16.9 5.8 20.4l1.6-6.8L2.2 9l6.9-.7z"/></svg>
+        </div>
+        <h3>Excellence</h3>
+        <p>Code propre, architecture solide, performances optimales : chaque livraison répond à des standards techniques exigeants, pensés pour durer.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-card-num"></span>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3>Dignité</h3>
+        <p>Nous croyons en une technologie au service de l'Homme — respectueuse, inclusive, et accessible à toutes les entreprises, du plus petit commerce à la plus grande structure.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-card-num"></span>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v2M16 4v2"/><path d="M8 13l2 2 4-4"/></svg>
+        </div>
+        <h3>Transparence</h3>
+        <p>Suivi de projet en temps réel, communication claire à chaque étape, devis détaillés sans coûts cachés : vous savez toujours où en est votre projet.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-card-num"></span>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
+        </div>
+        <h3>Engagement durable</h3>
+        <p>Notre relation ne s'arrête pas à la livraison. Maintenance, évolutions, support continu : nous restons à vos côtés sur le long terme.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-card-num"></span>
+        <div class="value-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11a9 9 0 0 1 18 0v5a2 2 0 0 1-2 2h-1v-7h3M3 16v-5h3v7H5a2 2 0 0 1-2-2z"/></svg>
+        </div>
+        <h3>Écoute client</h3>
+        <p>Chaque projet commence par une compréhension profonde de vos enjeux, vos contraintes et vos ambitions — avant même de parler technologie.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="values-cta">
+    <div class="values-cta-inner">
+      <h2>Ces valeurs, on les <span class="gold-text">vit au quotidien</span></h2>
+      <p>Parlons de votre projet et voyons comment nous pouvons vous accompagner.</p>
+      <a href="/#contact" class="btn btn-primary">Démarrer un projet</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+            <circle cx="30" cy="30" r="28" stroke="#f0b429" stroke-width="2"/>
+            <circle cx="30" cy="30" r="20" stroke="#f0b429" stroke-width="1.5"/>
+            <circle cx="30" cy="36" r="3" fill="#f0b429"/>
+            <path d="M20 28 Q30 20 40 28" stroke="#f0b429" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <span class="logo-name">AnNissa</span>
+            <span class="logo-sub">DEV GROUP</span>
+          </div>
+        </div>
+        <p>Tech with purpose and dignity.<br>Votre partenaire technologique de confiance.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/#services">Développement Web</a></li>
+          <li><a href="/#services">Applications Mobile</a></li>
+          <li><a href="/#services">Intelligence Artificielle</a></li>
+          <li><a href="/#services">Conseil IT</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Entreprise</h4>
+        <ul>
+          <li><a href="/#about">À propos</a></li>
+          <li><a href="/valeurs.html">Nos Valeurs</a></li>
+          <li><a href="/#contact">Contact</a></li>
+          <li><a href="/admin">Espace Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AnNissa Dev Group. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+
+<!-- ===== BOUTON WHATSAPP FLOTTANT ===== -->
+<a href="https://wa.me/221779215050?text=Bonjour%20AnNissa%20Dev%20Group%2C%20je%20souhaite%20discuter%20de%20mon%20projet."
+   class="whatsapp-float" target="_blank" rel="noopener" aria-label="Nous contacter sur WhatsApp">
+  <svg viewBox="0 0 32 32" width="30" height="30" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.004 3C9.383 3 4 8.383 4 15c0 2.117.555 4.184 1.61 6.008L4 29l8.184-1.582A11.93 11.93 0 0016.004 27C22.625 27 28 21.617 28 15S22.625 3 16.004 3zm0 21.6a9.55 9.55 0 01-4.867-1.332l-.35-.207-4.856.94.945-4.73-.227-.364A9.53 9.53 0 016.4 15c0-5.293 4.31-9.6 9.605-9.6 5.293 0 9.595 4.307 9.595 9.6 0 5.293-4.302 9.6-9.596 9.6zm5.266-7.19c-.29-.145-1.71-.844-1.976-.94-.266-.098-.46-.145-.653.144-.194.29-.75.94-.92 1.133-.168.194-.34.218-.63.073-.29-.145-1.223-.45-2.33-1.437-.86-.767-1.44-1.714-1.61-2.004-.168-.29-.018-.446.127-.59.13-.13.29-.34.436-.51.145-.17.194-.29.29-.484.098-.194.05-.364-.024-.51-.073-.144-.653-1.574-.895-2.156-.236-.566-.475-.49-.653-.5l-.556-.01c-.194 0-.51.073-.775.364s-1.017.994-1.017 2.424 1.04 2.81 1.185 3.005c.145.194 2.047 3.125 4.96 4.382.693.3 1.234.478 1.655.612.695.22 1.328.19 1.828.115.558-.083 1.71-.698 1.952-1.372.24-.674.24-1.252.168-1.372-.072-.12-.266-.194-.556-.34z"/>
+  </svg>
+</a>
+<style>
+.whatsapp-float{position:fixed;right:20px;bottom:20px;z-index:9998;width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .2s ease,box-shadow .2s ease}
+.whatsapp-float:hover{transform:scale(1.08);box-shadow:0 8px 26px rgba(37,211,102,.5)}
+@media(max-width:600px){.whatsapp-float{right:16px;bottom:16px;width:52px;height:52px}}
+</style>
+</body>
+</html>

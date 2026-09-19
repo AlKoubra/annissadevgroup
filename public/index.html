@@ -96,7 +96,7 @@
         </div>
       </li>
       <li><a href="#about">À propos</a></li>
-      <li><a href="#expertise">Expertise</a></li>
+      <li><a href="/valeurs.html">Nos Valeurs</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -422,108 +422,6 @@
   </div>
 </div>
 
-<!-- ===== EXPERTISE ===== -->
-<section class="expertise" id="expertise">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-label">Notre expertise</span>
-      <h2 class="section-title">Ce que nous <span class="gold-text">maîtrisons</span></h2>
-      <p class="section-desc">8 domaines d'expertise pour couvrir tous vos besoins</p>
-    </div>
-    <div class="tech-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(240,180,41,.15)" onclick="showService('web')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="20" height="20"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><path d="M7 10l3 3-3 3"/><line x1="11" y1="13" x2="14" y2="13"/></svg>
-          </div>
-          <h4 style="margin:0;color:#f0b429;font-size:14px;font-weight:700">Développement Web</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Sites vitrine, e-commerce, plateformes SaaS, dashboards métier.</p>
-        <span style="font-size:12px;color:#f0b429;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(240,180,41,.15)" onclick="showService('mobile')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="20" height="20"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="#f0b429"/><line x1="10" y1="5" x2="14" y2="5"/></svg>
-          </div>
-          <h4 style="margin:0;color:#f0b429;font-size:14px;font-weight:700">Développement Mobile</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Applications iOS & Android natives ou cross-platform.</p>
-        <span style="font-size:12px;color:#f0b429;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(240,180,41,.15)" onclick="showService('desktop')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="20" height="20"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><path d="M6 10h4M6 13h8M14 10h4"/></svg>
-          </div>
-          <h4 style="margin:0;color:#f0b429;font-size:14px;font-weight:700">Développement Desktop</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Applications Windows, macOS & Linux, logiciels métier, outils internes.</p>
-        <span style="font-size:12px;color:#f0b429;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(240,180,41,.15)" onclick="showService('ia')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><circle cx="12" cy="12" r="2" fill="#f0b429"/></svg>
-          </div>
-          <h4 style="margin:0;color:#f0b429;font-size:14px;font-weight:700">Intelligence Artificielle</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Chatbots, analyse prédictive, automatisation par ML.</p>
-        <span style="font-size:12px;color:#f0b429;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(240,180,41,.15)" onclick="showService('conseil')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="19" cy="17" r="4"/><path d="M17.5 17l1 1 2-2"/></svg>
-          </div>
-          <h4 style="margin:0;color:#f0b429;font-size:14px;font-weight:700">Conseil & Expertise IT</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Audit SI, architecture technique, transformation digitale & Salesforce CRM.</p>
-        <span style="font-size:12px;color:#f0b429;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(14,165,233,.2)" onclick="showService('formationit')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.3);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" width="20" height="20"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/><path d="M7 10l3 3-3 3"/><line x1="11" y1="13" x2="14" y2="13"/></svg>
-          </div>
-          <h4 style="margin:0;color:#0ea5e9;font-size:14px;font-weight:700">Formation IT</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Formations pratiques en dev, cloud, cybersécurité & IA par des experts certifiés.</p>
-        <span style="font-size:12px;color:#0ea5e9;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(99,102,241,.2)" onclick="showService('formation')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8"/><path d="M15 17l1 1 2.5-2.5"/></svg>
-          </div>
-          <h4 style="margin:0;color:#818cf8;font-size:14px;font-weight:700">Développement Personnel & Leadership</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Coaching certifié en leadership, confiance en soi & développement personnel.</p>
-        <span style="font-size:12px;color:#818cf8;font-weight:600">En savoir plus →</span>
-      </div>
-
-      <div class="tech-category" style="cursor:pointer;transition:all .3s;border:1px solid rgba(16,185,129,.2)" onclick="showService('anglais')">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:10px;padding:10px;display:flex">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          </div>
-          <h4 style="margin:0;color:#10b981;font-size:14px;font-weight:700">Formation Anglais</h4>
-        </div>
-        <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.6">Business English, présentations, négociation & communication professionnelle en anglais.</p>
-        <span style="font-size:12px;color:#10b981;font-weight:600">En savoir plus →</span>
-      </div>
-
-    </div>
-  </div>
-</section>
-
 <!-- ===== PROCESS ===== -->
 <section class="process">
   <div class="container">
@@ -683,7 +581,7 @@
         <h4>Entreprise</h4>
         <ul>
           <li><a href="#about">À propos</a></li>
-          <li><a href="#expertise">Expertise</a></li>
+          <li><a href="/valeurs.html">Nos Valeurs</a></li>
           <li><a href="#contact">Contact</a></li>
           <li><a href="/admin">Espace Admin</a></li>
         </ul>
