@@ -151,7 +151,7 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
   border: 1px solid rgba(240,180,41,0.4);
   color: var(--gold); padding: 8px 16px; border-radius: 50px;
   font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 24px;
+  line-height: 1; margin-bottom: 36px;
 }
 
 .badge-dot {
@@ -172,7 +172,7 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
   max-width: 600px; margin-bottom: 40px; line-height: 1.7;
   text-shadow: 0 2px 12px rgba(0,0,6,0.6);
 }
-.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 64px; }
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 44px; }
 .hero-stats { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
 .stat-item { display: flex; flex-direction: column; }
 .stat-num {
