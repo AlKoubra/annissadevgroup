@@ -77,7 +77,24 @@
       </div>
     </a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#services">Services</a></li>
+      <li class="nav-dropdown">
+        <a href="#services" class="nav-dropdown-toggle">
+          Services
+          <svg class="nav-caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+        <div class="nav-dropdown-panel">
+          <a class="nav-dropdown-item" href="#services" onclick="showService('web')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Web</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('mobile')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Mobile</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('desktop')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Desktop</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('ia')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Intelligence Artificielle</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('conseil')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Conseil & Expertise IT</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('formationit')"><span class="nav-dropdown-dot" style="background:#0ea5e9"></span>Formation IT</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('formation')"><span class="nav-dropdown-dot" style="background:#6366f1"></span>Développement Personnel</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('anglais')"><span class="nav-dropdown-dot" style="background:#10b981"></span>Formation Anglais</a>
+          <a class="nav-dropdown-item" href="#services" onclick="showService('infographie')"><span class="nav-dropdown-dot" style="background:#ec4899"></span>Infographie & Impression</a>
+          <a class="nav-dropdown-viewall" href="#services">Voir tous les services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </li>
       <li><a href="#about">À propos</a></li>
       <li><a href="#expertise">Expertise</a></li>
       <li><a href="#contact">Contact</a></li>
