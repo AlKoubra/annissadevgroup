@@ -1544,3 +1544,4 @@ input, select, textarea, button { -webkit-appearance: none; border-radius: 0; }
 .erp-logo { height: 38px; width: auto; }
 .erp-logo-odoo { height: 26px; margin: 0; }
 .erp-top { min-height: 40px; }
+.erp-top { justify-content: flex-start; min-height: 0; }
