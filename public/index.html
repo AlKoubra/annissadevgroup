@@ -10,7 +10,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon-192.png">
   <meta name="msapplication-TileImage" content="/favicon-192.png">
-  <link rel="stylesheet" href="/css/style.css?v=7">
+  <link rel="stylesheet" href="/css/style.css?v=22">
   <style>
     /* Responsive overrides for inline-styled elements */
     @media (max-width: 768px) {
@@ -53,10 +53,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="home-light">
 
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-info">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Dakar, Sénégal</span>
+        <a href="mailto:contact@annissadevgroup.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>contact@annissadevgroup.com</a>
+        <a href="tel:+221779215050"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>+221 77 921 50 50</a>
+      </div>
+      <div class="topbar-links">
+        <a href="#technology">AnNissa Technology</a>
+        <a href="#academy">AnNissa Academy</a>
+        <a href="#contact" class="topbar-cta">Demander un devis</a>
+      </div>
+    </div>
+  </div>
   <div class="nav-container">
     <a href="#" class="nav-logo">
       <div class="logo-icon">
@@ -83,16 +97,24 @@
           <svg class="nav-caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </a>
         <div class="nav-dropdown-panel">
-          <a class="nav-dropdown-item" href="#services" onclick="showService('web')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Web</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('mobile')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Mobile</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('desktop')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Desktop</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('ia')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Intelligence Artificielle</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('conseil')"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Conseil & Expertise IT</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('formationit')"><span class="nav-dropdown-dot" style="background:#0ea5e9"></span>Formation IT</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('formation')"><span class="nav-dropdown-dot" style="background:#6366f1"></span>Développement Personnel</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('anglais')"><span class="nav-dropdown-dot" style="background:#10b981"></span>Formation Anglais</a>
-          <a class="nav-dropdown-item" href="#services" onclick="showService('infographie')"><span class="nav-dropdown-dot" style="background:#ec4899"></span>Infographie & Impression</a>
-          <a class="nav-dropdown-viewall" href="#services">Voir tous les services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="nav-dropdown-group">
+            <a class="nav-dropdown-head" href="#technology">AnNissa <b>Technology</b></a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('web')"><span class="nav-dropdown-dot"></span>Développement Web</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('mobile')"><span class="nav-dropdown-dot"></span>Développement Mobile</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('desktop')"><span class="nav-dropdown-dot"></span>Développement Desktop</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('ia')"><span class="nav-dropdown-dot"></span>Intelligence Artificielle</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('salesforce')"><span class="nav-dropdown-dot"></span>Salesforce (CRM)</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('odoo')"><span class="nav-dropdown-dot"></span>Odoo (ERP)</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('sap')"><span class="nav-dropdown-dot"></span>SAP (ERP)</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('conseil')"><span class="nav-dropdown-dot"></span>Conseil & Expertise IT</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('infographie')"><span class="nav-dropdown-dot"></span>Infographie & Impression</a>
+          </div>
+          <div class="nav-dropdown-group">
+            <a class="nav-dropdown-head" href="#academy">AnNissa <b>Academy</b></a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('formationit')"><span class="nav-dropdown-dot"></span>Formation IT</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('formation')"><span class="nav-dropdown-dot"></span>Développement Personnel & Leadership</a>
+            <a class="nav-dropdown-item" href="#services" onclick="showService('anglais')"><span class="nav-dropdown-dot"></span>Formation Anglais</a>
+          </div>
         </div>
       </li>
       <li><a href="#about">À propos</a></li>
@@ -106,138 +128,222 @@
 </nav>
 
 <!-- ===== HERO ===== -->
-<section class="hero" id="home">
-  <div class="hero-bg">
-    <img src="/images/dev-team-voilee-chic.png" alt="Équipe d'ingénieurs AnNissa Dev Group au travail" class="hero-bg-img" width="1376" height="768" loading="eager">
-    <div class="hero-bg-overlay"></div>
-    <canvas id="particleCanvas"></canvas>
-    <div class="hero-grid"></div>
+<section class="hero hero-light" id="home" data-dot="Accueil">
+  <div class="hl-bg" aria-hidden="true">
+    <div class="hl-grid"></div>
+    <div class="hl-arc"></div>
+    <div class="hl-blob hl-blob-a"></div>
+    <div class="hl-blob hl-blob-b"></div>
   </div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Innovation · Excellence · Dignité
-    </div>
-    <div class="hero-bottom-group">
-      <div class="hero-actions">
-        <a href="#contact" class="btn btn-primary">Démarrer un projet</a>
-        <a href="#services" class="btn btn-outline">Nos services</a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-num" data-target="50">0</span><span class="stat-plus">+</span>
-          <span class="stat-label">Projets livrés</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-num" data-target="30">0</span><span class="stat-plus">+</span>
-          <span class="stat-label">Clients satisfaits</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-num" data-target="5">0</span><span class="stat-plus">+</span>
-          <span class="stat-label">Années d'expérience</span>
-        </div>
+  <div class="hl-inner">
+    <div class="hl-text">
+      <div class="hl-badge"><span class="badge-dot"></span>Innovation · Excellence · Dignité</div>
+      <h1 class="hl-title" style="visibility:hidden">La technologie,<br><em>pensée avec sens</em><br>et exigence.</h1>
+      <p class="hl-desc">Applications web et mobiles, intelligence artificielle et solutions d'entreprise Salesforce, Odoo et SAP : nous concevons et intégrons les outils qui font grandir votre activité.</p>
+      <div class="hl-actions">
+        <a href="#contact" class="btn hl-btn-dark">Démarrer un projet
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#services" class="hl-link">Découvrir nos services</a>
       </div>
     </div>
+
+    <div class="hl-visual" aria-hidden="true" data-fx="30">
+      <div class="hv-stage">
+        <!-- Fenêtre navigateur -->
+        <div class="hv-window">
+          <div class="hv-bar">
+            <span></span><span></span><span></span>
+            <div class="hv-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>votre-projet.com</div>
+          </div>
+          <div class="hv-body">
+            <div class="hv-side"><i class="on"></i><i></i><i></i><i></i></div>
+            <div class="hv-main">
+              <div class="hv-kpis">
+                <div class="hv-kpi"><small>Utilisateurs</small><b>12,4k</b><em>▲ 18%</em></div>
+                <div class="hv-kpi"><small>Conversions</small><b>3 281</b><em>▲ 24%</em></div>
+              </div>
+              <div class="hv-chart">
+                <svg viewBox="0 0 300 110" preserveAspectRatio="none">
+                  <defs><linearGradient id="hvFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0b429" stop-opacity=".35"/><stop offset="1" stop-color="#f0b429" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0 92 C30 88 45 70 75 72 S120 50 150 56 S200 30 230 34 S275 12 300 8 V110 H0Z" fill="url(#hvFill)"/>
+                  <path d="M0 92 C30 88 45 70 75 72 S120 50 150 56 S200 30 230 34 S275 12 300 8" fill="none" stroke="#e0a21c" stroke-width="2.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte de code -->
+        <div class="hv-code">
+          <div class="hv-code-top"><span></span><span></span><span></span><small>projet.js</small></div>
+<pre><span class="k">const</span> projet = <span class="k">new</span> <span class="f">AnNissa</span>({
+  vision:  <span class="s">'ambitieuse'</span>,
+  qualité: <span class="s">'premium'</span>,
+  impact:  <span class="s">'durable'</span>
+});
+projet.<span class="f">lancer</span>(); <span class="c">// ✓ en ligne</span></pre>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="hv-phone">
+          <div class="hv-notch"></div>
+          <div class="hv-app-head"><i></i><b></b></div>
+          <div class="hv-app-card"><small>Solde</small><strong>245 800 F</strong></div>
+          <div class="hv-app-row"><i></i><b></b></div>
+          <div class="hv-app-row"><i></i><b></b></div>
+          <div class="hv-app-row"><i></i><b></b></div>
+          <div class="hv-app-btn"></div>
+        </div>
+
+      </div>
+    </div>
   </div>
-  <div class="hero-scroll">
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
-      <span>Découvrir</span>
+
+</section>
+
+<!-- ===== CHIFFRES CLÉS ===== -->
+<section class="figures" id="chiffres" data-dot="En chiffres">
+  <div class="container">
+    <div class="fig-strip">
+      <div class="fig"><span class="fig-val"><span class="stat-num" data-target="50">0</span><sup>+</sup></span><span class="fig-label">Projets livrés</span></div>
+      <div class="fig"><span class="fig-val"><span class="stat-num" data-target="30">0</span><sup>+</sup></span><span class="fig-label">Clients accompagnés</span></div>
+      <div class="fig"><span class="fig-val"><span class="stat-num" data-target="5">0</span><sup>+</sup></span><span class="fig-label">Années d'expertise</span></div>
+      <div class="fig"><span class="fig-val"><span class="stat-num" data-target="24">0</span><sup>h</sup></span><span class="fig-label">Pour vous répondre</span></div>
     </div>
   </div>
 </section>
 
-<!-- ===== SERVICES ===== -->
-<section class="services" id="services">
+<!-- ===== SERVICES : DEUX PÔLES ===== -->
+<section class="services" id="services" data-dot="L'univers AnNissa">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">Ce que nous faisons</span>
-      <h2 class="section-title">Nos <span class="gold-text">Services</span></h2>
-      <p class="section-desc">Des solutions sur mesure pour chaque défi technologique</p>
+      <span class="section-label">Deux pôles, une même exigence</span>
+      <h2 class="section-title">L'univers <em class="serif-accent">AnNissa</em></h2>
+      <p class="section-desc">Nous bâtissons vos solutions numériques et formons les talents qui les feront vivre.</p>
     </div>
-    <div class="services-grid">
 
-      <div class="service-card" data-delay="0" onclick="showService('web')">
-        <div class="service-icon-wrap">
-          <div class="service-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="8" width="40" height="28" rx="3" stroke="currentColor" stroke-width="2"/>
-              <path d="M16 42h16M24 36v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M14 20l5 5-5 5M22 27h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+    <div class="poles">
+      <a href="#technology" class="pole pole-tech">
+        <div class="pole-top">
+          <span class="pole-index">Pôle 01</span>
+          <span class="pole-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6M16 6l6 6-6 6M14 4l-4 16"/></svg>
+          </span>
         </div>
-        <h3>Développement Web</h3>
-        <p>Sites vitrine, applications web complexes, e-commerce, plateformes SaaS. Des interfaces modernes, performantes et optimisées SEO.</p>
-        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pole-name"><span>AnNissa</span><strong>Technology</strong></div>
+        <p class="pole-desc">Développement, intelligence artificielle et conseil : nous concevons des produits numériques fiables, élégants et taillés pour durer.</p>
+        <ul class="pole-tags"><li>Web</li><li>Mobile</li><li>Desktop</li><li>IA</li><li>Salesforce</li><li>Odoo</li><li>SAP</li><li>Conseil IT</li><li>Infographie</li></ul>
+        <span class="pole-cta">Découvrir le pôle <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#academy" class="pole pole-academy">
+        <div class="pole-top">
+          <span class="pole-index">Pôle 02</span>
+          <span class="pole-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5M22 9v6"/></svg>
+          </span>
+        </div>
+        <div class="pole-name"><span>AnNissa</span><strong>Academy</strong></div>
+        <p class="pole-desc">Formations animées par des experts certifiés pour faire grandir les compétences techniques, humaines et linguistiques de vos équipes.</p>
+        <ul class="pole-tags"><li>Formation IT</li><li>Leadership</li><li>Développement personnel</li><li>Anglais</li></ul>
+        <span class="pole-cta">Découvrir l'Academy <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </div>
+
+    <!-- AnNissa Technology -->
+    <div class="pole-section" id="technology" data-dot="AnNissa Technology">
+      <div class="pole-head">
+        <div>
+          <span class="pole-head-label"><i></i>AnNissa Technology</span>
+          <h3 class="pole-head-title">Nous concevons,<br>vous grandissez.</h3>
+        </div>
+        <p class="pole-head-desc">Du site vitrine à la plateforme d'IA, une équipe d'ingénieurs vous accompagne de l'idée au déploiement, puis au-delà.</p>
+      </div>
+      <div class="svc-list">
+        <a href="#technology" class="svc-row" onclick="showService('web');return false;">
+          <span class="svc-num">01</span>
+          <span class="svc-main"><span class="svc-title">Développement Web</span><span class="svc-desc">Sites vitrines, applications web, e-commerce et plateformes SaaS, rapides et optimisés pour le référencement.</span></span>
+          <ul class="svc-tags"><li>Sites vitrines</li><li>E-commerce</li><li>SaaS</li></ul>
+          <span class="svc-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </a>
+        <a href="#technology" class="svc-row" onclick="showService('mobile');return false;">
+          <span class="svc-num">02</span>
+          <span class="svc-main"><span class="svc-title">Développement Mobile</span><span class="svc-desc">Applications iOS et Android natives ou cross-platform, du prototype à la publication sur les stores.</span></span>
+          <ul class="svc-tags"><li>iOS</li><li>Android</li><li>Cross-platform</li></ul>
+          <span class="svc-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </a>
+        <a href="#technology" class="svc-row" onclick="showService('desktop');return false;">
+          <span class="svc-num">03</span>
+          <span class="svc-main"><span class="svc-title">Développement Desktop</span><span class="svc-desc">Logiciels métier et outils internes performants pour Windows, macOS et Linux.</span></span>
+          <ul class="svc-tags"><li>Windows</li><li>macOS</li><li>Linux</li></ul>
+          <span class="svc-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </a>
+        <a href="#technology" class="svc-row" onclick="showService('ia');return false;">
+          <span class="svc-num">04</span>
+          <span class="svc-main"><span class="svc-title">Intelligence Artificielle<span class="svc-badge">Tendance</span></span><span class="svc-desc">Chatbots, analyse prédictive, traitement du langage et automatisation par apprentissage automatique.</span></span>
+          <ul class="svc-tags"><li>Chatbots</li><li>Prédictif</li><li>Automatisation</li></ul>
+          <span class="svc-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </a>
+        <a href="#technology" class="svc-row" onclick="showService('conseil');return false;">
+          <span class="svc-num">05</span>
+          <span class="svc-main"><span class="svc-title">Conseil & Expertise IT</span><span class="svc-desc">Audit de vos systèmes, architecture technique, cloud et transformation digitale.</span></span>
+          <ul class="svc-tags"><li>Audit</li><li>Architecture</li><li>Cloud</li></ul>
+          <span class="svc-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </a>
+        <a href="#technology" class="svc-row" onclick="showService('infographie');return false;">
+          <span class="svc-num">06</span>
+          <span class="svc-main"><span class="svc-title">Infographie & Impression</span><span class="svc-desc">Logos, affiches, banderoles et cartes de visite, de la conception graphique à l’impression.</span></span>
+          <ul class="svc-tags"><li>Identité</li><li>Print</li><li>Signalétique</li></ul>
+          <span class="svc-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        </a>
       </div>
 
-      <div class="service-card" data-delay="100" onclick="showService('mobile')">
-        <div class="service-icon-wrap">
-          <div class="service-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="14" y="4" width="20" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
-              <circle cx="24" cy="38" r="2" fill="currentColor"/>
-              <path d="M20 10h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+      <!-- Solutions d'entreprise : Salesforce, Odoo, SAP -->
+      <div class="erp" id="solutions" data-dot="Solutions d'entreprise">
+        <div class="erp-head">
+          <div>
+            <span class="pole-head-label"><i></i>Solutions d'entreprise</span>
+            <h3 class="erp-title">CRM & ERP : Salesforce, Odoo et SAP.</h3>
           </div>
+          <p class="pole-head-desc">Nous paramétrons, intégrons et faisons évoluer les plateformes qui pilotent vos ventes, vos stocks, votre finance et votre relation client.</p>
         </div>
-        <h3>Développement Mobile</h3>
-        <p>Applications iOS et Android natives ou cross-platform. Expériences utilisateurs fluides, intégrations API avancées et déploiement App Store / Play Store.</p>
-        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </div>
-
-      <div class="service-card" data-delay="150" onclick="showService('desktop')">
-        <div class="service-icon-wrap">
-          <div class="service-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="8" width="40" height="28" rx="3" stroke="currentColor" stroke-width="2"/>
-              <path d="M16 42h16M24 36v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M12 20h8M12 26h16M28 20h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
+        <div class="erp-grid">
+        <article class="erp-card">
+          <div class="erp-top"><img class="erp-logo erp-logo-salesforce" src="/images/logos/salesforce.svg" alt="Logo Salesforce" ><span class="erp-cat">CRM · Cloud</span></div>
+          <h4 class="erp-name">Salesforce</h4>
+          <p class="erp-desc">Déploiement et personnalisation de Salesforce pour piloter vos ventes, votre service client et votre marketing.</p>
+          <ul class="erp-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Sales Cloud & Service Cloud</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Personnalisation Apex & Lightning</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Intégrations API & migration de données</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Formation des utilisateurs & support</li></ul>
+          <a href="#solutions" class="erp-cta" onclick="showService('salesforce');return false;">Voir l’offre Salesforce <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="erp-card">
+          <div class="erp-top"><img class="erp-logo erp-logo-odoo" src="/images/logos/odoo.svg" alt="Logo Odoo" ><span class="erp-cat">ERP · Open source</span></div>
+          <h4 class="erp-name">Odoo</h4>
+          <p class="erp-desc">Mise en place d’Odoo, l’ERP modulaire qui réunit ventes, achats, stocks, comptabilité et RH dans un seul outil.</p>
+          <ul class="erp-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Paramétrage des modules métier</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Modules sur mesure en Python</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Migration de données & intégrations</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Hébergement, formation & maintenance</li></ul>
+          <a href="#solutions" class="erp-cta" onclick="showService('odoo');return false;">Voir l’offre Odoo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="erp-card">
+          <div class="erp-top"><img class="erp-logo erp-logo-sap" src="/images/logos/sap.svg" alt="Logo SAP" ><span class="erp-cat">ERP · Grands comptes</span></div>
+          <h4 class="erp-name">SAP</h4>
+          <p class="erp-desc">Accompagnement de vos projets SAP : cadrage, paramétrage et évolution de vos processus finance, logistique et achats.</p>
+          <ul class="erp-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Cadrage des projets SAP S/4HANA</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Paramétrage FI/CO, MM, SD</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Interfaces avec vos systèmes</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"/></svg>Formation des équipes & support</li></ul>
+          <a href="#solutions" class="erp-cta" onclick="showService('sap');return false;">Voir l’offre SAP <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
         </div>
-        <h3>Développement Desktop</h3>
-        <p>Applications de bureau performantes pour Windows, macOS et Linux. Logiciels métier, outils internes, interfaces riches et déploiement cross-platform.</p>
-        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
+    </div>
 
-      <div class="service-card featured" data-delay="200" onclick="showService('ia')">
-        <div class="service-badge">Tendance</div>
-        <div class="service-icon-wrap">
-          <div class="service-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="2"/>
-              <path d="M24 8v4M24 36v4M8 24h4M36 24h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="24" cy="24" r="4" fill="currentColor"/>
-              <path d="M12 12l3 3M33 33l3 3M33 12l-3 3M15 33l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
+    <!-- AnNissa Academy -->
+    <div class="pole-section" id="academy" data-dot="AnNissa Academy">
+      <div class="pole-head">
+        <div>
+          <span class="pole-head-label"><i></i>AnNissa Academy</span>
+          <h3 class="pole-head-title">Apprendre auprès<br>des meilleurs.</h3>
         </div>
-        <h3>Intelligence Artificielle</h3>
-        <p>Intégration d'IA dans vos produits : chatbots intelligents, analyse prédictive, traitement du langage naturel, automatisation par ML.</p>
-        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <p class="pole-head-desc">Des parcours pratiques, adaptés à chaque niveau, pour les particuliers comme pour les entreprises qui investissent dans leurs talents.</p>
       </div>
-
-      <div class="service-card" data-delay="300" onclick="showService('conseil')">
-        <div class="service-icon-wrap">
-          <div class="service-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 12h32M8 24h20M8 36h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="38" cy="34" r="8" stroke="currentColor" stroke-width="2"/>
-              <path d="M35 34l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <h3>Conseil & Expertise IT</h3>
-        <p>Audit de vos systèmes, architecture technique, choix technologiques, transformation digitale, accompagnement de vos équipes et intégration Salesforce.</p>
-        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </div>
-
-      <div class="service-card" data-delay="400" onclick="showService('formationit')">
-        <div class="service-badge" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)">Nouveau</div>
+      <div class="services-grid academy-grid">
+      <div class="service-card card-academy" data-delay="0" onclick="showService('formationit')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -251,9 +357,7 @@
         <p>Formations pratiques en développement web & mobile, cloud, cybersécurité et intelligence artificielle. Dispensées par des ingénieurs et experts IT certifiés.</p>
         <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-
-      <div class="service-card" data-delay="500" onclick="showService('formation')">
-        <div class="service-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">Nouveau</div>
+      <div class="service-card card-academy" data-delay="100" onclick="showService('formation')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -267,9 +371,7 @@
         <p>Coaching certifié en leadership, confiance en soi, gestion du stress et intelligence émotionnelle. Des coachs certifiés pour libérer le potentiel de vos équipes.</p>
         <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-
-      <div class="service-card" data-delay="600" onclick="showService('anglais')">
-        <div class="service-badge" style="background:linear-gradient(135deg,#10b981,#059669)">Nouveau</div>
+      <div class="service-card card-academy" data-delay="200" onclick="showService('anglais')">
         <div class="service-icon-wrap">
           <div class="service-icon">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -283,216 +385,225 @@
         <p>Business English, présentations professionnelles, négociation et communication en anglais. Formation adaptée à tous niveaux par des formateurs certifiés.</p>
         <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
-
-      <div class="service-card" data-delay="700" onclick="showService('infographie')">
-        <div class="service-badge" style="background:linear-gradient(135deg,#ec4899,#be185d)">Nouveau</div>
-        <div class="service-icon-wrap">
-          <div class="service-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M34 6l8 8-24 24H10v-8L34 6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M28 12l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="10" cy="38" r="3" stroke="currentColor" stroke-width="2"/>
-              <path d="M6 42h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-        <h3>Infographie & Impression</h3>
-        <p>Création de logos, affiches, banderolles et cartes de visite. Conception graphique professionnelle et impression haute qualité pour valoriser votre image de marque.</p>
-        <span class="service-link">En savoir plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
+      <div class="academy-band">
+        <div>
+          <strong>Former une équipe ou vous former vous-même ?</strong>
+          <span>Recevez le programme détaillé et un devis adapté à vos objectifs.</span>
+        </div>
+        <a href="#contact" class="btn hl-btn-dark">Demander le programme <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- ===== À LA UNE (slider) ===== -->
+<section class="feature" id="a-la-une" data-dot="À la une">
+  <div class="container">
+    <div class="hl-slider" aria-roledescription="carrousel" aria-label="À la une">
+      <div class="hl-track">
+      <article class="hl-slide" data-slide="0" aria-roledescription="diapositive" aria-label="1 sur 5">
+        <div class="hl-slide-text">
+          <span class="feature-tag"><span class="badge-dot"></span>À la une · AnNissa Technology</span>
+          <h3 class="hl-slide-title">L’intelligence artificielle,<br><em class="serif-accent">au service de votre activité.</em></h3>
+          <p>Chatbots, analyse prédictive, automatisation : nous intégrons l’IA là où elle crée une vraie valeur pour vos clients et vos équipes.</p>
+          <a href="#services" class="btn btn-primary" onclick="showService('ia');return false;">Découvrir l’offre IA <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="hl-slide-visual" aria-hidden="true"><svg viewBox="0 0 320 260" fill="none"><g stroke="rgba(240,180,41,.45)" stroke-width="1.2"><path d="M60 60 160 130 260 50M60 60 70 200 160 130 250 210M260 50 250 210M160 130 160 30M70 200 250 210"/></g><g fill="#0f1440" stroke="#f0b429" stroke-width="2"><circle cx="60" cy="60" r="9"/><circle cx="260" cy="50" r="9"/><circle cx="70" cy="200" r="9"/><circle cx="250" cy="210" r="9"/><circle cx="160" cy="30" r="7"/></g><circle cx="160" cy="130" r="34" fill="rgba(240,180,41,.12)" stroke="#f0b429" stroke-width="2"/><circle cx="160" cy="130" r="14" fill="#f0b429"/></svg></div>
+      </article>
+      <article class="hl-slide" data-slide="1" aria-roledescription="diapositive" aria-label="2 sur 5">
+        <div class="hl-slide-text">
+          <span class="feature-tag"><span class="badge-dot"></span>AnNissa Academy</span>
+          <h3 class="hl-slide-title">Formation IT,<br><em class="serif-accent">apprendre en pratiquant.</em></h3>
+          <p>Développement web & mobile, cloud, cybersécurité et IA : des formations concrètes dispensées par des ingénieurs et experts IT certifiés.</p>
+          <a href="#academy" class="btn btn-primary" onclick="showService('formationit');return false;">Voir la formation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="hl-slide-visual" aria-hidden="true"><svg viewBox="0 0 320 260" fill="none"><rect x="40" y="40" width="240" height="150" rx="14" stroke="rgba(240,180,41,.5)" stroke-width="2"/><path d="M40 70h240" stroke="rgba(240,180,41,.3)" stroke-width="1.5"/><circle cx="58" cy="55" r="4" fill="#f0b429"/><circle cx="72" cy="55" r="4" fill="rgba(240,180,41,.5)"/><path d="M80 110l22 18-22 18M120 146h50" stroke="#f0b429" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M110 225h100M160 190v35" stroke="rgba(240,180,41,.5)" stroke-width="2" stroke-linecap="round"/><path d="M215 92l40-18 40 18-40 18-40-18z" fill="#f0b429"/><path d="M230 100v18c0 6 11 11 25 11s25-5 25-11v-18" stroke="#f0b429" stroke-width="2"/></svg></div>
+      </article>
+      <article class="hl-slide" data-slide="2" aria-roledescription="diapositive" aria-label="3 sur 5">
+        <div class="hl-slide-text">
+          <span class="feature-tag"><span class="badge-dot"></span>AnNissa Technology</span>
+          <h3 class="hl-slide-title">Applications mobiles,<br><em class="serif-accent">pensées pour vos utilisateurs.</em></h3>
+          <p>Applications iOS et Android natives ou cross-platform, des parcours fluides et un déploiement sur les stores pris en charge de bout en bout.</p>
+          <a href="#services" class="btn btn-primary" onclick="showService('mobile');return false;">Découvrir le mobile <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="hl-slide-visual" aria-hidden="true"><svg viewBox="0 0 320 260" fill="none"><rect x="105" y="15" width="110" height="230" rx="22" stroke="#f0b429" stroke-width="2.5"/><rect x="140" y="27" width="40" height="7" rx="3.5" fill="rgba(240,180,41,.5)"/><rect x="120" y="50" width="80" height="44" rx="10" fill="rgba(240,180,41,.15)" stroke="rgba(240,180,41,.5)"/><path d="M120 112h80M120 132h60M120 152h70" stroke="rgba(240,180,41,.4)" stroke-width="6" stroke-linecap="round"/><rect x="120" y="198" width="80" height="22" rx="8" fill="#f0b429"/><circle cx="60" cy="80" r="26" stroke="rgba(240,180,41,.35)" stroke-width="1.5"/><path d="M60 68v24M48 80h24" stroke="#f0b429" stroke-width="2.5" stroke-linecap="round"/><circle cx="262" cy="180" r="30" stroke="rgba(240,180,41,.35)" stroke-width="1.5"/><path d="m250 180 9 9 16-17" stroke="#f0b429" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </article>
+      <article class="hl-slide" data-slide="3" aria-roledescription="diapositive" aria-label="4 sur 5">
+        <div class="hl-slide-text">
+          <span class="feature-tag"><span class="badge-dot"></span>AnNissa Technology</span>
+          <h3 class="hl-slide-title">Salesforce, Odoo & SAP,<br><em class="serif-accent">vos processus unifiés.</em></h3>
+          <p>CRM et ERP paramétrés, intégrés et maintenus par nos consultants : ventes, stocks, finance et relation client pilotés depuis un même outil.</p>
+          <a href="#services" class="btn btn-primary" onclick="document.getElementById('solutions').scrollIntoView({behavior:'smooth'});return false;">Découvrir nos solutions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="hl-slide-visual" aria-hidden="true"><svg viewBox="0 0 320 260" fill="none"><path d="M40 210V60" stroke="rgba(240,180,41,.35)" stroke-width="1.5"/><path d="M40 210h250" stroke="rgba(240,180,41,.35)" stroke-width="1.5"/><rect x="70" y="150" width="34" height="60" rx="6" fill="rgba(240,180,41,.25)"/><rect x="124" y="115" width="34" height="95" rx="6" fill="rgba(240,180,41,.45)"/><rect x="178" y="85" width="34" height="125" rx="6" fill="rgba(240,180,41,.7)"/><rect x="232" y="50" width="34" height="160" rx="6" fill="#f0b429"/><path d="M80 130 140 95l55-25 55-35" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 8"/><circle cx="250" cy="35" r="7" fill="#fff"/></svg></div>
+      </article>
+      <article class="hl-slide hl-slide-photo" data-slide="4" aria-roledescription="diapositive" aria-label="5 sur 5">
+        <div class="hl-slide-text">
+          <span class="feature-tag"><span class="badge-dot"></span>AnNissa Dev Group</span>
+          <h3 class="hl-slide-title">Une équipe engagée,<br><em class="serif-accent">guidée par ses valeurs.</em></h3>
+          <p>Innovation, excellence et dignité : six principes qui guident chaque ligne de code et chaque relation client.</p>
+          <a href="/valeurs.html" class="btn btn-primary">Découvrir nos valeurs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="hl-slide-visual" aria-hidden="true"><img src="/images/dev-team-voilee-chic.png" alt="" loading="lazy" width="1376" height="768"></div>
+      </article>
+      </div>
+      <div class="hl-nav">
+        <button type="button" class="hl-arrow hl-prev" aria-label="Diapositive précédente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+        <div class="hl-dots"></div>
+        <span class="hl-count"><b>01</b> / 05</span>
+        <button type="button" class="hl-arrow hl-next" aria-label="Diapositive suivante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ===== ABOUT ===== -->
-<section class="about" id="about">
+<section class="about" id="about" data-dot="À propos">
   <div class="container">
-    <div class="about-grid">
-      <div class="about-visual">
-        <div class="about-shape shape-1"></div>
-        <div class="about-shape shape-2"></div>
-        <div class="about-card-main">
-          <div class="about-logo-big">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="120" height="120">
-              <circle cx="60" cy="60" r="56" stroke="#f0b429" stroke-width="3"/>
-              <circle cx="60" cy="60" r="40" stroke="#f0b429" stroke-width="2"/>
-              <circle cx="60" cy="72" r="6" fill="#f0b429"/>
-              <path d="M40 56 Q60 40 80 56" stroke="#f0b429" stroke-width="3" fill="none" stroke-linecap="round"/>
-              <circle cx="60" cy="16" r="4" fill="#f0b429"/>
-              <circle cx="60" cy="104" r="4" fill="#f0b429"/>
-              <circle cx="16" cy="60" r="4" fill="#f0b429"/>
-              <circle cx="104" cy="60" r="4" fill="#f0b429"/>
-            </svg>
-          </div>
-          <p class="about-card-quote">« Tech with purpose and dignity »</p>
-          <div class="about-metric">
-            <span class="metric-num">100%</span>
-            <span class="metric-label">Satisfaction client</span>
-          </div>
+    <div class="ab-grid">
+      <div class="ab-visual" data-fx="-20">
+        <div class="ab-photo">
+          <img src="/images/dev-team-voilee-chic.png" alt="L'équipe AnNissa Dev Group au travail" loading="lazy" width="1376" height="768">
+        </div>
+        <div class="ab-quote">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M10 7H6a3 3 0 0 0-3 3v7h7v-7H6a1 1 0 0 1 1-1h3V7zm11 0h-4a3 3 0 0 0-3 3v7h7v-7h-4a1 1 0 0 1 1-1h3V7z"/></svg>
+          <p>Tech with purpose<br><em>and dignity.</em></p>
+        </div>
+        <div class="ab-metric">
+          <strong>100%</strong>
+          <span>Satisfaction client</span>
         </div>
       </div>
-      <div class="about-content">
+      <div class="ab-content">
         <span class="section-label">À propos de nous</span>
-        <h1 class="section-title">Construisons votre <span class="gold-text">avenir numérique</span> ensemble</h1>
-        <p class="about-text">
-          AnNissa Dev Group transforme vos idées en solutions technologiques robustes.
-          Développement web & mobile, Intelligence Artificielle, Conseil IT — nous sommes
-          votre partenaire tech de confiance.
-        </p>
-        <h2 class="section-title">Une équipe passionnée au service de <span class="gold-text">votre vision</span></h2>
-        <p class="about-text">
-          Fondée avec la conviction que la technologie doit être au service de l'Homme, AnNissa Dev Group accompagne
-          les entreprises et entrepreneurs dans leur transformation numérique. Notre approche allie rigueur technique,
-          créativité et écoute client.
-        </p>
-        <p class="about-text">
-          Chaque projet est unique. C'est pourquoi nous prenons le temps de comprendre vos enjeux, vos contraintes
-          et vos ambitions avant de proposer des solutions adaptées et évolutives.
-        </p>
-        <div class="about-values">
-          <div class="value-item">
-            <div class="value-icon">✦</div>
-            <div>
-              <h4>Excellence technique</h4>
-              <p>Code propre, architecture solide, performances optimales</p>
-            </div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">✦</div>
-            <div>
-              <h4>Transparence totale</h4>
-              <p>Suivi en temps réel, communication claire, devis détaillés</p>
-            </div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">✦</div>
-            <div>
-              <h4>Engagement durable</h4>
-              <p>Maintenance, évolution et support après livraison</p>
-            </div>
-          </div>
-        </div>
+        <h2 class="ab-title">Construisons votre avenir numérique <em class="serif-accent">ensemble</em>.</h2>
+        <p class="ab-lead">AnNissa Dev Group transforme vos idées en solutions technologiques robustes : développement web & mobile, intelligence artificielle, conseil IT et formation.</p>
+        <p class="ab-text">Fondée avec la conviction que la technologie doit être au service de l'Homme, notre équipe accompagne les entreprises et les entrepreneurs dans leur transformation numérique. Chaque projet est unique : nous prenons le temps de comprendre vos enjeux, vos contraintes et vos ambitions avant de proposer des solutions adaptées et évolutives.</p>
+        <ol class="ab-values">
+          <li><span>01</span><div><h4>Excellence technique</h4><p>Code propre, architecture solide, performances optimales.</p></div></li>
+          <li><span>02</span><div><h4>Transparence totale</h4><p>Suivi en temps réel, communication claire, devis détaillés.</p></div></li>
+          <li><span>03</span><div><h4>Engagement durable</h4><p>Maintenance, évolution et support après livraison.</p></div></li>
+        </ol>
+        <a href="/valeurs.html" class="hl-link">Découvrir nos valeurs</a>
       </div>
     </div>
   </div>
 </section>
 
-
 <!-- ===== TEAM CREDENTIALS ===== -->
-<div style="background:linear-gradient(135deg,rgba(240,180,41,.06),rgba(99,102,241,.06));border-top:1px solid rgba(240,180,41,.15);border-bottom:1px solid rgba(240,180,41,.15);padding:36px 0">
+<section class="creds">
   <div class="container">
-    <div style="text-align:center;margin-bottom:24px">
-      <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f0b429">Notre équipe</span>
-      <h3 style="margin:8px 0 0;font-size:18px;color:#fff;font-weight:700">Des experts certifiés à votre service</h3>
+    <div class="pole-head">
+      <div>
+        <span class="pole-head-label"><i></i>Notre équipe</span>
+        <h3 class="pole-head-title">Des experts certifiés<br>à votre service.</h3>
+      </div>
+      <p class="pole-head-desc">Ingénieurs, consultants, coachs et formateurs : chaque mission est confiée à un spécialiste reconnu de son domaine.</p>
     </div>
-    <div class="credentials-wrap" style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
-
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(240,180,41,.2);border-radius:50px;padding:10px 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="18" height="18"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0">Ingénieurs IT certifiés</span>
+    <div class="cred-grid">
+      <div class="cred">
+        <span class="cred-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span>
+        <strong>Ingénieurs IT certifiés</strong>
+        <small>AnNissa Technology</small>
       </div>
-
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(240,180,41,.2);border-radius:50px;padding:10px 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2" width="18" height="18"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0">Consultants & Experts IT certifiés</span>
+      <div class="cred">
+        <span class="cred-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M12 12v4M10 14h4"/></svg></span>
+        <strong>Consultants & experts IT certifiés</strong>
+        <small>AnNissa Technology</small>
       </div>
-
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(0,161,224,.3);border-radius:50px;padding:10px 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00a1e0" stroke-width="2" width="18" height="18"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8l4 4-4 4"/></svg>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0">Experts Salesforce certifiés</span>
+      <div class="cred">
+        <span class="cred-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z"/></svg></span>
+        <strong>Experts Salesforce certifiés</strong>
+        <small>AnNissa Technology</small>
       </div>
-
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(99,102,241,.3);border-radius:50px;padding:10px 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0">Coachs Leadership certifiés</span>
+      <div class="cred">
+        <span class="cred-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span>
+        <strong>Coachs leadership certifiés</strong>
+        <small>AnNissa Academy</small>
       </div>
-
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(99,102,241,.3);border-radius:50px;padding:10px 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0">Formateurs Anglais certifiés</span>
+      <div class="cred">
+        <span class="cred-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <strong>Formateurs anglais certifiés</strong>
+        <small>AnNissa Academy</small>
       </div>
-
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(16,185,129,.3);border-radius:50px;padding:10px 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" width="18" height="18"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0">Coachs Développement Personnel certifiés</span>
+      <div class="cred">
+        <span class="cred-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1 7.8 7.7 7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <strong>Coachs développement personnel certifiés</strong>
+        <small>AnNissa Academy</small>
       </div>
-
     </div>
   </div>
-</div>
+</section>
 
 <!-- ===== PROCESS ===== -->
-<section class="process">
+<section class="process" id="processus" data-dot="Processus">
   <div class="container">
     <div class="section-header">
       <span class="section-label">Comment ça marche</span>
-      <h2 class="section-title">Notre <span class="gold-text">processus</span></h2>
+      <h2 class="section-title">Notre processus</h2>
+      <p class="section-desc">Quatre étapes claires, de la première conversation au suivi après livraison.</p>
     </div>
-    <div class="process-steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <h3>Consultation</h3>
-          <p>Échange gratuit pour comprendre vos besoins, définir le périmètre et vos objectifs.</p>
-        </div>
-        <div class="step-arrow">→</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <h3>Devis & Planning</h3>
-          <p>Proposition détaillée avec chiffrage transparent, délais et jalons définis ensemble.</p>
-        </div>
-        <div class="step-arrow">→</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <h3>Développement</h3>
-          <p>Livraisons itératives avec démonstrations régulières. Vous suivez chaque avancement.</p>
-        </div>
-        <div class="step-arrow">→</div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-content">
-          <h3>Livraison & Suivi</h3>
-          <p>Mise en production, formation et support continu pour assurer votre succès.</p>
-        </div>
-      </div>
+    <div class="timeline-wrap">
+    <span class="tl-line" aria-hidden="true"><span class="tl-fill"></span></span>
+    <ol class="timeline">
+      <li class="tl-step">
+        <span class="tl-dot"></span>
+        <span class="tl-num">01</span>
+        <h3>Consultation</h3>
+        <p>Échange gratuit pour comprendre vos besoins, définir le périmètre et vos objectifs.</p>
+      </li>
+      <li class="tl-step">
+        <span class="tl-dot"></span>
+        <span class="tl-num">02</span>
+        <h3>Devis & planning</h3>
+        <p>Proposition détaillée avec chiffrage transparent, délais et jalons définis ensemble.</p>
+      </li>
+      <li class="tl-step">
+        <span class="tl-dot"></span>
+        <span class="tl-num">03</span>
+        <h3>Développement</h3>
+        <p>Livraisons itératives avec démonstrations régulières. Vous suivez chaque avancement.</p>
+      </li>
+      <li class="tl-step">
+        <span class="tl-dot"></span>
+        <span class="tl-num">04</span>
+        <h3>Livraison & suivi</h3>
+        <p>Mise en production, formation et support continu pour assurer votre succès.</p>
+      </li>
+    </ol>
     </div>
   </div>
 </section>
 
 <!-- ===== CONTACT ===== -->
-<section class="contact" id="contact">
+<section class="contact" id="contact" data-dot="Contact">
   <div class="container">
     <div class="contact-grid">
       <div class="contact-info">
         <span class="section-label">Parlons de votre projet</span>
-        <h2 class="section-title">Prêt à <span class="gold-text">commencer ?</span></h2>
+        <h2 class="section-title">Prêt à commencer ?</h2>
         <p class="contact-desc">
           Décrivez-nous votre projet et nous vous répondrons sous 24h avec
           une première estimation gratuite.
         </p>
         <div class="contact-details">
           <div class="contact-item">
-            <div class="contact-icon">✉</div>
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
             <div>
               <strong>Email</strong>
               <span>contact@annissadevgroup.com</span>
             </div>
           </div>
           <div class="contact-item">
-            <div class="contact-icon">☎</div>
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></div>
             <div>
               <strong>Téléphone</strong>
               <span><a href="tel:+221779215050">+221 77 921 50 50</a></span>
             </div>
           </div>
           <div class="contact-item">
-            <div class="contact-icon">⊙</div>
+            <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
             <div>
               <strong>Localisation</strong>
               <span>Dakar, Sénégal</span>
@@ -520,13 +631,22 @@
             <label>Type de projet *</label>
             <select name="projectType" required>
               <option value="">Sélectionner...</option>
-              <option value="web">Développement Web</option>
-              <option value="mobile">Application Mobile</option>
-              <option value="ai">Intelligence Artificielle</option>
-              <option value="consulting">Conseil & Expertise IT</option>
-              <option value="desktop">Développement Desktop</option>
-              <option value="formation">Développement Personnel & Leadership</option>
-              <option value="anglais">Formation Anglais</option>
+              <optgroup label="AnNissa Technology">
+                <option value="web">Développement Web</option>
+                <option value="mobile">Application Mobile</option>
+                <option value="desktop">Développement Desktop</option>
+                <option value="ai">Intelligence Artificielle</option>
+                <option value="salesforce">Salesforce (CRM)</option>
+                <option value="odoo">Odoo (ERP)</option>
+                <option value="sap">SAP (ERP)</option>
+                <option value="consulting">Conseil & Expertise IT</option>
+                <option value="infographie">Infographie & Impression</option>
+              </optgroup>
+              <optgroup label="AnNissa Academy">
+                <option value="formationit">Formation IT</option>
+                <option value="formation">Développement Personnel & Leadership</option>
+                <option value="anglais">Formation Anglais</option>
+              </optgroup>
               <option value="other">Autre</option>
             </select>
           </div>
@@ -552,7 +672,7 @@
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
+    <div class="footer-grid footer-grid-4">
       <div class="footer-brand">
         <div class="footer-logo">
           <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
@@ -567,14 +687,30 @@
           </div>
         </div>
         <p>Tech with purpose and dignity.<br>Votre partenaire technologique de confiance.</p>
+        <ul class="footer-contact">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Dakar, Sénégal</li>
+          <li><a href="mailto:contact@annissadevgroup.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>contact@annissadevgroup.com</a></li>
+          <li><a href="tel:+221779215050"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>+221 77 921 50 50</a></li>
+        </ul>
       </div>
       <div class="footer-links">
-        <h4>Services</h4>
+        <h4>AnNissa Technology</h4>
         <ul>
-          <li><a href="#services">Développement Web</a></li>
-          <li><a href="#services">Applications Mobile</a></li>
-          <li><a href="#services">Intelligence Artificielle</a></li>
-          <li><a href="#services">Conseil IT</a></li>
+          <li><a href="#technology">Développement Web</a></li>
+          <li><a href="#technology">Développement Mobile</a></li>
+          <li><a href="#technology">Développement Desktop</a></li>
+          <li><a href="#technology">Intelligence Artificielle</a></li>
+          <li><a href="#solutions">Salesforce · Odoo · SAP</a></li>
+          <li><a href="#technology">Conseil & Expertise IT</a></li>
+          <li><a href="#technology">Infographie & Impression</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>AnNissa Academy</h4>
+        <ul>
+          <li><a href="#academy">Formation IT</a></li>
+          <li><a href="#academy">Leadership & Développement personnel</a></li>
+          <li><a href="#academy">Formation Anglais</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -587,23 +723,60 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 AnNissa Dev Group. Tous droits réservés.</p>
+    <div class="footer-bottom footer-bottom-split">
+      <p>© 2026 AnNissa Dev Group. Tous droits réservés.<span class="footer-legal">NINEA 013460093 · RCCM SN.DKR.2026.A.40442</span></p>
+      <p class="footer-motto">Innovation · Excellence · Dignité</p>
     </div>
   </div>
 </footer>
 
 <!-- SERVICE MODAL -->
-<div id="serviceModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(8,12,50,.85);backdrop-filter:blur(8px);overflow-y:auto;padding:clamp(12px,4vw,40px) clamp(10px,4vw,16px)" onclick="if(event.target===this)closeServiceModal()">
-  <div id="serviceModalBox" style="max-width:680px;margin:0 auto;background:linear-gradient(160deg,#0d1347,#111b5e);border:1px solid rgba(240,180,41,.25);border-radius:20px;overflow:hidden;position:relative">
-    <button onclick="closeServiceModal()" style="position:absolute;top:18px;right:18px;background:rgba(255,255,255,.08);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10">×</button>
+<div id="serviceModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,20,64,.35);backdrop-filter:blur(8px);overflow-y:auto;padding:clamp(12px,4vw,40px) clamp(10px,4vw,16px)" onclick="if(event.target===this)closeServiceModal()">
+  <div id="serviceModalBox" style="max-width:680px;margin:0 auto;background:#fff;border:1px solid rgba(15,20,64,.08);border-radius:20px;overflow:hidden;position:relative;box-shadow:0 40px 90px -30px rgba(15,20,64,.45)">
+    <button onclick="closeServiceModal()" style="position:absolute;top:18px;right:18px;background:#f1f2f7;border:none;color:#0f1440;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10">×</button>
     <div id="serviceModalContent"></div>
   </div>
 </div>
 
-<script src="/js/main.js"></script>
+<script src="/js/main.js?v=19"></script>
 <script>
 const services = {
+  salesforce: {
+    icon: `<svg viewBox="0 0 48 48" fill="none" width="32" height="32" stroke="#f0b429" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M34 38H15a11 11 0 1 1 10.6-14h2.9A7 7 0 1 1 34 38z"/></svg>`,
+    title: 'Salesforce — CRM',
+    desc: 'Nous déployons et personnalisons Salesforce pour unifier vos ventes, votre service client et votre marketing : paramétrage, développements sur mesure, intégrations avec vos outils et accompagnement de vos équipes.',
+    stacks: [
+      { cat: 'Clouds Salesforce', techs: ['Sales Cloud', 'Service Cloud', 'Marketing Cloud', 'Experience Cloud'] },
+      { cat: 'Développement', techs: ['Apex', 'Lightning Web Components', 'Flows', 'SOQL'] },
+      { cat: 'Intégration', techs: ['API REST / SOAP', 'MuleSoft', 'Data Loader', 'Migration de données'] },
+      { cat: 'Accompagnement', techs: ['Audit de l\'existant', 'Formation utilisateurs', 'Support & évolutions'] }
+    ],
+    deliverables: ['Cadrage fonctionnel', 'Org Salesforce paramétrée', 'Développements sur mesure', 'Intégrations', 'Formation des équipes', 'Support continu']
+  },
+  odoo: {
+    icon: `<svg viewBox="0 0 48 48" fill="none" width="32" height="32" stroke="#f0b429" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="15" height="15" rx="3"/><rect x="27" y="6" width="15" height="15" rx="3"/><rect x="6" y="27" width="15" height="15" rx="3"/><circle cx="34.5" cy="34.5" r="7.5"/></svg>`,
+    title: 'Odoo — ERP',
+    desc: 'Nous mettons en place Odoo, l\'ERP modulaire qui réunit ventes, achats, stocks, comptabilité et ressources humaines dans un seul outil, avec des modules sur mesure adaptés à votre activité.',
+    stacks: [
+      { cat: 'Modules', techs: ['Ventes & CRM', 'Achats', 'Inventaire', 'Comptabilité', 'RH', 'Point de vente'] },
+      { cat: 'Développement', techs: ['Python', 'ORM Odoo', 'XML / QWeb', 'Odoo Studio'] },
+      { cat: 'Intégration', techs: ['API XML-RPC / JSON-RPC', 'E-commerce', 'Passerelles de paiement', 'Migration de données'] },
+      { cat: 'Déploiement', techs: ['Odoo Online', 'Odoo.sh', 'Serveur dédié'] }
+    ],
+    deliverables: ['Analyse des processus', 'Paramétrage des modules', 'Modules sur mesure', 'Reprise des données', 'Formation des utilisateurs', 'Maintenance']
+  },
+  sap: {
+    icon: `<svg viewBox="0 0 48 48" fill="none" width="32" height="32" stroke="#f0b429" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="38" height="28" rx="4"/><path d="M5 18h38M14 26h8M14 31h14"/></svg>`,
+    title: 'SAP — ERP',
+    desc: 'Nous accompagnons vos projets SAP, du cadrage à l\'exploitation : paramétrage des modules, interfaces avec votre système d\'information, conduite du changement et formation de vos équipes.',
+    stacks: [
+      { cat: 'Modules', techs: ['FI / CO', 'MM', 'SD', 'PP', 'HCM'] },
+      { cat: 'Plateformes', techs: ['SAP S/4HANA', 'SAP Business One', 'SAP BTP'] },
+      { cat: 'Technique', techs: ['ABAP', 'SAP Fiori', 'IDoc & API', 'Interfaces SI'] },
+      { cat: 'Accompagnement', techs: ['Cadrage', 'Conduite du changement', 'Formation', 'Support'] }
+    ],
+    deliverables: ['Étude de cadrage', 'Paramétrage des modules', 'Interfaces', 'Tests & recette', 'Formation des équipes', 'Support post-démarrage']
+  },
   desktop: {
     icon: `<svg viewBox="0 0 48 48" fill="none" width="32" height="32"><rect x="4" y="8" width="40" height="28" rx="3" stroke="#f0b429" stroke-width="2"/><path d="M16 42h16M24 36v6" stroke="#f0b429" stroke-width="2" stroke-linecap="round"/><path d="M12 20h8M12 26h16M28 20h8" stroke="#f0b429" stroke-width="2" stroke-linecap="round"/></svg>`,
     title: 'Développement Desktop',
@@ -722,30 +895,30 @@ function showService(key) {
   const s = services[key];
   const stackHTML = s.stacks.map(g => `
     <div style="margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;color:#f0b429;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">${g.cat}</div>
+      <div style="font-size:11px;font-weight:700;color:#c8941f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">${g.cat}</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px">
-        ${g.techs.map(t => `<span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;font-size:12px;color:#cbd5e1">${t}</span>`).join('')}
+        ${g.techs.map(t => `<span style="background:#f7f8fb;border:1px solid rgba(15,20,64,.08);padding:4px 12px;border-radius:20px;font-size:12px;color:#545a7e">${t}</span>`).join('')}
       </div>
     </div>`).join('');
 
   const delivHTML = s.deliverables.map(d => `
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-      <span style="color:#f0b429;font-size:14px">✓</span>
-      <span style="font-size:13px;color:#cbd5e1">${d}</span>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(15,20,64,.06)">
+      <span style="color:#c8941f;font-size:14px">✓</span>
+      <span style="font-size:13px;color:#545a7e">${d}</span>
     </div>`).join('');
 
   document.getElementById('serviceModalContent').innerHTML = `
-    <div style="background:linear-gradient(135deg,rgba(240,180,41,.12),transparent);padding:36px 36px 28px;border-bottom:1px solid rgba(255,255,255,.08)">
+    <div style="background:#fff;padding:36px 36px 28px;border-bottom:1px solid rgba(15,20,64,.07)">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-        <div style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);border-radius:12px;padding:12px;display:flex">${s.icon}</div>
-        <h2 style="margin:0;font-size:22px;font-weight:800;color:#fff">${s.title}</h2>
+        <div style="background:#f4f5f9;border:1px solid rgba(15,20,64,.08);border-radius:12px;padding:12px;display:flex">${s.icon}</div>
+        <h2 style="margin:0;font-size:22px;font-weight:800;color:#0f1440">${s.title}</h2>
       </div>
-      <p style="margin:0;color:#94a3b8;font-size:14px;line-height:1.7">${s.desc}</p>
+      <p style="margin:0;color:#545a7e;font-size:14px;line-height:1.7">${s.desc}</p>
     </div>
     <div style="padding:28px 36px">
-      <h3 style="margin:0 0 20px;font-size:13px;font-weight:700;color:#f0b429;text-transform:uppercase;letter-spacing:1px">Stack technique</h3>
+      <h3 style="margin:0 0 20px;font-size:13px;font-weight:700;color:#c8941f;text-transform:uppercase;letter-spacing:1px">Stack technique</h3>
       ${stackHTML}
-      <h3 style="margin:24px 0 12px;font-size:13px;font-weight:700;color:#f0b429;text-transform:uppercase;letter-spacing:1px">Ce que vous recevez</h3>
+      <h3 style="margin:24px 0 12px;font-size:13px;font-weight:700;color:#c8941f;text-transform:uppercase;letter-spacing:1px">Ce que vous recevez</h3>
       ${delivHTML}
       <div style="margin-top:28px;text-align:center">
         <a href="#contact" onclick="closeServiceModal()" style="display:inline-block;background:linear-gradient(135deg,#f0b429,#d4940a);color:#0d1347;font-weight:800;font-size:14px;padding:14px 36px;border-radius:50px;text-decoration:none;letter-spacing:.3px">Demander un devis gratuit →</a>

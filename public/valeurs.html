@@ -9,14 +9,14 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon-192.png">
-  <link rel="stylesheet" href="/css/style.css?v=7">
+  <link rel="stylesheet" href="/css/style.css?v=20">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ===== PAGE HERO ===== */
     .page-hero {
-      position: relative; overflow: hidden; padding: 170px 24px 110px; text-align: center;
-      min-height: 66vh; display: flex; align-items: center;
+      position: relative; overflow: hidden; padding: 205px 24px 110px; text-align: center;
+      min-height: 66vh; display: flex; align-items: center; background: #ffffff;
     }
     .page-hero-bg-img {
       position: absolute; inset: 0; z-index: 0;
@@ -25,33 +25,32 @@
     .page-hero-overlay {
       position: absolute; inset: 0; z-index: 1;
       background:
-        linear-gradient(180deg, rgba(8,11,42,0.88) 0%, rgba(8,11,42,0.72) 45%, rgba(10,14,53,0.88) 100%),
-        radial-gradient(ellipse 70% 60% at 50% 30%, transparent 0%, rgba(8,11,42,0.5) 100%);
+        linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(255,255,255,0.9) 55%, #ffffff 100%),
+        none;
     }
     .page-hero .hero-grid {
       position: absolute; inset: 0; z-index: 2;
       background-image:
-        linear-gradient(rgba(240,180,41,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(240,180,41,0.06) 1px, transparent 1px);
+        linear-gradient(rgba(15,20,64,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,20,64,0.05) 1px, transparent 1px);
       background-size: 60px 60px;
       mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 40%, transparent 100%);
     }
     .page-hero-content { position: relative; z-index: 3; max-width: 760px; margin: 0 auto; }
-    .page-hero .hero-badge { margin: 0 auto 20px; }
+    .page-hero .hl-badge { margin: 0 auto 20px; }
     .page-hero h1 {
       font-family: var(--font-head); font-size: clamp(2.4rem, 5vw, 3.6rem);
-      font-weight: 800; line-height: 1.15; margin: 14px 0 20px; letter-spacing: -1px;
-      text-shadow: 0 2px 16px rgba(0,0,6,0.55), 0 8px 40px rgba(0,0,6,0.45);
+      font-weight: 700; line-height: 1.1; margin: 14px 0 20px; letter-spacing: -.03em; color: var(--ink);
     }
     .page-hero p.lead {
       color: var(--text-light); font-size: clamp(15px, 1.6vw, 18px); line-height: 1.75;
-      max-width: 620px; margin: 0 auto; text-shadow: 0 2px 12px rgba(0,0,6,0.6);
+      max-width: 620px; margin: 0 auto;
     }
     .page-hero .quote-pill {
       display: inline-flex; align-items: center; gap: 10px; margin-top: 32px;
-      background: rgba(13,17,60,0.55); backdrop-filter: blur(8px);
-      border: 1px solid rgba(240,180,41,0.3);
-      padding: 10px 22px; border-radius: 50px; color: var(--gold);
+      background: #fff; box-shadow: 0 8px 24px -14px rgba(15,20,64,0.25);
+      border: 1px solid rgba(240,180,41,0.35);
+      padding: 10px 22px; border-radius: 50px; color: var(--gold-dark);
       font-size: 13px; font-weight: 600; letter-spacing: .5px; font-style: italic;
     }
 
@@ -65,33 +64,33 @@
       background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
       padding: 36px 32px; position: relative; overflow: hidden;
       transition: transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s cubic-bezier(.16,1,.3,1), border-color .4s;
-      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 2px rgba(15,20,64,0.04), 0 12px 32px -18px rgba(15,20,64,0.18);
       counter-increment: value-counter;
     }
     .value-card::before {
       content: ''; position: absolute; inset: 0; z-index: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(240,180,41,0.1) 0%, transparent 60%);
+      background: radial-gradient(circle at 50% 0%, rgba(15,20,64,0.03) 0%, transparent 60%);
       opacity: 0; transition: opacity .4s;
     }
     .value-card:hover {
       transform: translateY(-10px); border-color: rgba(240,180,41,0.5);
-      box-shadow: 0 24px 48px -12px rgba(0,0,8,0.55);
+      box-shadow: 0 30px 60px -24px rgba(15,20,64,0.25);
     }
     .value-card:hover::before { opacity: 1; }
     .value-card-num {
       position: absolute; top: 18px; right: 24px; z-index: 0;
       font-family: var(--font-head); font-weight: 800; font-size: 2.6rem;
-      color: rgba(240,180,41,0.12); line-height: 1;
+      color: rgba(240,180,41,0.28); line-height: 1;
     }
     .value-card-num::before { content: counter(value-counter, decimal-leading-zero); }
     .value-icon {
       width: 60px; height: 60px; border-radius: 14px; margin-bottom: 24px; position: relative; z-index: 1;
-      background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.2);
+      background: #f4f5f9; border: 1px solid rgba(15,20,64,.08);
       display: flex; align-items: center; justify-content: center; color: var(--gold);
       transition: transform .5s cubic-bezier(.34,1.56,.64,1), background .4s, border-color .4s;
     }
     .value-icon svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; flex-shrink: 0; }
-    .value-card:hover .value-icon { transform: scale(1.1) rotate(-6deg); background: rgba(240,180,41,0.18); border-color: rgba(240,180,41,0.4); }
+    .value-card:hover .value-icon { transform: scale(1.1) rotate(-6deg); background: #fff; border-color: rgba(240,180,41,0.5); }
     .value-card h3 { font-family: var(--font-head); font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; position: relative; z-index: 1; }
     .value-card p { color: var(--text-light); font-size: 14px; line-height: 1.7; position: relative; z-index: 1; }
 
@@ -100,7 +99,7 @@
       max-width: 1200px; margin: 60px auto 0; padding: 0 24px;
     }
     .values-cta-inner {
-      background: linear-gradient(135deg, rgba(240,180,41,0.12), rgba(99,102,241,0.08));
+      background: #fff; box-shadow: 0 30px 60px -36px rgba(15,20,64,0.25);
       border: 1px solid rgba(240,180,41,0.25); border-radius: 24px;
       padding: 56px 40px; text-align: center;
     }
@@ -121,6 +120,20 @@
 
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-info">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Dakar, Sénégal</span>
+        <a href="mailto:contact@annissadevgroup.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>contact@annissadevgroup.com</a>
+        <a href="tel:+221779215050"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>+221 77 921 50 50</a>
+      </div>
+      <div class="topbar-links">
+        <a href="/#technology">AnNissa Technology</a>
+        <a href="/#academy">AnNissa Academy</a>
+        <a href="/#contact" class="topbar-cta">Demander un devis</a>
+      </div>
+    </div>
+  </div>
   <div class="nav-container">
     <a href="/" class="nav-logo">
       <div class="logo-icon">
@@ -147,16 +160,24 @@
           <svg class="nav-caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </a>
         <div class="nav-dropdown-panel">
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Web</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Mobile</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Développement Desktop</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Intelligence Artificielle</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#f0b429"></span>Conseil & Expertise IT</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#0ea5e9"></span>Formation IT</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#6366f1"></span>Développement Personnel</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#10b981"></span>Formation Anglais</a>
-          <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot" style="background:#ec4899"></span>Infographie & Impression</a>
-          <a class="nav-dropdown-viewall" href="/#services">Voir tous les services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="nav-dropdown-group">
+            <a class="nav-dropdown-head" href="/#technology">AnNissa <b>Technology</b></a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Développement Web</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Développement Mobile</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Développement Desktop</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Intelligence Artificielle</a>
+            <a class="nav-dropdown-item" href="/#solutions"><span class="nav-dropdown-dot"></span>Salesforce (CRM)</a>
+            <a class="nav-dropdown-item" href="/#solutions"><span class="nav-dropdown-dot"></span>Odoo (ERP)</a>
+            <a class="nav-dropdown-item" href="/#solutions"><span class="nav-dropdown-dot"></span>SAP (ERP)</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Conseil & Expertise IT</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Infographie & Impression</a>
+          </div>
+          <div class="nav-dropdown-group">
+            <a class="nav-dropdown-head" href="/#academy">AnNissa <b>Academy</b></a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Formation IT</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Développement Personnel & Leadership</a>
+            <a class="nav-dropdown-item" href="/#services"><span class="nav-dropdown-dot"></span>Formation Anglais</a>
+          </div>
         </div>
       </li>
       <li><a href="/#about">À propos</a></li>
@@ -171,11 +192,9 @@
 
 <!-- ===== PAGE HERO ===== -->
 <section class="page-hero">
-  <img src="/images/dev-team-voilee-chic.png" alt="Équipe d'ingénieurs AnNissa Dev Group au travail" class="page-hero-bg-img" width="1376" height="768" loading="eager">
-  <div class="page-hero-overlay"></div>
   <div class="hero-grid"></div>
   <div class="page-hero-content">
-    <div class="hero-badge">
+    <div class="hl-badge">
       <span class="badge-dot"></span>
       Innovation · Excellence · Dignité
     </div>
@@ -262,7 +281,7 @@
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
+    <div class="footer-grid footer-grid-4">
       <div class="footer-brand">
         <div class="footer-logo">
           <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
@@ -277,14 +296,30 @@
           </div>
         </div>
         <p>Tech with purpose and dignity.<br>Votre partenaire technologique de confiance.</p>
+        <ul class="footer-contact">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Dakar, Sénégal</li>
+          <li><a href="mailto:contact@annissadevgroup.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>contact@annissadevgroup.com</a></li>
+          <li><a href="tel:+221779215050"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>+221 77 921 50 50</a></li>
+        </ul>
       </div>
       <div class="footer-links">
-        <h4>Services</h4>
+        <h4>AnNissa Technology</h4>
         <ul>
-          <li><a href="/#services">Développement Web</a></li>
-          <li><a href="/#services">Applications Mobile</a></li>
-          <li><a href="/#services">Intelligence Artificielle</a></li>
-          <li><a href="/#services">Conseil IT</a></li>
+          <li><a href="/#technology">Développement Web</a></li>
+          <li><a href="/#technology">Développement Mobile</a></li>
+          <li><a href="/#technology">Développement Desktop</a></li>
+          <li><a href="/#technology">Intelligence Artificielle</a></li>
+          <li><a href="/#solutions">Salesforce · Odoo · SAP</a></li>
+          <li><a href="/#technology">Conseil & Expertise IT</a></li>
+          <li><a href="/#technology">Infographie & Impression</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>AnNissa Academy</h4>
+        <ul>
+          <li><a href="/#academy">Formation IT</a></li>
+          <li><a href="/#academy">Leadership & Développement personnel</a></li>
+          <li><a href="/#academy">Formation Anglais</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -297,13 +332,14 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 AnNissa Dev Group. Tous droits réservés.</p>
+    <div class="footer-bottom footer-bottom-split">
+      <p>© 2026 AnNissa Dev Group. Tous droits réservés.<span class="footer-legal">NINEA 013460093 · RCCM SN.DKR.2026.A.40442</span></p>
+      <p class="footer-motto">Innovation · Excellence · Dignité</p>
     </div>
   </div>
 </footer>
 
-<script src="/js/main.js"></script>
+<script src="/js/main.js?v=19"></script>
 
 <!-- ===== BOUTON WHATSAPP FLOTTANT ===== -->
 <a href="https://wa.me/221779215050?text=Bonjour%20AnNissa%20Dev%20Group%2C%20je%20souhaite%20discuter%20de%20mon%20projet."

@@ -1488,6 +1488,13 @@ const drawLogoInPDF = (doc, cx, cy, r, goldColor) => {
   doc.circle(cx, cy + r * 0.28, r * 0.1, 'F');
 };
 
+// Identité légale de l'entreprise (reprise sur devis, factures et aperçus)
+const LEGAL_DEFAULTS = { ninea: '013460093', rccm: 'SN.DKR.2026.A.40442' };
+const legalLine = (co = {}) => `NINEA ${co.ninea || LEGAL_DEFAULTS.ninea}  ·  RCCM ${co.rccm || LEGAL_DEFAULTS.rccm}`;
+
+// Numéro affiché sur les devis, factures et emails : le téléphone commercial uniquement
+const docPhone = (co = {}) => { const p = (co.commercialPhone || '77 921 50 50').trim(); return p.startsWith('+') ? p : `+221 ${p}`; };
+
 const buildPDF = (doc, data, type = 'quote') => {
   const co = state.settings.company || {};
   const cur = co.currency || 'FCFA';
@@ -1525,10 +1532,13 @@ const buildPDF = (doc, data, type = 'quote') => {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...slate);
   doc.text('Tech with purpose and dignity', 34, 29);
-  const phoneLine = [co.phone, co.commercialPhone].filter(Boolean).join(' / ');
+  const phoneLine = docPhone(co);
   const contactLine = [co.address, co.email, phoneLine].filter(Boolean).join('  ·  ');
   doc.text(contactLine || 'annissadevgroup.com', 34, 35);
   doc.text(co.website || 'annissadevgroup.com', 34, 41);
+  doc.setTextColor(...gold);
+  doc.setFontSize(7);
+  doc.text(legalLine(co), 34, 47);
 
   // ── Document type badge (top-right) ──────────────────────────────────────
   const badgeW = 52, badgeH = data.type === 'formation' ? 26 : 20, badgeX = pageW - badgeW - 12, badgeY = 8;
@@ -1769,7 +1779,10 @@ const buildPDF = (doc, data, type = 'quote') => {
   doc.setTextColor(...slate);
   doc.setFontSize(7);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${co.name || 'AnNissa Dev Group'}  ·  ${co.website || 'annissadevgroup.com'}  ·  ${co.email || ''}  ·  ${co.phone || ''}`, pageW / 2 + 6, pageH - 6, { align: 'center' });
+  doc.text(`${co.name || 'AnNissa Dev Group'}  ·  ${co.website || 'annissadevgroup.com'}  ·  ${co.email || ''}  ·  ${docPhone(co)}`, pageW / 2 + 6, pageH - 9.5, { align: 'center' });
+  doc.setFontSize(6.5);
+  doc.setTextColor(...gold);
+  doc.text(legalLine(co), pageW / 2 + 6, pageH - 4.5, { align: 'center' });
 
   // Gold right accent strip in footer
   doc.setFillColor(...gold);
@@ -1874,8 +1887,9 @@ const previewDocument = (type, id) => {
               <div style="font-size:10px;color:#8896c4;letter-spacing:2px;text-transform:uppercase;margin:4px 0 10px">Tech with purpose and dignity</div>
               <div style="font-size:11px;color:#6872a8;line-height:1.9">
                 ${co.address || 'Dakar, Sénégal'}<br>
-                ${[co.email, [co.phone, co.commercialPhone].filter(Boolean).join(' / ')].filter(Boolean).join('  ·  ') || 'contact@annissadevgroup.com'}<br>
-                <span style="color:#8896c4">${co.website || 'annissadevgroup.com'}</span>
+                ${[co.email, docPhone(co)].filter(Boolean).join('  ·  ') || 'contact@annissadevgroup.com'}<br>
+                <span style="color:#8896c4">${co.website || 'annissadevgroup.com'}</span><br>
+                <span style="color:#f0b429;font-weight:600">${legalLine(co).replace(/  /g, ' ')}</span>
               </div>
             </div>
           </div>
@@ -1963,7 +1977,7 @@ const previewDocument = (type, id) => {
           <path d="M13 18Q20 13 27 18" stroke="#f0b429" stroke-width="1.5" fill="none" stroke-linecap="round"/>
         </svg>
         <span style="font-size:11px;color:#6872a8">
-          ${co.name || 'AnNissa Dev Group'}&nbsp;·&nbsp;${co.website || 'annissadevgroup.com'}&nbsp;·&nbsp;${co.email || ''}
+          ${co.name || 'AnNissa Dev Group'}&nbsp;·&nbsp;${co.website || 'annissadevgroup.com'}&nbsp;·&nbsp;${co.email || ''}<br>${legalLine(co).replace(/  /g, ' ')}
         </span>
       </div>
     </div>
@@ -2026,8 +2040,12 @@ const renderSettings = (main) => {
               <input id="s_address" value="${co.address || ''}">
             </div>
             <div class="form-group">
-              <label>SIRET / Numéro fiscal</label>
-              <input id="s_siret" value="${co.siret || ''}">
+              <label>NINEA</label>
+              <input id="s_ninea" value="${co.ninea || '013460093'}">
+            </div>
+            <div class="form-group">
+              <label>RCCM</label>
+              <input id="s_rccm" value="${co.rccm || 'SN.DKR.2026.A.40442'}">
             </div>
             <div class="form-group">
               <label>Téléphone admin (SMS notifications)</label>
@@ -2098,7 +2116,8 @@ const saveSettings = async () => {
       phone: document.getElementById('s_phone')?.value,
       commercialPhone: document.getElementById('s_commercial_phone')?.value?.trim(),
       address: document.getElementById('s_address')?.value,
-      siret: document.getElementById('s_siret')?.value,
+      ninea: document.getElementById('s_ninea')?.value.trim(),
+      rccm: document.getElementById('s_rccm')?.value.trim(),
       adminPhone: document.getElementById('s_admin_phone')?.value?.trim(),
       currency: document.getElementById('s_currency')?.value,
       quotePrefix: document.getElementById('s_qprefix')?.value,
@@ -2652,7 +2671,7 @@ const doSendAppointmentReminderEmail = async (id) => {
 
 // ===== MESSAGES =====
 const renderMessages = async (main) => {
-  const projectTypes = { web: 'Développement Web', mobile: 'Application Mobile', ai: 'Intelligence Artificielle', consulting: 'Conseil & Expertise', other: 'Autre' };
+  const projectTypes = { web: 'Développement Web', mobile: 'Application Mobile', desktop: 'Développement Desktop', ai: 'Intelligence Artificielle', salesforce: 'Salesforce (CRM)', odoo: 'Odoo (ERP)', sap: 'SAP (ERP)', consulting: 'Conseil & Expertise', infographie: 'Infographie & Impression', formationit: 'Formation IT', formation: 'Développement Personnel & Leadership', anglais: 'Formation Anglais', other: 'Autre' };
   const unread = state.messages.filter(m => !m.read).length;
 
   main.innerHTML = `

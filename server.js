@@ -30,6 +30,9 @@ const bumpVersion = async () => {
 };
 
 // ── Default settings ──
+const LEGAL_DEFAULTS = { ninea: '013460093', rccm: 'SN.DKR.2026.A.40442' };
+const docPhone = (co = {}) => { const p = (co.commercialPhone || '77 921 50 50').trim(); return p.startsWith('+') ? p : `+221 ${p}`; };
+const legalLine = (co = {}) => `NINEA ${co.ninea || LEGAL_DEFAULTS.ninea} · RCCM ${co.rccm || LEGAL_DEFAULTS.rccm}`;
 const defaultSettings = {
   company: {
     name: 'AnNissa Dev Group',
@@ -38,7 +41,8 @@ const defaultSettings = {
     commercialPhone: '77 921 50 50',
     address: 'Dakar, Sénégal',
     website: 'annissadevgroup.com',
-    siret: '',
+    ninea: '013460093',
+    rccm: 'SN.DKR.2026.A.40442',
     taxRate: 18,
     currency: 'FCFA',
     quotePrefix: 'DEV',
@@ -564,7 +568,8 @@ const buildEmailHTML = (data, type, settings) => {
   </td></tr>` : ''}
   <tr><td style="background:#fff;padding:28px 40px">
     <p style="margin:0;font-size:14px;font-weight:700;color:#0d1347">${co.name || 'AnNissa Dev Group'}</p>
-    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.commercialPhone, co.email, co.website].filter(Boolean).join(' · ')}</p>
+    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[docPhone(co), co.email, co.website].filter(Boolean).join(' · ')}</p>
+    <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">${legalLine(co)}</p>
   </td></tr>
   <tr><td style="background:linear-gradient(135deg,#0d1347 0%,#1a2a7a 100%);padding:20px 40px;border-radius:0 0 12px 12px">
     <table cellpadding="0" cellspacing="0"><tr>
@@ -642,7 +647,8 @@ const buildReminderEmailHTML = (appt, settings, audience, customMessage) => {
   </td></tr>
   <tr><td style="background:#fff;padding:26px 32px 30px">
     <p style="margin:0;font-size:13.5px;font-weight:700;color:#0d1347">${co.name || 'AnNissa Dev Group'}</p>
-    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[co.phone, co.commercialPhone, co.email, co.website].filter(Boolean).join(' · ')}</p>
+    <p style="margin:3px 0 0;font-size:12px;color:#64748b">${[docPhone(co), co.email, co.website].filter(Boolean).join(' · ')}</p>
+    <p style="margin:3px 0 0;font-size:11px;color:#94a3b8">${legalLine(co)}</p>
   </td></tr>
 </table></td></tr></table></body></html>`;
 };
